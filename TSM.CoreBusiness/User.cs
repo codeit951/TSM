@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TSM.CoreBusiness
+{
+    public class User
+    {
+        public Guid UserID { get; set; } = Guid.NewGuid();
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string Default_Currency { get; set; } = string.Empty;
+        public string ReferralCode { get; set; } = string.Empty;
+        public string ReferrerCode { get; set; } = string.Empty;
+        public string _2FAKey { get; set; } = string.Empty;
+        public StatusType Status { get; set; } = StatusType.InActive;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime LastLogin { get; set; } = DateTime.UtcNow;
+        public List<string> Roles { get; set; } = new();
+        public StatusType EmailStatus { get; set; } = StatusType.Pending;
+        public byte[] ProfileImage { get; set; }
+
+    }
+}

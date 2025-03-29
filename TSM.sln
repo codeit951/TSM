@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.CoreBusiness", "TSM.CoreBusiness\TSM.CoreBusiness.csproj", "{26623F9B-5F45-474A-9B70-16718EBBA034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.TradingWebApp", "TSM.TradingWebApp\TSM.TradingWebApp.csproj", "{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TSM.Plugins", "TSM.Plugins", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.InMemoryStore", "TSM.Plugins\TSM.InMemoryStore\TSM.InMemoryStore.csproj", "{5A490FA8-258C-49A0-9C53-57A7BE99182A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26623F9B-5F45-474A-9B70-16718EBBA034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26623F9B-5F45-474A-9B70-16718EBBA034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26623F9B-5F45-474A-9B70-16718EBBA034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26623F9B-5F45-474A-9B70-16718EBBA034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5A490FA8-258C-49A0-9C53-57A7BE99182A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9026B94A-8E32-4946-A891-8AFE92CC26C5}
+	EndGlobalSection
+EndGlobal

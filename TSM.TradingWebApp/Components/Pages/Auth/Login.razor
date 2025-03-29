@@ -1,0 +1,91 @@
+﻿@page "/login"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication;
+@using System.ComponentModel.DataAnnotations
+
+
+@layout Layout.AuthLayout
+@inject NavigationManager NavigationManager
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div class="css-1ne255a">
+    <EditForm Model="loginModel" FormName="LoginForm" OnValidSubmit="HandleLogin">
+        
+        <div class="css-1axhzbi">
+            <span class="auth_form_header"><h3 class="auth_form_title">Log in to your account</h3></span>
+            <DataAnnotationsValidator />  @* Required for form validation *@
+            <ValidationSummary style="color:#fff" />
+            <div class="auth_form_fields">
+                <div class="css-jdqo73">
+                    <div class="input_wrapper">
+                        <InputText @bind-Value="loginModel.Email" name="email" type="email" placeholder="Email address" class="no-zoom-14px" />
+                    </div>
+                    <p class="email-placement">email error here</p>
+                </div>
+                <div class="css-1vv7r1s">
+                    <div class="input_wrapper">
+                        <InputText @bind-Value="loginModel.Password" name="password" type="password" placeholder="Password" class="no-zoom-14px" />
+
+                        <button class="show_btn" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-eye">
+                                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="password-placement">password error here</p>
+                </div>
+            </div>
+            <br />
+            <p class="form_action_text"><a href="/register">Don't have an account?</a></p>
+            <p class="form_action_text"><a href="/forgot-password">Forgot your password?</a></p>
+            <div class="auth_form_footer">
+                <button type="submit" class="css-nncgg"><p>Log in</p></button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+@code {
+    private LoginModel loginModel = new();
+
+    private async Task HandleLogin()
+    {
+        Console.WriteLine($"Submitted Email: {loginModel.Email}, Password: {loginModel.Password}");
+        if(loginModel.Email=="Test@gmail.com" && loginModel.Password=="test123")
+        {
+            var Claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, loginModel.Email),
+                new Claim(ClaimTypes.Email, loginModel.Email),
+                new Claim(ClaimTypes.Role, "User")
+            };
+            var claimsIdentity = new ClaimsIdentity(Claims, "MyLoginAuth");
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContextAccessor.HttpContext.SignInAsync("MyLoginAuth", claimsPrincipal);
+
+            //NavigationManager.NavigateTo("/user/dashboard", forceLoad: true);
+        }
+        else
+        {
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required]
+        public string Email { get; set; } = string.Empty;
+        [Required]
+        public string Password { get; set; } = string.Empty;
+    }
+}
