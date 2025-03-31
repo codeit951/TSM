@@ -6,12 +6,13 @@
 
 @layout Layout.AuthLayout
 @inject NavigationManager NavigationManager
-
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @inject IHttpContextAccessor HttpContextAccessor
 
 <div class="css-1ne255a">
-    <EditForm Model="loginModel" FormName="LoginForm" OnValidSubmit="HandleLogin">
-        
+    <EditForm Model="loginModel" method="post" FormName="LoginForm" OnValidSubmit="HandleLogin">
+
         <div class="css-1axhzbi">
             <span class="auth_form_header"><h3 class="auth_form_title">Log in to your account</h3></span>
             <DataAnnotationsValidator />  @* Required for form validation *@
@@ -19,13 +20,13 @@
             <div class="auth_form_fields">
                 <div class="css-jdqo73">
                     <div class="input_wrapper">
-                        <InputText @bind-Value="loginModel.Email" name="email" type="email" placeholder="Email address" class="no-zoom-14px" />
+                        <InputText @bind-Value="loginModel.Email" type="email" placeholder="Email address" class="no-zoom-14px" />
                     </div>
                     <p class="email-placement">email error here</p>
                 </div>
                 <div class="css-1vv7r1s">
                     <div class="input_wrapper">
-                        <InputText @bind-Value="loginModel.Password" name="password" type="password" placeholder="Password" class="no-zoom-14px" />
+                        <InputText @bind-Value="loginModel.Password" type="password" placeholder="Password" class="no-zoom-14px" />
 
                         <button class="show_btn" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -56,28 +57,20 @@
     </EditForm>
 </div>
 @code {
-    private LoginModel loginModel = new();
+    [SupplyParameterFromForm(FormName = "LoginForm")]
+    private LoginModel loginModel { get; set; } = new();
 
     private async Task HandleLogin()
     {
-        Console.WriteLine($"Submitted Email: {loginModel.Email}, Password: {loginModel.Password}");
-        if(loginModel.Email=="Test@gmail.com" && loginModel.Password=="test123")
+       
+        var user = await UserManager.FindByNameAsync(loginModel.Email);
+        if (user != null && await UserManager.CheckPasswordAsync(user, loginModel.Password))
         {
-            var Claims = new List<Claim>
+            var result = await SignInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
+            if (result.Succeeded)
             {
-                new Claim(ClaimTypes.Name, loginModel.Email),
-                new Claim(ClaimTypes.Email, loginModel.Email),
-                new Claim(ClaimTypes.Role, "User")
-            };
-            var claimsIdentity = new ClaimsIdentity(Claims, "MyLoginAuth");
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            await HttpContextAccessor.HttpContext.SignInAsync("MyLoginAuth", claimsPrincipal);
-
-            //NavigationManager.NavigateTo("/user/dashboard", forceLoad: true);
-        }
-        else
-        {
+                NavigationManager.NavigateTo("/user/dashboard", forceLoad: true); // 🔹 Reload page to prevent rendering issues
+            }
         }
     }
 

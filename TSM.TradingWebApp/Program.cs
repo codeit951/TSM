@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Identity;
 using TSM.CoreBusiness;
 using TSM.InMemoryStore;
 using TSM.TradingWebApp.Components;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +18,15 @@ builder.Services.Configure<CircuitOptions>(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddUserStore<UsersRepository>()
+    .AddRoleStore<RoleRepository>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication("MyLoginAuth").AddCookie("MyLoginAuth", options =>
-{
-    options.Cookie.Name = "MyLoginAuth";
-    //options.LoginPath = "/Account/Login";
-    //options.AccessDeniedPath = "/Account/AccessDenied";
-});
+
+
+
+builder.Services.AddAuthorization(); //  Ensure Authorization is also added
 
 var app = builder.Build();
 

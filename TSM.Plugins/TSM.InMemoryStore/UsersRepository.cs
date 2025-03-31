@@ -22,7 +22,7 @@ namespace TSM.InMemoryStore
                 FirstName = "Test",
                 LastName = "User",
                 Email = "Test@gmail.com",
-                Password = "Test123",
+                Password = "AQAAAAIAAYagAAAAENO/b30WB3r+Z9XXAJw8IYQNKcaiKeemI6VHHuY/iS9vFEp7xN9a1y2vUz1eKQ/OkQ==",
                 Phone = "1234567890",
                 Country = "United States",
                 Default_Currency = "USD",
