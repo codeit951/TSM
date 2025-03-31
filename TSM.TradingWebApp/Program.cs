@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddBlazorBootstrap(); //  Add BlazorBootstrap
+
 builder.Services.Configure<CircuitOptions>(options =>
 {
     options.DetailedErrors = true;
@@ -23,6 +25,13 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddRoleStore<RoleRepository>()
     .AddDefaultTokenProviders();
 
+// Configure authentication cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login"; // Custom login path
+    options.AccessDeniedPath = "/access-denied"; // Custom access denied page
+    options.LogoutPath = "/logout"; // Custom logout path
+});
 
 
 

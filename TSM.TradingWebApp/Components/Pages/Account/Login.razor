@@ -1,8 +1,4 @@
 ﻿@page "/login"
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Authentication;
-@using System.ComponentModel.DataAnnotations
-
 
 @layout Layout.AuthLayout
 @inject NavigationManager NavigationManager
@@ -11,6 +7,16 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 <div class="css-1ne255a">
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-danger alert-dismissible fade show w-50" role="alert">
+                @ErrorMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert"><Icon Name="IconName.X"/></button>
+            </div>
+        </div>
+
+    }
     <EditForm Model="loginModel" method="post" FormName="LoginForm" OnValidSubmit="HandleLogin">
 
         <div class="css-1axhzbi">
@@ -60,9 +66,13 @@
     [SupplyParameterFromForm(FormName = "LoginForm")]
     private LoginModel loginModel { get; set; } = new();
 
+    private string ErrorMessage = string.Empty;
+
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
     private async Task HandleLogin()
     {
-       
+
         var user = await UserManager.FindByNameAsync(loginModel.Email);
         if (user != null && await UserManager.CheckPasswordAsync(user, loginModel.Password))
         {
@@ -71,6 +81,30 @@
             {
                 NavigationManager.NavigateTo("/user/dashboard", forceLoad: true); // 🔹 Reload page to prevent rendering issues
             }
+            else if (result.IsLockedOut)
+            {
+
+            }
+            else if (result.IsNotAllowed)
+            {
+            }
+            else if (result.RequiresTwoFactor)
+            {
+                NavigationManager.NavigateTo("/twofa", forceLoad: true);
+            }
+
+        }
+        else if(user != null)
+        {
+            // incorrect password
+            ErrorMessage = "Invalid account password!";
+            return;
+        }
+        else
+        {
+            // account not found
+            ErrorMessage = "Account not found!";
+            return;
         }
     }
 
