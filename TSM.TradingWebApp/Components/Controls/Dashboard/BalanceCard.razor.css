@@ -1,0 +1,121 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-1ov6cn9 .balance_card_bottom {
+    margin-top: 44px;
+    overflow: scroll;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.css-1ov6cn9 .balance_card_bottom_title {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 18px;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.css-bqmfuh {
+    display: grid;
+    padding-top: 12px;
+}
+
+    .css-bqmfuh .account_summary_button {
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        outline: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 150ms ease-out;
+    }
+
+        .css-bqmfuh .account_summary_button:hover {
+            color: white;
+            background-color: rgb(49, 172, 238);
+        }
+
+    .css-bqmfuh .account_summary_new_item {
+        font-size: 14px;
+        color: rgb(255, 255, 255);
+        line-height: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 120px 150px 100px;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        transition: 150ms ease-out;
+        box-sizing: border-box;
+        padding: 6px 0px;
+        height: 52px;
+    }
+
+        .css-bqmfuh .account_summary_new_item span {
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            gap: 4px;
+        }
+
+            .css-bqmfuh .account_summary_new_item span img {
+                height: 18px;
+                width: 18px;
+            }
+
+        .css-bqmfuh .account_summary_new_item .title {
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .css-bqmfuh .account_summary_new_item .value {
+            color: rgba(255, 255, 255, 0.75);
+            white-space: nowrap;
+            width: 100%;
+            max-width: max-content;
+        }
+
+        .css-bqmfuh .account_summary_new_item:not(:last-of-type) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.024);
+        }
+
+        .css-bqmfuh .account_summary_new_item:hover {
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: transparent;
+        }
+
+        .css-bqmfuh .account_summary_new_item:hover {
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: transparent;
+        }
+
+@@media screen and (max-width: 550px) {
+    .css-bqmfuh .account_summary_new_item {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 6px;
+    }
+
+    .css-bqmfuh .account_summary_button {
+        display: none;
+    }
+
+    .css-bqmfuh .account_summary_new_item:hover .value {
+        display: none;
+    }
+
+    .css-bqmfuh .account_summary_new_item:hover .account_summary_button {
+        display: block;
+    }
+}
+

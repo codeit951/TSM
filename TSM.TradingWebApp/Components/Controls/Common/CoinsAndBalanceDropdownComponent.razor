@@ -1,0 +1,869 @@
+﻿<style>
+   
+    /*! CSS Used from: Embedded */
+    .css-v6puf8 input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .css-v6puf8 input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            line-height: 18px;
+            font-weight: 600;
+        }
+
+    .css-bp1l2g {
+        box-sizing: border-box;
+        margin: 0px !important;
+    }
+
+        .css-bp1l2g .search_box {
+            position: sticky;
+            top: 0px;
+            left: 0px;
+            z-index: 100;
+            background: rgb(30, 33, 36);
+            padding: 6px;
+            border: none;
+            outline: none;
+            margin: 0px !important;
+        }
+
+            .css-bp1l2g .search_box div {
+                border: none !important;
+                outline: none !important;
+                margin: 0px !important;
+            }
+
+        .css-bp1l2g .scrollable {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            width: 100%;
+            box-sizing: border-box;
+            max-height: calc(-100px + 88vh);
+            overflow: scroll;
+            padding: 6px;
+            margin: 0px !important;
+        }
+
+            .css-bp1l2g .scrollable div {
+                cursor: pointer;
+                transition: 100ms ease-out;
+                padding: 10px 12px;
+                border-radius: 8px;
+                display: grid;
+                margin: 0px !important;
+            }
+
+                .css-bp1l2g .scrollable div .asset_item {
+                    font-size: 14px;
+                    gap: 6px;
+                    max-width: max-content;
+                    cursor: pointer;
+                    -webkit-box-pack: justify;
+                    justify-content: space-between;
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    background: transparent;
+                }
+
+                .css-bp1l2g .scrollable div .asset_item_right {
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                    .css-bp1l2g .scrollable div .asset_item_right p:first-of-type {
+                        font-size: 14px;
+                        white-space: nowrap;
+                        color: rgb(255, 255, 255);
+                        line-height: 18px;
+                        font-weight: 500;
+                    }
+
+                    .css-bp1l2g .scrollable div .asset_item_right p:last-of-type {
+                        font-size: 14px;
+                        white-space: nowrap;
+                        color: rgba(255, 255, 255, 0.5);
+                        line-height: 18px;
+                        font-weight: 600;
+                    }
+
+                .css-bp1l2g .scrollable div:hover {
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+
+                .css-bp1l2g .scrollable div.selected {
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+
+                .css-bp1l2g .scrollable div p {
+                    font-size: 14px;
+                    white-space: nowrap;
+                    color: rgb(255, 255, 255);
+                    line-height: 18px;
+                    font-weight: 500;
+                }
+    @@media (max-width: 768px) {
+        .css-bp1l2g .scrollable
+
+    {
+        padding-bottom: 200px;
+    }
+
+    }
+
+    .css-g70r1a {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+        .css-g70r1a img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .css-g70r1a input {
+            line-height: 18px;
+            color: rgb(255, 255, 255);
+            border: none;
+            outline: none;
+            background: transparent;
+            font-weight: 500;
+            width: 100%;
+        }
+
+            .css-g70r1a input::placeholder {
+                color: rgba(255, 255, 255, 0.75);
+                font-weight: 500;
+            }
+
+    .css-cg9ir8 {
+        display: none;
+        position: absolute;
+        left: 0px;
+        max-width: 80%;
+        min-width: 80%;
+        z-index: 101;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+        transition: transform 200ms ease-out, opacity 100ms ease-out;
+        max-height: 300px;
+        overflow-y: auto;
+        transform: translateY(0px);
+        opacity: 1;
+        pointer-events: auto;
+        margin-top: 4px;
+        border-radius: 8px;
+        background: rgb(30, 33, 36) !important;
+        backdrop-filter: blur(200px) !important;
+    }
+
+        .css-cg9ir8.full {
+            max-width: 100%;
+            width: 100%;
+        }
+</style>
+
+<div class="css-1kyvdx0">
+    <div class="css-1ug4zh5"></div>
+    <div class="full scrollbar-hide css-cg9ir8" id="coinsbalarea" style="@(IsOpen?"display:block;":"display:none;")">
+        <div class="css-bp1l2g">
+            <div class="search_box">
+                <div class="css-g70r1a"><img src="/assets/general/search.svg" alt="Search for assets"><input placeholder="Search for assets" class="no-zoom-14px"></div>
+            </div>
+            <div class="scrollable scrollbar-hide">
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/AAVE.svg" alt="AAVE">
+                        <p>AAVE</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 AAVE</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ALGO.svg" alt="Algorand">
+                        <p>Algorand</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ALGO</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ANC.svg" alt="Anchor Protocol">
+                        <p>Anchor Protocol</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ANC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/APE.svg" alt="ApeCoin">
+                        <p>ApeCoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 APE</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/FET.svg" alt="Artificial Superintelligence Alliance">
+                        <p>Artificial Superintelligence Alliance</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 FET</p>
+                    </span>
+                </div>
+                <div class="selected" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/AURORA.svg" alt="Aurora">
+                        <p>Aurora</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 AURORA</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/AVAX.svg" alt="Avalanche">
+                        <p>Avalanche</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 AVAX</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/AXS.svg" alt="Axie Infinity">
+                        <p>Axie Infinity</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 AXS</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/BTC.svg" alt="Bitcoin">
+                        <p>Bitcoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 BTC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/BCH.svg" alt="Bitcoin Cash">
+                        <p>Bitcoin Cash</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 BCH</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/BTG.svg" alt="Bitcoin Gold">
+                        <p>Bitcoin Gold</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 BTG</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/BSV.svg" alt="Bitcoin SV">
+                        <p>Bitcoin SV</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 BSV</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/BORING.svg" alt="Boring DAO">
+                        <p>Boring DAO</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 BORING</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ADA.svg" alt="Cardano">
+                        <p>Cardano</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ADA</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/LINK.svg" alt="ChainLink">
+                        <p>ChainLink</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 LINK</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/CRO.svg" alt="Cronos">
+                        <p>Cronos</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 CRO</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/DAI.svg" alt="Dai">
+                        <p>Dai</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 DAI</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/DASH.svg" alt="Dash">
+                        <p>Dash</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 DASH</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/MANA.svg" alt="Decentraland">
+                        <p>Decentraland</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 MANA</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/DOGE.svg" alt="Dogecoin">
+                        <p>Dogecoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 DOGE</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ETH.svg" alt="Ethereum">
+                        <p>Ethereum</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ETH</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ETC.svg" alt="Ethereum Classic">
+                        <p>Ethereum Classic</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ETC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/EVMOS.svg" alt="Evmos">
+                        <p>Evmos</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 EVMOS</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/GT.svg" alt="Gate Token">
+                        <p>Gate Token</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 GT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/HBAR.svg" alt="Hedera">
+                        <p>Hedera</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 HBAR</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/HEX.svg" alt="Hex">
+                        <p>Hex</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 HEX</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ICP.svg" alt="Internet Computer">
+                        <p>Internet Computer</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ICP</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/LN.svg" alt="Link">
+                        <p>Link</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 LN</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/LTC.svg" alt="Litecoin">
+                        <p>Litecoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 LTC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XMR.svg" alt="Monero">
+                        <p>Monero</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XMR</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/NEXO.svg" alt="Nexo">
+                        <p>Nexo</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 NEXO</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/OKB.svg" alt="OKB">
+                        <p>OKB</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 OKB</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XCN.svg" alt="Onyxcoin">
+                        <p>Onyxcoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XCN</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/OP.svg" alt="Optimism">
+                        <p>Optimism</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 OP</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/OGN.svg" alt="Origin Protocol">
+                        <p>Origin Protocol</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 OGN</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ORN.svg" alt="Orion Protocol">
+                        <p>Orion Protocol</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ORN</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/PNG.svg" alt="Pangolin">
+                        <p>Pangolin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 PNG</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/PEPE.svg" alt="Pepe">
+                        <p>Pepe</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 PEPE</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/DOT.svg" alt="Polkadot">
+                        <p>Polkadot</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 DOT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/MATIC.svg" alt="Polygon">
+                        <p>Polygon</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 MATIC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XPR.svg" alt="Proton">
+                        <p>Proton</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XPR</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/QNT.svg" alt="Quant">
+                        <p>Quant</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 QNT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/RARI.svg" alt="Rarible">
+                        <p>Rarible</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 RARI</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/RNDR.svg" alt="Render">
+                        <p>Render</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 RNDR</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XRP.svg" alt="Ripple">
+                        <p>Ripple</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XRP</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/SFP.svg" alt="Safepal">
+                        <p>Safepal</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 SFP</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/SHIB.svg" alt="Shiba Inu">
+                        <p>Shiba Inu</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 SHIB</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/SOL.svg" alt="Solana">
+                        <p>Solana</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 SOL</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/SOLO.svg" alt="Sologenic">
+                        <p>Sologenic</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 SOLO</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XLM.svg" alt="Stellar">
+                        <p>Stellar</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XLM</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/GMT.svg" alt="Stepn">
+                        <p>Stepn</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 GMT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/SUSHI.svg" alt="Sushi">
+                        <p>Sushi</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 SUSHI</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/TLOS.svg" alt="Telos">
+                        <p>Telos</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 TLOS</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/USDT.svg" alt="Tether">
+                        <p>Tether</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 USDT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XTZ.svg" alt="Tezos">
+                        <p>Tezos</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XTZ</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/GRT.svg" alt="The Graph">
+                        <p>The Graph</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 GRT</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/TON.svg" alt="Toncoin">
+                        <p>Toncoin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 TON</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/TRX.svg" alt="Tron">
+                        <p>Tron</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 TRX</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/UNI.svg" alt="Uniswap">
+                        <p>Uniswap</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 UNI</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/USDC.svg" alt="USD Coin">
+                        <p>USD Coin</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 USDC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/VET.svg" alt="Vechain">
+                        <p>Vechain</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 VET</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/VELO.svg" alt="Velo">
+                        <p>Velo</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 VELO</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/WING.svg" alt="Wing Finance">
+                        <p>Wing Finance</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 WING</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XDC.svg" alt="XDC Network">
+                        <p>XDC Network</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XDC</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/XRPH.svg" alt="XRP Healthcare">
+                        <p>XRP Healthcare</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 XRPH</p>
+                    </span>
+                </div>
+                <div class="" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="asset_item">
+                        <img loading="lazy" width="16" src="./asseticons/ZEC.svg" alt="Zcash">
+                        <p>Zcash</p>
+                    </span>
+                    <span class="asset_item_right">
+                        <p>$0.00</p>
+                        <p>0 ZEC</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    [Parameter]
+    public bool IsOpen { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSelect { get; set; }
+    private async Task OnClick(string asset)
+    {
+        await OnSelect.InvokeAsync(asset);
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(IsOpen);
+    }
+}

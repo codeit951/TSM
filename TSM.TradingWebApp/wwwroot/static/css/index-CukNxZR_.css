@@ -1481,7 +1481,7 @@ h2.react-datepicker__current-month {
     border: none;
     outline: none;
     color: white;
-    background: transparent;
+    background: #111416;
     font-size: 14px;
     line-height: 18px;
     font-weight: 600;
@@ -1796,8 +1796,8 @@ h2.react-datepicker__current-month {
         .css-a0n6wz .balance_card_bottom_asset_left img {
             min-width: 32px;
             min-height: 32px;
-            width: 100%;
-            height: 100%;
+            width: 32px;
+            height: 32px;
         }
 
     .css-a0n6wz .balance_card_asset_titles,
@@ -3243,4 +3243,10 @@ h2.react-datepicker__current-month {
         transform: translateY(0px);
         filter: blur(0px);
     }
+}
+.css-1xibl81 .switcher_item.active.sell {
+    background: rgb(255, 69, 69);
+}
+.css-1xibl81 .switcher_item.active.convert {
+    background: rgb(49, 172, 238);
 }

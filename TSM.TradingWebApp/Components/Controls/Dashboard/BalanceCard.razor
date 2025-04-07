@@ -1,0 +1,149 @@
+﻿@rendermode InteractiveServer
+
+
+<div class="balance_card_top">
+    <div class="balance_card_top_wrapper">
+        <div class="balance">
+            <span class="balance_wrapper">
+                <span class="label">Total Balance</span>
+                <button class="eyes_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off eye">
+                        <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+                        <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+                        <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+                        <path d="m2 2 20 20"></path>
+                    </svg>
+                </button>
+            </span>
+            <span class="user_balance" style="display: block;">$0.00</span>
+            <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+        </div>
+    </div>
+    <div class="balance_card_top_buttons"><button @onclick="ChangeTab" class="balance_card_top_button @(showTab==1?"active":"")"><span><img src="img/wallet.svg" alt="icon"></span></button><button @onclick="ChangeTab" class="balance_card_top_button @(showTab==2?"active":"")"><span><img src="img/file.svg" alt="icon"></span></button></div>
+</div>
+<div class="balance_card_bottom scrollbar-hide @(showTab==1?"":"hidden")">
+    <span>
+        <p class="balance_card_bottom_title">
+            <p>Top Assets</p>
+        </p><button class="assets_button">View all assets</button>
+    </span>
+    <div class="balance_card_bottom_wrapper">
+        <div class="css-a0n6wz">
+            <span class="balance_card_bottom_asset_left">
+                <img src="cryptoIcons/BTC.png" alt="icon">
+                <span class="balance_card_asset_titles">
+                    <p>Bitcoin</p>
+                    <p>BTC</p>
+                </span>
+            </span>
+            <span class="balance_card_bottom_asset_right">
+                <p>$0.00</p>
+                <p>0.0000 BTC</p>
+            </span>
+            <button class="balance_card_button">Deposit</button>
+        </div>
+        <div class="css-a0n6wz">
+            <span class="balance_card_bottom_asset_left">
+                <img src="cryptoIcons/ETH.png" alt="icon">
+                <span class="balance_card_asset_titles">
+                    <p>Ethereum</p>
+                    <p>ETH</p>
+                </span>
+            </span>
+            <span class="balance_card_bottom_asset_right">
+                <p>$0.00</p>
+                <p>0.0000 ETH</p>
+            </span>
+            <button class="balance_card_button">Deposit</button>
+        </div>
+        <div class="css-a0n6wz">
+            <span class="balance_card_bottom_asset_left">
+                <img src="cryptoIcons/USD.png" alt="icon">
+                <span class="balance_card_asset_titles">
+                    <p>United States Dollars</p>
+                    <p>USD</p>
+                </span>
+            </span>
+            <span class="balance_card_bottom_asset_right">
+                <p>$0.00</p>
+                <p>0.0000 USD</p>
+            </span>
+            <button class="balance_card_button">Deposit</button>
+        </div>
+        <div class="css-a0n6wz">
+            <span class="balance_card_bottom_asset_left">
+                <img src="cryptoIcons/AAPL.svg" alt="icon">
+                <span class="balance_card_asset_titles">
+                    <p>Apple</p>
+                    <p>AAPL</p>
+                </span>
+            </span>
+            <span class="balance_card_bottom_asset_right">
+                <p>$0.00</p>
+                <p>0.0000 AAPL</p>
+            </span>
+            <button class="balance_card_button">Deposit</button>
+        </div>
+    </div>
+</div>
+<div class="balance_card_bottom scrollbar-hide @(showTab==2?"":"hidden")">
+    <span style="display: flex; align-items: center; justify-content: space-between;">
+        <p class="balance_card_bottom_title" style="color: rgba(255, 255, 255, 0.8);">
+            <p>Account Summary</p>
+        </p>
+    </span>
+    <div class="css-bqmfuh">
+        <div class="account_summary_new_item">
+            <span>
+                <img src="img/deposit.svg" alt="icon">
+                <p class="title">Total Deposits</p>
+            </span>
+            <p class="value">$0.00</p>
+            <button class="account_summary_button">
+                <p>Deposit</p>
+            </button>
+        </div>
+        <div class="account_summary_new_item">
+            <span>
+                <img src="img/withdraw.svg" alt="icon">
+                <p class="title">Total Withdrawals</p>
+            </span>
+            <p class="value">$0.00</p>
+            <button class="account_summary_button">
+                <p>Withdraw</p>
+            </button>
+        </div>
+        <div class="account_summary_new_item">
+            <span>
+                <img src="img/trade.svg" alt="icon">
+                <p class="title">Total Profits</p>
+            </span>
+            <p class="value">$0.00</p>
+            <button class="account_summary_button" style="opacity: 0; user-select: none; pointer-events: none;">
+                <p>Profits</p>
+            </button>
+        </div>
+        @if (user is not null && user.Status != StatusType.Active)
+        {
+            <div class="account_summary_new_item">
+                <span>
+                <img src="img/verify.svg" alt="icon">
+                <p class="title">Verification</p>
+            </span>
+            <p class="value" style="color: rgb(255, 51, 68);">Your account is not verified</p>
+        </div>
+        }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public User? user { get; set; }
+
+    private int showTab = 1;
+
+    private void ChangeTab()
+    {
+        showTab = showTab == 1 ? 2 : 1;
+    }
+}

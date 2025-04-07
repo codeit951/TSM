@@ -1,231 +1,35 @@
 ﻿@page "/user/dashboard"
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @layout Layout.UserLayout
 @attribute [Authorize]
 
 <div class="scrollbar-hide css-66hwna">
     <div class="css-1mq6rco">
-        <div class="css-sai4f1" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5); border: 2px solid rgb(50, 195, 105);">
-            <div class="balance_card css-1pbigpn" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                <div class="balance_card_top" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <div class="balance_card_top_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <div class="balance" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="label" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Total Balance</span>
-                                <button class="eyes_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off eye" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                        <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="m2 2 20 20" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                    </svg>
-                                </button>
-                            </span>
-                            <span class="user_balance" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="display: block; background-color: rgba(255, 0, 0, 0.5);">$0.00</span>
-                            <h3 class="user_balance hidden" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="display: none; background-color: rgba(255, 0, 0, 0.5);"><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i></h3>
-                        </div>
-                    </div>
-                    <div class="balance_card_top_buttons" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><button class="balance_card_top_button active" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><img src="./assets/general/wallet.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="height: 16px; width: 16px; background-color: rgba(255, 0, 0, 0.5);"></button><button class="balance_card_top_button " data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><img src="./assets/general/file.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="height: 16px; width: 16px; background-color: rgba(255, 0, 0, 0.5);"></button></div>
-                </div>
-                <div class="balance_card_bottom scrollbar-hide" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(255, 0, 0, 0.5);">
-                        <p class="balance_card_bottom_title" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="color: rgba(255, 255, 255, 0.8); background-color: rgba(255, 0, 0, 0.5);">
-                        <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Top Assets</p>
-                        </p><button class="assets_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">View all assets</button>
-                    </span>
-                    <div class="balance_card_bottom_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/BTC.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Bitcoin</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">BTC</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0 BTC</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/ETH.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Ethereum</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">ETH</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0 ETH</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/USD.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">United States Dollars</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">USD</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0 USD</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/AAPL.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Apple</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">AAPL</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0 AAPL</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                    </div>
-                </div>
+        <div class="css-sai4f1" >
+            <div class="balance_card css-1pbigpn" >
+                <BalanceCard user="user" />
             </div>
-            <div class="balance_card css-1ov6cn9" style="background-color: rgba(255, 0, 0, 0.5);" data-default-style="{&quot;backgroundColor&quot;:&quot;transparent&quot;,&quot;border&quot;:&quot;&quot;}">
-                <div class="balance_card_top" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <div class="balance_card_top_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <div class="balance" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="label" data-default-style="{&quot;backgroundColor&quot;:&quot;transparent&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Total Balance</span>
-                                <button class="eyes_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off eye" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                        <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                        <path d="m2 2 20 20" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></path>
-                                    </svg>
-                                </button>
-                            </span>
-                            <span class="user_balance" style="display: block; background-color: rgba(255, 0, 0, 0.5);" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}">$0.00</span>
-                            <h3 class="user_balance hidden" style="display: none; background-color: rgba(255, 0, 0, 0.5);" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}"><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i><i data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">*</i></h3>
-                        </div>
-                    </div>
-                    <div class="balance_card_top_buttons" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><button class="balance_card_top_button active" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><img src="./assets/general/wallet.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></span></button><button class="balance_card_top_button " data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"><img src="./assets/general/file.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></span></button></div>
-                </div>
-                <div class="balance_card_bottom scrollbar-hide" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(255, 0, 0, 0.5);">
-                        <p class="balance_card_bottom_title" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="color: rgba(255, 255, 255, 0.8); background-color: rgba(255, 0, 0, 0.5);">
-                        <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Top Assets</p>
-                        </p><button class="assets_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">View all assets</button>
-                    </span>
-                    <div class="balance_card_bottom_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/BTC.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Bitcoin</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">BTC</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0.0000 BTC</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/ETH.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Ethereum</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">ETH</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0.0000 ETH</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/USD.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">United States Dollars</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">USD</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0.0000 USD</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                        <div class="css-a0n6wz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <span class="balance_card_bottom_asset_left" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <img src="/asseticons/AAPL.svg" alt="icon" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <span class="balance_card_asset_titles" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Apple</p>
-                                    <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">AAPL</p>
-                                </span>
-                            </span>
-                            <span class="balance_card_bottom_asset_right" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">$0.00</p>
-                                <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">0.0000 AAPL</p>
-                            </span>
-                            <button class="balance_card_button" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Deposit</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="balance_card css-1ov6cn9">
+                <BalanceCard user="user" />
             </div>
-            <div class="css-1d4c5kz" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                <div class="categories_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <p class="account_section_title categories" data-default-style="{&quot;backgroundColor&quot;:&quot;transparent&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Categories</p>
-                    <div class="categories_section" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="font-size: 12px; font-weight: 600; background-color: rgba(255, 0, 0, 0.5);">No categories yet. <strong data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="color: rgb(49, 170, 206); cursor: pointer; font-weight: 700; background-color: rgba(255, 0, 0, 0.5);">Deposit now </strong>to see your portfolio breakdown.</p>
-                    </div>
-                </div>
-                <div class="account_card_bottom" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                    <div class="progress_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <p class="account_section_title progress" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Trading progress</p>
-                            <p data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="font-size: 14px; font-weight: 600; background-color: rgba(255, 0, 0, 0.5);">0%</p>
-                        </span>
-                        <div class="progress_section" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <div class="progress_bar" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="progress" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="width: 0%; background-color: rgba(255, 0, 0, 0.5);"></div>
-                        </div>
-                    </div>
-                    <div class="signal_strength_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                        <span data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <p class="account_section_title signal_strength" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">Signal strength</p>
-                            <p class="red" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="font-size: 14px; font-weight: 600; background-color: rgba(255, 0, 0, 0.5);">0%</p>
-                        </span>
-                        <div class="signal_wrapper" data-default-style="{&quot;backgroundColor&quot;:&quot;&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);">
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                            <div class="signal_bar " data-default-style="{&quot;backgroundColor&quot;:&quot;rgba(255, 51, 68, 0.5)&quot;,&quot;border&quot;:&quot;&quot;}" style="background-color: rgba(255, 0, 0, 0.5);"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <CategoryComponent />
         </div>
-       
+        <TradeAreaComponent @rendermode="InteractiveServer" />
+        <TradeHistoryComponent @rendermode="InteractiveServer" />
     </div>
 </div>
 @code {
+    private User? user;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+        }
+    }
 }

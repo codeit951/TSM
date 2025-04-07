@@ -1,0 +1,104 @@
+﻿@using System.Threading
+@using System.Threading.Tasks
+
+<div class="@ToastCssClass" style="@(Show ? "" : "display:none;")">
+    <div class="toast-content relative">
+        <h3 class="toast-heading">@Heading</h3>
+        <p class="toast-message">@Message</p>
+        <button class="toast-close" @onclick="CloseToast">&times;</button>
+    </div>
+    <div class="toast-progress" style="@ProgressStyle"></div>
+</div>
+
+@code {
+    [Parameter] public MyToastType Type { get; set; } = MyToastType.Success;
+    [Parameter] public string Heading { get; set; } = string.Empty;
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public int Timeout { get; set; } = 10000;
+
+    private bool Show { get; set; } = false;
+    private bool expanded = false;
+    private bool exiting = false;
+    private string ProgressStyle = "";
+    private Timer? _dismissTimer;
+
+    private string ToastCssClass => $"toast {GetMyToastTypeClass()} {(expanded ? "expanded" : "")} {(exiting ? "exiting" : "")}";
+
+    public void ShowToast(MyToastType type, string heading, string message, int? timeout = null)
+    {
+        Type = type;
+        Heading = heading;
+        Message = message;
+        if (timeout.HasValue)
+        {
+            Timeout = timeout.Value;
+        }
+        Show = true;
+        StartTimer();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void StartTimer()
+    {
+        _ = Task.Delay(800).ContinueWith(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                expanded = true;
+                StateHasChanged();
+            });
+        });
+
+        _dismissTimer?.Dispose();
+        _dismissTimer = new Timer(_ => DismissToast(), null, Timeout, System.Threading.Timeout.Infinite);
+
+        ProgressStyle = $"animation: progressBar {Timeout}ms linear forwards;";
+    }
+
+    private void DismissToast()
+    {
+        // Remove the expanded state immediately.
+        InvokeAsync(() =>
+        {
+            expanded = false;
+            StateHasChanged();
+        });
+
+        // After 200ms, add the exiting state.
+        Task.Delay(200).ContinueWith(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                exiting = true;
+                StateHasChanged();
+            });
+        });
+
+        // After a total of 1000ms, hide the toast.
+        Task.Delay(1000).ContinueWith(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                exiting = false;
+                Show = false;
+                StateHasChanged();
+            });
+        });
+    }
+
+    private void CloseToast()
+    {
+        _dismissTimer?.Dispose();
+        DismissToast();
+    }
+
+    private string GetMyToastTypeClass() =>
+        Type switch
+        {
+            MyToastType.Success => "toast-success",
+            MyToastType.Danger => "toast-danger",
+            MyToastType.Info => "toast-info",
+            MyToastType.Warning => "toast-warning",
+            _ => "toast-success",
+        };
+}

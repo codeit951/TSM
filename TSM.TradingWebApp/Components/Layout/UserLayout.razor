@@ -1,4 +1,5 @@
-﻿
+﻿@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inherits LayoutComponentBase
 <link href="static/css/dashboard.css" rel="stylesheet" />
 <link href="static/css/index-CukNxZR_.css" rel="stylesheet"/>
@@ -7,7 +8,7 @@
       <div class="css-10q2b6j">
           <div class="css-6ymeda"></div>
           @* Everything goies here *@
-        <SettingsTab />
+        <SettingsTab @bind-Transform="settingsTransform" @rendermode="InteractiveServer" user="user" />
         <div class="css-6ymeda"></div>
         <ConnectWalletTab />
         <div class="css-6ymeda"></div>
@@ -15,9 +16,9 @@
         <div class="css-6ymeda"></div>
         <ReferalTab />
         <SideBarMenu />
-        <SettingsTab2 />
+        <SettingsTab2 user="user" />
         <div class="css-1598bpk">
-            <SomeSideBar />
+            <SomeSideBar user="user" />
 
             @* Main Page Content *@
             @Body
@@ -25,5 +26,18 @@
       </div>
 </div>
 @code {
+    private string settingsTransform = "100%";
 
+    private User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+        }
+    }
 }

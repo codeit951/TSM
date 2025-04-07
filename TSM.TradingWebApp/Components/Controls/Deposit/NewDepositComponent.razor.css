@@ -1,0 +1,417 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-nncgg {
+    background: rgb(49, 172, 238);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+    .css-nncgg.disabled {
+        background-color: grey;
+        pointer-events: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+.css-1azirga label {
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.css-1azirga .select_wrapper {
+    background: rgba(255, 255, 255, 0.024);
+    border-radius: 8px;
+    margin-top: 6px;
+    padding: 10px 8px;
+    border: 1px solid transparent;
+    transition: border 150ms ease-out;
+    position: relative;
+    height: 40px;
+    min-width: 135px;
+    width: 100%;
+}
+
+.css-1azirga select {
+    appearance: none;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: white;
+    background: transparent;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.css-1azirga .select_wrapper:hover {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.css-v6puf8 {
+    width: 100%;
+}
+
+    .css-v6puf8 label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+        .css-v6puf8 label.divide {
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+        }
+
+    .css-v6puf8 .amountbox_wrapper {
+        background: rgba(255, 255, 255, 0.024);
+        border-radius: 8px;
+        padding: 4px 4px 4px 8px;
+        margin-top: 6px;
+        border: 1px solid transparent;
+        position: relative;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border 150ms ease-out;
+        height: 42px;
+    }
+
+        .css-v6puf8 .amountbox_wrapper:hover {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+    .css-v6puf8 .amount_select {
+        outline: none;
+        border: none;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 6px;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition: background 150ms ease-out;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+        height: 100%;
+    }
+
+        .css-v6puf8 .amount_select:hover {
+            background: rgba(255, 255, 255, 0.024);
+        }
+
+        .css-v6puf8 .amount_select p {
+            font-size: 14px;
+            line-height: 18px;
+            font-weight: 600;
+            color: rgb(255, 255, 255);
+        }
+
+        .css-v6puf8 .amount_select img {
+            width: 16px;
+            height: 16px;
+        }
+
+    .css-v6puf8 input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .css-v6puf8 input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            line-height: 18px;
+            font-weight: 600;
+        }
+
+.css-8ndowl {
+    position: fixed;
+    z-index: 1300;
+    inset: 0px;
+}
+
+.css-919eu4 {
+    position: fixed;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: transparent;
+    z-index: -1;
+}
+
+.css-13lqfnw {
+    position: absolute;
+    width: 59%;
+    padding: 16px;
+    min-height: 300px;
+    border-radius: 12px;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    max-width: 430px;
+    animation: 0.3s ease-out 0s 1 normal forwards running fadeSlideIn;
+    overflow: scroll;
+    background: rgba(255, 255, 255, 0.075) !important;
+    backdrop-filter: blur(200px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.024) !important;
+}
+
+    .css-13lqfnw .modal_top {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+        .css-13lqfnw .modal_top .modal_top_title {
+            font-size: 14px;
+            line-height: 18px;
+            font-weight: 600;
+            color: rgb(255, 255, 255);
+        }
+
+        .css-13lqfnw .modal_top button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+            .css-13lqfnw .modal_top button:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+                filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(334deg) brightness(200%) contrast(100%);
+            }
+
+    .css-13lqfnw .modal_content {
+        margin-top: 16px;
+        display: grid;
+        gap: 16px;
+    }
+
+        .css-13lqfnw .modal_content .modal_description {
+            font-size: 14px;
+            line-height: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 95%;
+        }
+
+@media (max-width: 768px) {
+    .css-13lqfnw {
+        position: fixed;
+        top: unset;
+        bottom: 0px;
+        left: 0px;
+        z-index: 101;
+        width: 100%;
+        max-width: unset;
+        max-height: 85vh;
+        transform: none;
+        animation: 0.3s ease-out 0s 1 normal forwards running fadeSlideUp;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+}
+
+.css-13lqfnw .modal_footer {
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box !important;
+}
+
+.css-184mof1 {
+    width: 100%;
+}
+
+    .css-184mof1 label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .css-184mof1 .select_wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.024);
+        border-radius: 8px;
+        margin-top: 6px;
+        padding: 10px 8px;
+        border: 1px solid transparent;
+        transition: border 150ms ease-out;
+        position: relative;
+        height: 42px;
+        min-width: 150px;
+        width: 100%;
+    }
+
+        .css-184mof1 .select_wrapper img {
+            width: 16px;
+            height: 16px;
+        }
+
+    .css-184mof1 .svg_icon {
+        width: 8px;
+        height: 6px;
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .css-184mof1 select {
+        appearance: none;
+        width: 100%;
+        border: none;
+        outline: none;
+        color: white;
+        background: transparent;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        height: 100%;
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding-left: 24px;
+    }
+
+    .css-184mof1 .select_wrapper:hover {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+.css-1ky7uhq {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+    .css-1ky7uhq label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .css-1ky7uhq .file_upload_wrapper {
+        background: rgba(255, 255, 255, 0.024);
+        border-radius: 8px;
+        padding: 4px 4px 4px 8px;
+        margin-top: 6px;
+        border: 1px dashed rgba(255, 255, 255, 0.05);
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border 150ms ease-out;
+        height: 42px;
+        position: relative;
+    }
+
+        .css-1ky7uhq .file_upload_wrapper .upload_wrapper {
+            display: flex;
+            gap: 8px;
+            -webkit-box-align: center;
+            align-items: center;
+        }
+
+            .css-1ky7uhq .file_upload_wrapper .upload_wrapper .icon {
+                color: rgb(49, 172, 238);
+                border-radius: 4px;
+                padding: 2px;
+                opacity: 0.5;
+                transition: 150ms ease-out;
+            }
+
+            .css-1ky7uhq .file_upload_wrapper .upload_wrapper p {
+                font-size: 14px;
+                line-height: 18px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+                .css-1ky7uhq .file_upload_wrapper .upload_wrapper p strong {
+                    color: rgb(49, 172, 238);
+                    font-weight: 600;
+                }
+
+        .css-1ky7uhq .file_upload_wrapper:hover {
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+            .css-1ky7uhq .file_upload_wrapper:hover .upload_wrapper .icon {
+                opacity: 1;
+                color: rgb(49, 172, 238);
+            }

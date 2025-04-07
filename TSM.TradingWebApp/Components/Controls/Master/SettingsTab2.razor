@@ -1,640 +1,20 @@
-﻿<div class="css-1tgwo75">
+﻿@rendermode InteractiveServer
+@inject IJSRuntime JS
+<div class="css-1tgwo75">
     <div class="css-6ymeda"></div>
-    <div class="scrollbar-hide css-m1amxs">
-        <div class="top">
-            <div role="button" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.5"
-                     stroke-linecap="round"
-                     stroke-linejoin="round"
-                     class="lucide lucide-chevron-left">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-                <p class="top_title" style="text-transform: capitalize;">Settings</p>
-            </div>
-            <button><img src="./The Iron Markets_files/close.svg" alt="close" /></button>
-        </div>
-        <div class="content scrollbar-hide css-inwg8j">
-            <div class="user_wrapper">
-                <div class="user_avatar"><p>jl</p></div>
-                <div class="user_info">
-                    <p class="user_name" style="display: flex; align-items: center; gap: 6px; line-height: 18px;"><span style="height: 20px;">james lam</span></p>
-                    <p class="user_email">codeit951@gmail.com</p>
-                </div>
-            </div>
-            <div class="settings_options">
-                <ul class="settings_option css-cgifpv">
-                    <li class="settings_option_item payments">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-credit-card">
-                                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-                                <line x1="2" x2="22" y1="10" y2="10"></line>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Payments</p>
-                            <p class="description">Deposit and Withdraw</p>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="settings_option css-cgifpv">
-                    <p class="title option_title">Profile</p>
-                    <li class="settings_option_item verification">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-user-round-check">
-                                <path d="M2 21a8 8 0 0 1 13.292-6"></path>
-                                <circle cx="10" cy="8" r="5"></circle>
-                                <path d="m16 19 2 2 4-4"></path>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Verification</p>
-                            <p class="description">Verification and confirmation of identity</p>
-                        </div>
-                    </li>
-                    <li class="settings_option_item personal">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-user-round">
-                                <circle cx="12" cy="8" r="5"></circle>
-                                <path d="M20 21a8 8 0 0 0-16 0"></path>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Personal</p>
-                            <p class="description">Your personal information</p>
-                        </div>
-                    </li>
-                    <li class="settings_option_item security">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-key">
-                                <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"></path>
-                                <path d="m21 2-9.6 9.6"></path>
-                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Security</p>
-                            <p class="description">Email, password and 2FA</p>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="settings_option css-cgifpv">
-                    <p class="title option_title">Setup</p>
-                    <li class="settings_option_item account">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-square-user-round">
-                                <path d="M18 21a6 6 0 0 0-12 0"></path>
-                                <circle cx="12" cy="11" r="4"></circle>
-                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Account</p>
-                            <p class="description">Language, currency and account</p>
-                        </div>
-                    </li>
-                    <li class="settings_option_item mining">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-coins">
-                                <circle cx="8" cy="8" r="6"></circle>
-                                <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
-                                <path d="M7 6h1v4"></path>
-                                <path d="m16.71 13.88.7.71-2.82 2.82"></path>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content">
-                            <p class="title">Mining</p>
-                            <p class="description">Manage your mining settings</p>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="settings_option css-cgifpv">
-                    <li class="settings_option_item logout">
-                        <div class="settings_option_item_icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="16"
-                                 height="16"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-log-out">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" x2="9" y1="12" y2="12"></line>
-                            </svg>
-                        </div>
-                        <div class="settings_option_item_content"><p class="title">Logout</p></div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <SettingsTab @bind-Transform="settingsTransform" @rendermode="InteractiveServer" user="user" />
     <div class="css-6ymeda"></div>
-    <div class="scrollbar-hide css-f12qtg">
-        <div class="top">
-            <div role="button" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.5"
-                     stroke-linecap="round"
-                     stroke-linejoin="round"
-                     class="lucide lucide-chevron-left">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-                <p class="top_title">Generate code</p>
-            </div>
-            <button><img src="./The Iron Markets_files/close.svg" alt="close" /></button>
-        </div>
-        <div class="content">
-            <div class="content_wrapper scrollbar-hide">
-                <div class="css-1v2i069">
-                    <div class="section">
-                        <div class="section_titles"><div class="subtitle">To generate a quarry code, simply click on the button below.</div></div>
-                        <div class="section_content">
-                            <button class="css-13x80pm" style="background-color: rgb(81, 207, 239); text-transform: capitalize; max-width: fit-content;">Generate quarry code</button>
-                            <p role="button" style="color: rgb(171, 177, 186); font-size: 13px; font-weight: 500; margin-top: 4px; cursor: pointer; transition: 0.3s ease-in-out;">How to use quarry code?</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <GenerateQueryCodeTab />
     <div class="css-6ymeda"></div>
-    <div class="scrollbar-hide css-10q5ekg">
-        <div class="top">
-            <div role="button" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.5"
-                     stroke-linecap="round"
-                     stroke-linejoin="round"
-                     class="lucide lucide-chevron-left">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-                <p class="top_title">Connect wallet</p>
-            </div>
-            <button><img src="./The Iron Markets_files/close.svg" alt="close" /></button>
-        </div>
-        <div class="content">
-            <div class="content_wrapper scrollbar-hide">
-                <div class="css-1v2i069">
-                    <div class="section">
-                        <div class="section_titles">
-                            <div class="title">Connect your wallet</div>
-                            <div class="subtitle">Connect your wallet to enjoy advanced features. The Iron Markets supports 500+ exchanges &amp; wallets, NFTs, 10,000+ cryptocurrencies, and 20,000+ DeFi smart contracts.</div>
-                        </div>
-                        <div class="section_content">
-                            <div class="toggle" style="position: relative;">
-                                <div class="css-ewwsn6">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         width="16"
-                                         height="16"
-                                         viewBox="0 0 24 24"
-                                         fill="none"
-                                         stroke="currentColor"
-                                         stroke-width="1.5"
-                                         stroke-linecap="round"
-                                         stroke-linejoin="round"
-                                         class="lucide lucide-search">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <path d="m21 21-4.3-4.3"></path>
-                                    </svg>
-                                    <input placeholder="Search for your wallet" class="no-zoom-14px" />
-                                </div>
-                                <div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/aktionriat.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Aktionariat Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/binance.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Binance</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/bitcoinwallet.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Bitcoin Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/bitkeep.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Bitkeep Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/bitpay.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Bitpay</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/blockchain.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Blockchain</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/coinbase.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Coinbase</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/coinbase-one.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Coinbase One</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/cryptocom.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Crypto Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/exodus.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Exodus Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/gemini.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Gemini</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/imtoken.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Imtoken</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/infinito.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Infinito Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/infinity.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Infinity Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/keyringpro.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Keyringpro Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/metamask.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Metamask</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/ownbit.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Ownbit Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/phantom.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Phantom Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/pulse.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Pulse Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/rainbow.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Rainbow</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/robinhood.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Robinhood Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/safepal.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Safepal Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/sparkpoint.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Sparkpoint Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/trust.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Trust Wallet</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/uniswap.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Uniswap</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div class="hoverable css-1vr3rr2">
-                                            <label style="display: flex; gap: 6px; align-items: center;">
-                                                <img src="./The Iron Markets_files/wallet.svg" alt="" style="width: 20px; height: auto;" />
-                                                <p style="font-weight: 500;">Wallet io</p>
-                                            </label>
-                                            <button class="switch_wrapper"><div class="switch"></div></button>
-                                        </div>
-                                    </div>
-                                    <div class="hoverable lighter css-1vr3rr2">
-                                        <label style="display: flex; gap: 6px; align-items: center;">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 width="16"
-                                                 height="16"
-                                                 viewBox="0 0 24 24"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 stroke-width="1.5"
-                                                 stroke-linecap="round"
-                                                 stroke-linejoin="round"
-                                                 class="lucide lucide-link">
-                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                                            </svg>
-                                            <p style="font-weight: 500;">Add new wallet</p>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <ConnectWalletTab />
     <div class="css-6ymeda"></div>
-    <div class="scrollbar-hide css-f12qtg">
-        <div class="top">
-            <div role="button" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="16"
-                     height="16"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.5"
-                     stroke-linecap="round"
-                     stroke-linejoin="round"
-                     class="lucide lucide-chevron-left">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-                <p class="top_title">Referral program</p>
-            </div>
-            <button><img src="./The Iron Markets_files/close.svg" alt="close" /></button>
-        </div>
-        <div class="content">
-            <div class="content_wrapper scrollbar-hide">
-                <div class="css-1v2i069">
-                    <div class="section">
-                        <div class="section_titles">
-                            <div class="subtitle">
-                                Invite your friends to join our platform by using your referral code on sign up! You'll earn $6,000.00 anytime your friends make a deposit on our platform. It's a win-win for everyone!
-                            </div>
-                        </div>
-                        <div class="section_content">
-                            <div class="css-d9afuz">
-                                <label>Your referral balance:</label>
-                                <div class="input_wrapper">
-                                    <input type="text" placeholder="$0.00" disabled="" value="$0.00" />
-                                    <button disabled="" class="disabled css-13x80pm" style="background-color: rgb(49, 170, 206); display: grid; place-content: center; text-transform: uppercase;">Claim</button>
-                                </div>
-                            </div>
-                            <div class="css-d9afuz">
-                                <label>Your referral code:</label>
-                                <div class="input_wrapper">
-                                    <input type="text" placeholder="d2JNR0hKN0xCMlRPQmtzcjFxVHdwSHFJWmlGMg" disabled="" value="d2JNR0hKN0xCMlRPQmtzcjFxVHdwSHFJWmlGMg" />
-                                    <button class="css-13x80pm" style="background-color: rgb(81, 207, 239); text-transform: uppercase;">Copy</button>
-                                </div>
-                            </div>
-                            <div class="css-1jeveej">
-                                <label>Statistics</label>
-                                <div class="stats_wrapper">
-                                    <div class="stat">
-                                        <p>Friends invited</p>
-                                        <p>0</p>
-                                    </div>
-                                    <div class="stat">
-                                        <p>Rewards claimed</p>
-                                        <p>$0.00</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <label style="margin-top: 16px;">Referrals</label>
-                            <div class="css-ewwsn6">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     width="16"
-                                     height="16"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.5"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     class="lucide lucide-search">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <path d="m21 21-4.3-4.3"></path>
-                                </svg>
-                                <input placeholder="Search for a referral" class="no-zoom-14px" />
-                            </div>
-                            <div class="empty_state" style="margin-top: 24px;">
-                                <svg class="svg-icon" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12.132 6.06h10" stroke="currentColor" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M14.352 2.5h5.56c1.78 0 2.22.44 2.22 2.2v4.11c0 1.76-.44 2.2-2.22 2.2h-5.56c-1.78 0-2.22-.44-2.22-2.2V4.7c0-1.76.44-2.2 2.22-2.2Z"
-                                          stroke="currentColor"
-                                          stroke-width="1.2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"></path>
-                                    <path d="M2.132 17.56h10" stroke="currentColor" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M4.352 14h5.56c1.78 0 2.22.44 2.22 2.2v4.11c0 1.76-.44 2.2-2.22 2.2h-5.56c-1.78 0-2.22-.44-2.22-2.2V16.2c0-1.76.44-2.2 2.22-2.2ZM22.132 15.5c0 3.87-3.13 7-7 7l1.05-1.75"
-                                          stroke="currentColor"
-                                          stroke-width="1.2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"></path>
-                                    <path d="M7.05 4.1 3.738 7.414M3.732 4.1l3.314 3.314" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
-                                </svg>
-                                <p>No referrals yet.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="css-igs4nd">
+    <ReferalTab />
+    <div class="css-igs4nd" style="overflow-y: scroll;
+    scrollbar-width: none;">
         <div class="sidebar_top css-aiffyg">
             <div class="logo_wrapper"><img src="./The Iron Markets_files/logo.svg" alt="logo" class="logo" style="width: 40px;" /></div>
             <div class="sidebar_items">
-                <span to="/dashboard" class="sidebar_item active">
+                <NavLink href="/user/dashboard" class="sidebar_item">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="18"
                          height="18"
@@ -649,8 +29,8 @@
                         <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     </svg>
                     <p>Dashboard</p>
-                </span>
-                <span to="/deposit" class="sidebar_item">
+                </NavLink>
+                <NavLink href="/user/deposit" class="sidebar_item">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="18"
                          height="18"
@@ -666,7 +46,7 @@
                         <path d="M12 8v8"></path>
                     </svg>
                     <p>Deposit</p>
-                </span>
+                </NavLink>
                 <span to="/withdraw" class="sidebar_item">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="18"
@@ -826,7 +206,7 @@
                     </svg>
                     <p>Copy Experts</p>
                 </span>
-                <span to="/settings" class="sidebar_item">
+                <span @onclick="UpdateSettingsTransform" class="sidebar_item settings_link">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="18"
                          height="18"
@@ -859,3 +239,29 @@
         </div>
     </div>
 </div>
+@code{
+    [Parameter]
+    public User? user { get; set; }
+
+    private string settingsTransform = "100%";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("registerOutsideClick3", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void CloseSettingsTransform()
+    {
+        settingsTransform = "100%";
+        StateHasChanged(); // Ensure UI updates
+    }
+
+    private void UpdateSettingsTransform()
+    {
+        settingsTransform = "0%";
+    }
+}

@@ -1,0 +1,79 @@
+﻿<div class="css-jli6pn">
+    <div class="chart">
+        <div class="tradingview-widget-container" style="height: 100%; width: 100%; padding: 8px; mix-blend-mode: lighten; position: relative; border-radius: 12px; background-color: transparent;">
+            <div style="background: transparent; width: calc(100% - 16px); height: calc(100% - 16px); position: absolute; top: 8px; border: 2px solid rgb(5, 0, 36); pointer-events: none; user-select: none; left: 8px; border-radius: 2px; padding: 8px;"></div>
+            <div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.498); mix-blend-mode: soft-light; pointer-events: none;"></div>
+            <style>
+                .tradingview-widget-copyright {
+                    font-size: 13px !important;
+                    line-height: 32px !important;
+                    text-align: center !important;
+                    vertical-align: middle !important;
+                     font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif !important;
+                    color: #B2B5BE !important;
+                }
+
+                    .tradingview-widget-copyright .blue-text {
+                        color: #2962FF !important;
+                    }
+
+                    .tradingview-widget-copyright a {
+                        text-decoration: none !important;
+                        color: #B2B5BE !important;
+                    }
+
+                        .tradingview-widget-copyright a:visited {
+                            color: #B2B5BE !important;
+                        }
+
+                        .tradingview-widget-copyright a:hover .blue-text {
+                            color: #1E53E5 !important;
+                        }
+
+                        .tradingview-widget-copyright a:active .blue-text {
+                            color: #1848CC !important;
+                        }
+
+                        .tradingview-widget-copyright a:visited .blue-text {
+                            color: #2962FF !important;
+                        }
+
+                .custom-range::-webkit-slider-thumb {
+                    background: #4ebe96;
+                    height: 25px;
+                }
+            </style>
+            <iframe scrolling="no" allowtransparency="true" frameborder="0" src="https://www.tradingview-widget.com/embed-widget/advanced-chart/?locale=en#%7B%22autosize%22%3Atrue%2C%22symbol%22%3A%22BTC%22%2C%22interval%22%3A%22D%22%2C%22timezone%22%3A%22Etc%2FUTC%22%2C%22theme%22%3A%22dark%22%2C%22style%22%3A%221%22%2C%22backgroundColor%22%3A%22%230c0000%22%2C%22gridColor%22%3A%22%230c0000%22%2C%22hide_top_toolbar%22%3Afalse%2C%22hide_side_toolbar%22%3Afalse%2C%22allow_symbol_change%22%3Afalse%2C%22support_host%22%3A%22https%3A%2F%2Fwww.tradingview.com%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22utm_source%22%3A%22app.theironmarkets.com%22%2C%22utm_medium%22%3A%22widget%22%2C%22utm_campaign%22%3A%22advanced-chart%22%2C%22page-uri%22%3A%22app.theironmarkets.com%2Fdashboard%22%7D" title="advanced chart TradingView widget" lang="en" style="user-select: none; box-sizing: border-box; display: block; height: 100%; width: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="trade">
+        <div class="css-0">
+            <div class="css-1e4hs4u">
+                <div class="css-1xibl81">
+                    <div class="switcher_wrapper">
+                        <button class="switcher_item buy @(currentTab==0?"active":"")" @onclick="()=>SwitchTab(0)">Buy</button>
+                        <button class="switcher_item sell @(currentTab==1?"active":"")" @onclick="()=>SwitchTab(1)">Sell</button>
+                        <button class="switcher_item convert @(currentTab==2?"active":"")" @onclick="()=>SwitchTab(2)">Convert</button>
+                    </div>
+                </div>
+                <div class="@(currentTab==0?"":"hidden")">
+                <BuyTradeComponent/>
+                </div>
+                <div class="@(currentTab==1?"":"hidden")">
+                    <SellTradeComponent />
+                    </div>
+                <div class="@(currentTab==2?"":"hidden")">
+                    <ConvertTradeComponent />
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    private int currentTab = 0;
+
+    private void SwitchTab(int tabIndex)
+    {
+        currentTab = tabIndex;
+    }
+}

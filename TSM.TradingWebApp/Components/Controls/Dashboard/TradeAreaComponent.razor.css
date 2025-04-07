@@ -1,0 +1,42 @@
+﻿/* Apply general styles */
+.custom-range {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+    /* Chrome, Safari, Edge */
+    .custom-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        background: #00a0e3;
+        border-radius: 50%;
+        box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    }
+
+    /* Firefox */
+    .custom-range::-moz-range-thumb {
+        height: 20px;
+        width: 20px;
+        background: #00a0e3;
+        border-radius: 50%;
+        border: none;
+    }
+
+    /* IE */
+    .custom-range::-ms-thumb {
+        height: 20px;
+        width: 20px;
+        background: #00a0e3;
+        border-radius: 50%;
+        border: none;
+    }
+    .custom-range::-webkit-slider-thumb {
+        background: #4ebe96;
+        height: 25px;
+    }

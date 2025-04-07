@@ -1,0 +1,109 @@
+﻿@rendermode InteractiveServer
+
+@inject IJSRuntime JS
+
+<div class="form">
+    <div class="form">
+        <div class="amount_with_dropdown">
+            <div class=" css-v6puf8">
+                <label>From:</label>
+                <div class="amountbox_wrapper">
+                    <input type="number" placeholder="0.03" class="no-zoom-14px">
+                    <div class="amount_select" @onclick="ToggleCoinsAndBalanceDropdown">
+                        <span class="icon_divider">
+                            <img src="./asseticons/JPY.svg" alt="">
+                            <p>JPY</p>
+                        </span>
+                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" fill-rule="evenodd">
+                                <g transform="translate(-1391 -130)" fill="currentColor">
+                                    <g transform="translate(1250 116)">
+                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @rendermode="InteractiveServer" />
+                <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;"><button class=" disabled css-40mlel" value="10" type="button" disabled="">10%</button><button class=" disabled css-40mlel" value="25" type="button" disabled="">25%</button><button class=" disabled css-40mlel" value="50" type="button" disabled="">50%</button><button class=" disabled css-40mlel" value="75" type="button" disabled="">75%</button><button class=" disabled css-40mlel" value="MAX" type="button" disabled="">MAX</button></div>
+                <div class="captions">
+                    <span class="caption">
+                        <p>Current JPY balance:</p>
+                        <p class="value">0 JPY</p>
+                    </span>
+                    <span class="caption">
+                        <p>Current JPY price</p>
+                        <p class="value" style="color: rgb(91, 222, 76);">$0.007</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="amount_with_dropdown">
+            <div class=" css-v6puf8">
+                <label>To:</label>
+                <div class="amountbox_wrapper">
+                    <input type="number" placeholder="0.0000" disabled="" class="no-zoom-14px" value="0.0000">
+                    <div class="amount_select" @onclick="ToggleCoinsAndBalanceDropdown2">
+                        <span class="icon_divider">
+                            <img src="./asseticons/AUD.svg" alt="">
+                            <p>AUD</p>
+                        </span>
+                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" fill-rule="evenodd">
+                                <g transform="translate(-1391 -130)" fill="currentColor">
+                                    <g transform="translate(1250 116)">
+                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @rendermode="InteractiveServer" />
+                <div class="captions">
+                    <span class="caption">
+                        <p>Current AUD balance:</p>
+                        <p class="value">0 AUD</p>
+                    </span>
+                    <span class="caption">
+                        <p>Current AUD price</p>
+                        <p class="value" style="color: rgb(91, 222, 76);">$0.607</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="divider_24px" aria-hidden="true"></div>
+    <button class="disabled css-nncgg" disabled="">
+        <p> Convert</p>
+    </button>
+</div>
+@code{
+    private bool isCoinsAndBalanceDropdownOpen = false;
+    private bool isCoinsAndBalanceDropdownOpen2 = false;
+    private void ToggleCoinsAndBalanceDropdown()
+    {
+        isCoinsAndBalanceDropdownOpen = !isCoinsAndBalanceDropdownOpen;
+    }
+    private void ToggleCoinsAndBalanceDropdown2()
+    {
+        isCoinsAndBalanceDropdownOpen2 = !isCoinsAndBalanceDropdownOpen2;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("registerOutsideClick2", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void CloseCoinsAndBalanceDropdown()
+    {
+        isCoinsAndBalanceDropdownOpen = false;
+        isCoinsAndBalanceDropdownOpen2 = false;
+        StateHasChanged();
+    }
+}
