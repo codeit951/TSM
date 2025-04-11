@@ -1,0 +1,17 @@
+﻿@page "/user/assets"
+
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+
+<link href="pages/assets.css" rel="stylesheet" />
+<div class="scrollbar-hide css-66hwna">
+    <div class="css-51u8x3">
+        <div class="top">
+            <BalanceComponent />
+            <ActivitiesComponent />
+        </div>
+        <AssetsListComponent />
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿.page {
+    transition: 300ms ease-in-out;
+}
+.slide-left {
+    transform: translateX(0%);
+    
+}
+.slide-right {
+    transform: translateX(-100%);
+}

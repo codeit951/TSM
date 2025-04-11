@@ -15,16 +15,18 @@ namespace TSM.CoreBusiness
         public string Password { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
-        public string Default_Currency { get; set; } = string.Empty;
+        public string Default_Currency { get; set; } = "USD";
         public string ReferralCode { get; set; } = string.Empty;
         public string ReferrerCode { get; set; } = string.Empty;
+        public string Plan { get; set; } = string.Empty;
         public string _2FAKey { get; set; } = string.Empty;
         public StatusType Status { get; set; } = StatusType.InActive;
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime LastLogin { get; set; } = DateTime.UtcNow;
         public List<string> Roles { get; set; } = new();
         public StatusType EmailStatus { get; set; } = StatusType.Pending;
-        public byte[] ProfileImage { get; set; }
-
+        public byte[]? ProfileImage { get; set; }
+        public List<Balance>? Balances { get; set; }
+        public List<Trade>? Trades { get; set; }
     }
 }

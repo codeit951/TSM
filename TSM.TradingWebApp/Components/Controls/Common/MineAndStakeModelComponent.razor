@@ -1,0 +1,83 @@
+﻿<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl" style="display:@(IsActive? "block":"none")">
+    <div aria-hidden="true" class="MuiBackdrop-root MuiModal-backdrop css-919eu4" style="opacity: 1; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);"></div>
+    <div tabindex="0" data-testid="sentinelStart"></div>
+    <div tabindex="-1" class="css-1ocdasm">
+        <div class="modal_top" style="color: white;">
+            <p class="modal_top_title">Mine BTC</p>
+            <button @onclick="CloseModal"><Icon Name="IconName.X" /></button>
+        </div>
+        <div class="modal_content">
+            <div class="css-v6puf8">
+                <label>Amount:</label>
+                <div class="amountbox_wrapper">
+                    <input type="number" placeholder="0.02273" /><span class="amount_select"><p>BTC</p></span>
+                </div>
+                <div class="captions">
+                    <div class="captions">
+                        <span class="caption">
+                            <p>Current BTC balance:</p>
+                            <p>0 BTC</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="css-1azirga">
+                <label>Duration:</label>
+                <div class="select_wrapper">
+                    <select name="options">
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5">5 days</option>
+                        <option value="6">6 days</option>
+                        <option value="7">7 days</option>
+                        <option value="8">8 days</option>
+                        <option value="9">9 days</option>
+                        <option value="10">10 days</option>
+                        <option value="11">11 days</option>
+                        <option value="12">12 days</option>
+                        <option value="13">13 days</option>
+                        <option value="14">14 days</option>
+                        <option value="15">15 days</option>
+                        <option value="16">16 days</option>
+                        <option value="17">17 days</option>
+                        <option value="18">18 days</option>
+                        <option value="19">19 days</option>
+                        <option value="20">20 days</option>
+                    </select>
+                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fill-rule="evenodd">
+                            <g transform="translate(-1391 -130)" fill="#ffffff">
+                                <g transform="translate(1250 116)">
+                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
+                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class="css-v6puf8">
+                <label>ROI:</label>
+                <div class="amountbox_wrapper">
+                    <input type="number" placeholder="80%" disabled="" value="80%" /><span class="amount_select"><p>%</p></span>
+                </div>
+                <div class="captions"></div>
+            </div>
+            <button disabled="" class="disabled css-nncgg"><p>Mine</p></button>
+        </div>
+    </div>
+    <div tabindex="0" data-testid="sentinelEnd"></div>
+</div>
+@code{
+    [Parameter]
+    public bool IsActive { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsActiveChanged { get; set; }
+    private async Task CloseModal()
+    {
+        IsActive = false;
+        await IsActiveChanged.InvokeAsync(IsActive);
+    }
+}

@@ -10,8 +10,10 @@ namespace TSM.CoreBusiness
     {
         public int BalanceId { get; set; }
         public int AssetId { get; set; }
+        public Asset? Asset { get; set; }
         public Guid UserId { get; set; }
         public decimal Available { get; set; }
+        public decimal Locked { get; set; }
         public StatusType Status { get; set; } = StatusType.Active;
     }
 }

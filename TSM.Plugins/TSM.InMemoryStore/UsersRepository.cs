@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSM.CoreBusiness;
+using TSM.UseCase.PluginInterfaces;
 
 namespace TSM.InMemoryStore
 {
-    public class UsersRepository : IUserStore<User>, IUserPasswordStore<User>
+    public class UsersRepository : IUserStore<User>, IUserPasswordStore<User>, IUserRepository
     {
         private readonly List<User> _users;
 
@@ -28,15 +29,29 @@ namespace TSM.InMemoryStore
                 Default_Currency = "USD",
                 ReferralCode = "Test123",
                 ReferrerCode = "Test123",
-                UserID = Guid.NewGuid(),
-                Status = StatusType.Active,
+                UserID = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                Status = StatusType.InActive,
                 CreatedOn = DateTime.UtcNow,
                 LastLogin = DateTime.UtcNow,
                 Roles = new List<string> { "User" },
-                EmailStatus = StatusType.Active
-
+                EmailStatus = StatusType.Active,
+                Plan="Starter"
             }
         };
+        }
+
+        public Task AddTrade(Guid userID, Trade trade)
+        {
+            var user = _users.FirstOrDefault(u => u.UserID == userID);
+            if (user != null)
+            {
+                if (user.Trades == null)
+                {
+                    user.Trades = new List<Trade>();
+                }
+                user.Trades.Add(trade);
+            }
+            return Task.CompletedTask;
         }
 
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
@@ -79,6 +94,19 @@ namespace TSM.InMemoryStore
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken) => Task.FromResult(user.Email);
 
+        public Task<List<User>> GetUsersByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return Task.FromResult(_users);
+            }
+            else
+            {
+                var users = _users.Where(u => u.FirstName.Contains(name, StringComparison.OrdinalIgnoreCase) || u.LastName.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                return Task.FromResult(users);
+            }
+        }
+
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken) => Task.FromResult(!string.IsNullOrEmpty(user.Password));
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
@@ -101,7 +129,75 @@ namespace TSM.InMemoryStore
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var existingUser = _users.FirstOrDefault(u => u.UserID == user.UserID);
+            if (existingUser != null)
+            {
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.Email = user.Email;
+                existingUser.Password = user.Password;
+                existingUser.Phone = user.Phone;
+                existingUser.Country = user.Country;
+                existingUser.Default_Currency = user.Default_Currency;
+                existingUser.ReferralCode = user.ReferralCode;
+                existingUser.ReferrerCode = user.ReferrerCode;
+                existingUser.Status = user.Status;
+                existingUser.CreatedOn = user.CreatedOn;
+                existingUser.LastLogin = user.LastLogin;
+                existingUser.Roles = user.Roles;
+                existingUser.EmailStatus = user.EmailStatus;
+                existingUser.Plan = user.Plan;
+                existingUser.ProfileImage = user.ProfileImage;
+                existingUser.Balances = user.Balances;
+                existingUser.Trades = user.Trades;
+
+            }
+            return Task.FromResult(IdentityResult.Success);
+        }
+
+        public Task UpdateTrade(Guid userID, Trade trade)
+        {
+            var user = _users.FirstOrDefault(u => u.UserID == userID);
+            if (user != null && user.Trades != null)
+            {
+                var existingTrade = user.Trades.FirstOrDefault(t => t.OrderID == trade.OrderID);
+                if (existingTrade != null)
+                {
+                    existingTrade.ClosePrice = trade.ClosePrice;
+                    existingTrade.Status = trade.Status;
+                    existingTrade.IsCopied = trade.IsCopied;
+                    existingTrade.CopiedTradeID = trade.CopiedTradeID;
+                    existingTrade.CopiedUserID = trade.CopiedUserID;
+                    existingTrade.FeePaid = trade.FeePaid;
+                    existingTrade.Fee = trade.Fee;
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateUserBalance(Guid userID, List<Balance> balances)
+        {
+            var user = _users.FirstOrDefault(u => u.UserID == userID);
+            if (user != null)
+            {
+                if (user.Balances == null)
+                {
+                    user.Balances = new List<Balance>();
+                }
+                foreach (var balance in balances)
+                {
+                    var existingBalance = user.Balances.FirstOrDefault(b => b.BalanceId == balance.BalanceId);
+                    if (existingBalance != null)
+                    {
+                        existingBalance.Available = balance.Available;
+                    }
+                    else
+                    {
+                        user.Balances.Add(balance);
+                    }
+                }
+            }
+            return Task.CompletedTask;
         }
     }
 }

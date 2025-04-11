@@ -1,10 +1,13 @@
 ﻿@page "/login"
+@using TSM.InMemoryStore
 
 @layout Layout.AuthLayout
 @inject NavigationManager NavigationManager
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IViewAssetsByNameUseCase ViewAssetsByNameUseCase
+@inject IUpdateUserBalanceUseCase UpdateUserBalanceUseCase
 
 <div class="css-1ne255a">
     @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -67,20 +70,27 @@
     [SupplyParameterFromForm(FormName = "LoginForm")]
     private LoginModel loginModel { get; set; } = new();
 
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
     private string ErrorMessage = string.Empty;
 
     private ToastComponent? toastComponent;
 
+    private User? user;
+
     private async Task HandleLogin()
     {
 
-        var user = await UserManager.FindByNameAsync(loginModel.Email);
+        user = await UserManager.FindByNameAsync(loginModel.Email);
         if (user != null && await UserManager.CheckPasswordAsync(user, loginModel.Password))
         {
+            //await setBalance();
             var result = await SignInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
             if (result.Succeeded)
             {
-                NavigationManager.NavigateTo("/user/dashboard", forceLoad: true); // 🔹 Reload page to prevent rendering issues
+                var targetUrl = string.IsNullOrWhiteSpace(ReturnUrl) ? "/user/dashboard" : ReturnUrl;
+                NavigationManager.NavigateTo(targetUrl, forceLoad: true); // 🔹 Reload page to prevent rendering issues
             }
             else if (result.IsLockedOut)
             {
@@ -109,6 +119,25 @@
             toastComponent?.ShowToast(MyToastType.Danger, "Success!", ErrorMessage);
             return;
         }
+    }
+
+    private async Task setBalance()
+    {
+        var assets = await ViewAssetsByNameUseCase.Execute();
+        List<Balance> balances = new List<Balance>();
+        foreach (var asset in assets)
+        {
+            balances.Add(
+            new Balance
+                {
+                    AssetId = asset.AssetId,
+                    UserId = user.UserID,
+                    Available = 200,
+                    Locked = 0
+                }
+            );
+        }
+        await UpdateUserBalanceUseCase.ExecuteAsync(user.UserID, balances);
     }
 
     public class LoginModel

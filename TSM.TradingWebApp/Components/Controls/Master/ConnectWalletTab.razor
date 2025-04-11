@@ -1,6 +1,6 @@
-﻿<div class="scrollbar-hide css-10q5ekg">
+﻿<div class="scrollbar-hide css-10q5ekg" style="transform: translateX(@Transform);opacity:1;">
     <div class="top">
-        <div role="button" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
+        <div role="button" @onclick="UpdateTransform" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="16"
                  height="16"
@@ -15,7 +15,7 @@
             </svg>
             <p class="top_title">Connect wallet</p>
         </div>
-        <button><Icon Name="IconName.X" /></button>
+        <button @onclick="UpdateTransform"><Icon Name="IconName.X" /></button>
     </div>
     <div class="content">
         <div class="content_wrapper scrollbar-hide">
@@ -304,3 +304,17 @@
         </div>
     </div>
 </div>
+@code {
+    [Parameter]
+    public string Transform { get; set; }
+    [Parameter] public EventCallback<string> TransformChanged { get; set; }
+
+    [Parameter]
+    public User? user { get; set; }
+
+    private void UpdateTransform()
+    {
+        Transform = "100%"; // Update locally
+        TransformChanged.InvokeAsync(Transform); // Notify Parent
+    }
+}

@@ -840,6 +840,7 @@ ul {
     transform: translateX(-100%);
     padding: 24px 16px 16px;
     opacity: 0.75;
+    touch-action: pan-y;
 }
 
     .css-ytotl3 .user_avatar {

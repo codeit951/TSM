@@ -1,0 +1,76 @@
+﻿<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl @(IsActive?"":"hidden")">
+    <div aria-hidden="true" class="MuiBackdrop-root MuiModal-backdrop css-919eu4" style="opacity: 1; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);"></div>
+    <div tabindex="0" data-testid="sentinelStart"></div>
+    <div tabindex="-1" class="css-13lqfnw" style="scrollbar-width: none;">
+        <div class="modal_top" style="color: white;">
+            <p class="modal_top_title">Withdraw</p>
+            <button type="button" @onclick="CloseModal"><Icon Name="IconName.X" /></button>
+        </div>
+        <div class="modal_content">
+            <p class="modal_description">To make a withdraw, choose your preferred method, enter an amount and payment details.</p>
+            <div class="css-1azirga">
+                <label>Type:</label>
+                <div class="select_wrapper">
+                    <select name="type" id="type">
+                        <option value="crypto">Crypto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="css-184mof1">
+                <label>Method:</label>
+                <div class="select_wrapper">
+                    <img src="/asseticons/SOL.svg" alt="SOL" />
+                    <select name="asset" id="asset">
+                        <option value="SOL">Solana</option>
+                        <option value="ADA">Cardano</option>
+                        <option value="XRP">Ripple</option>
+                        <option value="LTC">Litecoin</option>
+                        <option value="ETH">Ethereum</option>
+                        <option value="BTC">Bitcoin</option>
+                        <option value="USDC">USD Coin</option>
+                    </select>
+                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fill-rule="evenodd">
+                            <g transform="translate(-1391 -130)" fill="#ffffff">
+                                <g transform="translate(1250 116)">
+                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
+                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class="css-v6puf8">
+                <label>Amount:</label>
+                <div class="amountbox_wrapper">
+                    <input type="number" placeholder="0.00000000" />
+                    <div class="amount_select">
+                        <img src="/asseticons/SOL.svg" alt="icon" />
+                        <p>SOL</p>
+                    </div>
+                </div>
+            </div>
+            <div class="css-v6puf8">
+                <label class="divide"><p>Address :</p></label>
+                <div class="amountbox_wrapper">
+                    <input type="text" placeholder="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" value="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" /><button class="amount_select"><p>Copy</p></button>
+                </div>
+            </div>
+            
+            <div class="modal_footer"><button disabled="" class="disabled css-nncgg">Withdraw</button></div>
+        </div>
+    </div>
+    <div tabindex="0" data-testid="sentinelEnd"></div>
+</div>
+@code{
+    [Parameter] public bool IsActive { get; set; } = false;
+
+    [Parameter] public EventCallback<bool> IsActiveChanged { get; set; }
+
+    private void CloseModal()
+    {
+        IsActive = false;
+        IsActiveChanged.InvokeAsync(IsActive);
+    }
+}

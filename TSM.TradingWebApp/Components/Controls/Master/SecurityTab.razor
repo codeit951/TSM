@@ -1,0 +1,175 @@
+﻿<div class="scrollbar-hide css-7v5cjc" style="transform: translateX(@Transform); opacity: 1;">
+    <div class="top">
+        <div role="button" @onclick="UpdateTransform" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+            <p class="top_title" style="text-transform: capitalize;">Security Settings</p>
+        </div>
+        <button @onclick="UpdateTransform"><Icon Name="IconName.X" /></button>
+    </div>
+    <div class="content scrollbar-hide css-inwg8j" style="background-color: transparent;">
+        <div class="css-94nc50">
+            <div class="form">
+                <div class="section">
+                    <div class="section_titles">
+                        <div class="title">Password</div>
+                        <div class="subtitle">Edit your sign-in password.</div>
+                    </div>
+                    <div class="section_content">
+                        <div class="css-1vv7r1s">
+                            <label for="password">Current password</label>
+                            <div class="input_wrapper">
+                                <input type="password" placeholder="Password (min. of 6 characters)" class="no-zoom-14px" />
+                                <button class="show_btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="lucide lucide-eye">
+                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="css-1vv7r1s">
+                            <label for="password">New password:</label>
+                            <div class="input_wrapper">
+                                <input type="password" placeholder="Your new password (min. of 6 characters)" class="no-zoom-14px" />
+                                <button class="show_btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="lucide lucide-eye">
+                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="css-1vv7r1s">
+                            <label for="password">Confirm new password:</label>
+                            <div class="input_wrapper">
+                                <input type="password" placeholder="Retype your new password" class="no-zoom-14px" />
+                                <button class="show_btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="lucide lucide-eye">
+                                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="section_footer">
+                            <button disabled="" class="disabled css-nncgg"><p style="text-transform: uppercase;">Save</p></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section_titles">
+                        <div class="title">Set up 2-Factor Authentication</div>
+                        <div class="subtitle">Add an extra layer of security to your account.</div>
+                    </div>
+                    <div class="section_content">
+                        <button class="css-yxtzq2" @onclick="Show2FA" style="display:@(is2FA?"none":"block")"><p style="text-transform: uppercase;">Enable Google Authenticator</p></button>
+                        <div class="two-factor-auth" style="display:@(is2FA?"block":"none")">
+                            <p style="font-size: 12px; line-height: 18px; text-align: center; color: rgba(255, 255, 255, 0.65);">Set an additional protection layer on your account. We will request a verification code for login and certain transactions.</p>
+                            <div class="qr-container" style="display: flex; flex-flow: column; align-items: center; gap: 12px; margin-bottom: 24px;">
+                                <div class="two-factor-auth-qr" style="height: 180px; width: 180px; display: flex; background: rgb(255, 255, 255); padding: 6px; border-radius: 12px; margin: 24px auto 0px;">
+                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAADkCAYAAACIV4iNAAAAAXNSR0IArs4c6QAAF8VJREFUeF7t3d2y2zquBODk/R86UzNXR15V+tynQdk7G7kFiZ9GN0jJXs7vP3/+/Pm1/xaBReArEPi9gvyKPmwSi8D/EFhBLhEWgS9CYAX5Rc3YVBaBFeRyYBH4IgRWkF/UjE1lEVhBLgcWgS9CYAX5Rc3YVBaBFeRyYBH4IgRWkF/UjE1lEVhBLgcWgS9CYAX5Rc3YVBaBFeRyYBH4IgRWkF/UjE1lEVhBLgcWgS9CYAX5Rc3YVBaBWpC/f/9+FEX9+abyOb1fYLzmp3xe/aX70/XKX/m82l/rU3+0X/HbeGn9ab7yv4J8QUiESQWUEogNexmAymcF+V0HBvvb/oGyCKwEUntKwHSCqR7FVz2tQNL96XrlrwEjvIWv9iv+npB7ZY043Aok3Z+uj4r571+4o/+tQDQAVZ/yS+vVeuWr/eNX1jahdAJqvQBICaP1qT3Nv8U3Jeh0Pco/zU8nqgQrfsg+7X8F+fIbXyJEStC0YWl8ESYV/DTBp+tXvWl/5E/2tD76m36G1ARUQiKQ/IvQKeHS9S0hlL/qF77y39b7dP+m8xV+bX3yvyfknpC3HJkeMBoo6cBYQb4goCM7BTglgPzLnxqqiaaJqf3KLyWw1itf7Ve/Ve/0fvVP8cSf1r/w+NGP01fW0wXLvwgvwGNAw7fOyu/bBCKCC6/p/eqf4ok/rX/hsYIMX9PHgK4gbyGTQIS3BJQOOPlbQeKZToCnAGq9CKIroParnj0hrwhKQCme8id+tAPmrz8h04ZIUPKnhkmQbXwJVv7T/KbxkCAUT/VLMIqv/sp/iu/xt6ynCxYgsouwIoQaFjcE31VN61F9aX7TeIgfireCfOmgCCLARejU/6cbKIJIAG29qX+tT/uj9emA+HQ/VY/6leK7J+TwgFlBXgEVHhrYK8hQ0poQArydQN8ef/pECNvzY7kInvqX4FS/8kn9t/FU//F8/7bPIQXYNOAaCCJIOpCUv+wtPspX8YWX7PIvvNv6tb8eICvI+yuWCCK7CCKCpzcMEVaE0n7lq/3CS3b5F95t/dq/ggzfSqqhKeApgSQwxVf+sk/7TwkovGRXfSvI8CclTgMqgrSCeNp/S9BP16sTVflpv/jU4ve0/+NvWVWQ7AJUdk1MNfzT/tP431Zviq/4oIGo+tP9yqftz498Tz9DqiDZVbDsalBKGDVUE19XxtSe4vd0vWk81SP81e90v/JJ+Ud/K8grRK0gVpD3lBO+ImwqqGnBnBb8+JVVgLZ2NXTtfy4Qi5D/NnvLP+1PB8bxK6sSbu0ruBXc/+VQOlBa/mn/CjL82GMF/e8WtATV2leQK8gLh3bg3A+cVnDa/3FBKsHT9k9fWdIGTL/0Eb4pPhK04mm/8FK+p1+qqL7T9vqlzukE5V8NlADkX3YRTAR6tbeEVrzUf4pf6j/Nt12vfn7avoIsO7CCvAK4guwItYLs8Pu1glxBlhS6bK8F+fSVUQJQPrryCFydANqfXlFTf+l61XPaLjxUj/qdXrkVT/zTftlXkMM/2yjARcBpAimf04KTf+Gh/FeQLwh9GyDKZ0/I7oopfFP7CvKKwJ6Qe0Jen2Ee/lx3BTksyOkTR1cU2T995VN+wqt9RklPqPRKmdaX+lf9qi/NT3xRPmk8ra9PSBFMCUwXLICVT2pv8z9NMAlC9hQPnXjqj/A8jZfyb/HQ/hWkEIJdBJL70wST4GRX/rKn/oXnabxWkC//l4caLLsmsPandhFI/k4TTIKQXfnLnvoXnqfx+scLMhVACrgaLgDVQOU/TSjVk+YrPBUvtQsv+VO+qX/1R/GUb5uP/P945Jv+xQAlIIBSAFaQ179uEP6tfbo/Pwg5/NZbfBMeab11vBXk79ueaAJrIKjhIqTitwRo80v3K99WALphpPm2+cTxVpAryIQ0KUHTgZX6Pz2w2nwSbP+7tn7LmiacJijA04anJ5LyVf06EdJ8dAKk+aTrUzzS/k33U/nKnuaf9vvjz5ACQA15mkDK9+l8VpD3HVE/1M+n+beCfEFABFcDRYB0Yiqf1P40wdr8lG/bD+1X/Ol+ryBXkBcEpgm2guzeej/+DJneyacnmuK3J1qbb/tMmU74tl7hmeKh9YqX2hVPdg0g7f/4CSnA0gJaAraA6oRRPRKE8lN84a340wNCeMie1iP8FE/2af97Qpb/e5cEoYZKEGq44qcEVr5tPvIve1qP8lU82af9ryBXkOLc7TOnBBI5f2Ox4qX2N0LeLvk6QZ6+0ghgXVmVX9uQdH97Iqbx0vqVn+KLoLKn+Sqf1K760/zT+PUJKQBTQUlg6RVN+aWAtes/3nB8V1T5qX4RVvZP90v1p/kLrx/1tl+dE4AryCtCH2/4CvJWIx/vzwoynWHd+o83fAX5dwsyPcK1XlfS9kqr/Z3cfv1q82/j68ai+pW/Bsrp+Mq/xa/lZ4rP+JVVBahBT19pn26oCNI2UP5TgaXrn47/dP9Sfrb9rF/qrCCvFBGhTxNKA1DxlX9KuNSf1it/DQjZxWfll+KzJ+QLAi2AqQBOEyrN5/QJkBJY60/j99cLUgVqYqUEk7+WgKpHduWX7heBNXAUr7Wrf8pPeMkufLRf9un8j19Z1VAVrIam+1eQ91ds4ZPa1b9pQiteyhetn85/BRl+DKABI7sanO7XCSDCKF5rl0CUn/CSXfhov+zT+a8gV5AXzqUnoAS7gpSkX24sp78Y0D6Ea8KlBMrg8eo0v5agEoDySfuheELo9H75Fx464dr9wucHH1aQKWT3z2CnCd8S8HR+7cBJ97d4rCDD/zognVBqUCe/n7vT/FLCpeuVzwryisAKcgV5YUQ6QLR+BXn9TRvh8dcJ8mmC6MTQCaAGpfvV0NMnsuK39ab5K176zN/6U/7CT3xL9yufx9+yKqG0wKcbpgGk+lp7Gl/4aACl+SreCvIe0RUkGJcSKCVwun4Fef8MqIHQDqAU/7i/7VtWJfg0QAK8zUf1pg1I16fx23rb/NJ+aACm/pR/eyNL9yuf4ydkegdvCaT9angLcCoYNSi1q/7Un/BQvW0+ip/yS/Wrnul4P/ydPiHTAtIGSmDpRE0JkNYnQrT2FD/FEx4icJuP4k/jr3qm460gXz52SRsgAk/7UzwRJN2vAaZ46YBUfitIIfRiTwmo9elETQmg9SkBUoKG8MbLU/wUQHhM9zMdCNP4q57peOMnpBIUwCKQBCT/aX4tQbU/bbj8tXblo/608bVfA0H70/4rnvBK81lBhv+HfSp4NeR0QxVfBE0HYBovXS+BpP40YBTvdP/qt6xqsAidApSuT/NTg9Uw7T/dUMUXHivI+/9O7nT/VpAhg1eQIWDl8hZvDSAdGNo/nl/7sYcSTguWP01wAaQJJ3ua3/R68butX/5lfxo/8Wv6RtXyj/itIO//OmCa4C1h1dDpfBVveuCk+a8g0aF2IqUNbgneTrzp+KpfAkkJrfWKp3zlv8VvBbmCvCDQEiolrASS+tN6xVtB/r5A0OI5/lJHDUwJPN1wTVTlr3zkXzcI7U/zS/OV//ZGkebTxhPeqYBa/grfFWT4CwbThFKDUsLInwiq/a1ApvETPqpX+5Vvul/4riBXkOLI7ZWsPTFSwaTxUv8CI40vfz8EP/2WVQm0BaX7pxuiiakrp/LRfuErexpf+aT9mMZPJ5Tq1X7lm+5nf1pBnm6IChBhtD9tWFqv/Cv/dL/qHSdQ+FXENL7wnsan7Uda3/gJKcBEkGlAU0AUv31mkv+WAMJX/tP9OjHkr+2P+qH4qT2Nl9a3gnxBQIJRQ9QA+Zdg0v0inPLV/hXk9WMO9S/Gc6+sGcDpjSAVlAZA2uBpwqwgM76k/arfsk4TLp3gii+Cyy5A0/1tfdP7hZ/ql+DTAZbGa/23+9N8tX4FiZ/0EIAryCtCwiMdKMK/FVS7X/ml9hXkCjLlzO36FWQH5wpyBdkx6GX3CrKD8+sFqStF+gwkwnRw/tytK9p0/qqvzafdL3zlXy+V0vpb/FVPal9Bhh9spwCLYC0h0oHV5tPuF37yv4IEgp8m1HR8ESa1i2DT+acnhAiut6jpfuEnvBQvrb/FX/Wk9j0h94S8cEYElWC0XwSV/xVkeEK2E6ptSDvRlb8IldrTeC0+2p8KSv4kIOEl/7qyy//pehX/Bz6nv6kjwGRXQQK0baj8Kz/ZV5D3CLX9E/5pf5WP4sk+fmUVwVI7C8CVUwBqIKQNU746wRVP9ehE0n7FV/6qf9q/+vd0Poon+wryRdAaGAI0tafxJKgV5P0PHQsf9S/FX/6OX1mVQEpA+dPETieoJrgaku5XfvLX4pPub/NR/1t7Wk/KH/kXP7R//IRUQAGu/bLLvwAT4ab3ryDvf7Xt0/iIDxK0+LonJH5DRw1YQd7/+ZEImA7MFaQQfbGLwJog6X6llzY8faZYQa4g7zgofoi/9ZW1JbQEKYGpQNkFYJqf4rV4ab/qafefxiPFL61n+sRN8VZ9K8jDV1g24PDHNml8EWwFeUVUeAn/8WdITaj2yron5Nn/r1AnRtvflJDtetWT2pXPCnL4u6cC9PSJ0PoXwUSodH+br/Jp7aontSsf8Uf7x09IFagJq4JEgLTg9MRN1ysf1Su85D+1q742X+0Xf9R/+W/xnMZH/amfIQWoABGgaogK/LYrs+oVXmm9Wj9NuGk+qP+n8ZzGR/1YQYYvVUQQAX6aQIqfDqg2X+2XgIW3/LcDbgX5gqAaMk3AlLBtfO2frj+tryW89q8grx2pT0hNoOkJowZO55PGU3wJUARO/af+5F/9TOtr8VW+6QBK89f61L6CDP/aIyV4esJN+0/9ieAryOyvSVaQuPKKUKldgK8grwhN46sBsifkwyeOTgBdiVr7CjL7busK8p4x9ZVVJ4AEk0640xNPAk0FqPpT/LRe+KT5T/uTINN46ldrT/mpfhP/6d/USQFNC5b/lrBqIAHFDSGtNyWw8Enzn/aX1iOCq1+tve2X8P7hfwV5fUhXAwVwul8DJCXwtICm/aX1rCDFOLw0mW6g0kkbrPxSQWmCpoRK80vx0fp0QKT+0n6l+Ml/ald/1S/h8/gJmSakAlvBCGA1TPnJv/BQ/KftqkeCUb3T9nSgaH3a77ae4y912gRTAqbxJHA1TITUfjU8zS/FS/5XkFcE1O+Uf3tC4sotQktAIrAapvhP21XPaYIKL+WnfrUDM81P6/eEDD83VYNTgsifTrDTdtWzgpTEMnstyCxcvvrTE0zxRchpwUjAQlj1aL/qTQWc4tPmp3jT+Svf8StrGjBdnxIoJYzyUXzFEwFS+wryvmNtP1aQUIQE0RJ0BSkErnYRfprQ0/3XAJzOP0P316+9spYDQQQVAVJ7O4BSgk/Ha19KieBtP/46QaYNbxuk/WpgaxcB5F+C1P7Urv6keGq98FH9ab6poNL1bT7q1/gJqYQ1cdMGiRACoLWLcPKverU/tas/KZ5aL3xUf5pvKrB0fZuP+rWCFEKwi3ByL0Jqf2pPCdWuFz6qP42fCixd3+ajfq0ghdAK8haBPSGv8GgAiW61IDXhpieQCtKVWPk87V+EVj3CP53o8if8akKGf76mfql+7W/rkf8feE7/+ZUKUMNbAEVgESoFMK1X+al+CVj2NH5an9YLX/FD+5/ub5qP1u8JWf7XBCJgK7BWQG38tD6tJyH3hMR//wQE04mm9SKQGioCPz1BVc/pE62NL4Gpn2m/TvtL81H9qT+tr09IETwtaLohyk8ASeAifLu/FazqU/7T8RVP+YpP4o/iy7/4lO4ff4acTlCAqmGyqyHanxJ0BXlFYBr/lH+Knwpqmq97QkqBL/YV5P3PPorQEoTakfpP+yX/6QBQPXtCDr/ESQnWEkTxWkJNn+gicEpY1acT6zR+yk/1Pn5CCrC2gSK8AFPDBGhLaPlP62vrSfHSetU3na/4lsZr62P97eeQElBKIPlTQU/Ha/PR/lTgqr+Np/60hE0F8jQ+bX3Cf0/IF4RaQqQEUYNSfyvI7Hd2036vIMNnPhFSgKYNkqCUj/avIDOEhLfsiib+aL/s9QmZ3tFTQFoAns5Pgm7rl//TAlY/UrxFUMXTfuE17b/21z5Dpg1oCakGpM84af4p4Z9en8ab7keLp/Jv+3/a/woSHUoJ0hI0ncjT60W4FA/5awegBFYTHI880/5rf3tCXj/oXkHOfvCf4pkOAAk6HXjylw6g2F8ryOkEBeB0w5R/Gi89gTRRn/YnAqX5tPgpn1TwwlvxTtvrlzoidArACvKKaCoA4S1/Ipz2q39pfspnBVk+swlgNTSduIqngZLGSwmbElQEbP0Jr7S+Fj/lIzzS+Ip32r4n5AvCGggt4UVoDQgRsM1PhFP+0/gpH+Gxgiw/yFcDRFjtF2G1X4RrCZD6V76pXQSXfbr+tF/pwEj9p3im64+fkEqoBSQl8LfHS+sRvqldgpN9BZkifl2/ggzxSwWTDoDUf5g+l0twsq8gCfHtghVkiF8qmBXk9cvegltXznZ/61/xW3styG8jqASghsguwFM85G/a/jQ+345Hiq9uCMJX8VaQLz+6t4LMvrkkAq4gJcHhZ8gUcDXwNf1p/xKc7II3zVf+pu3CX/XL3vZvut5pf3tCDn+MIkLJrgavIF8mftg/4ftp+9cL8tMAPS2g4w0Z/uuEpwdEegKLP8J7+q1umo/Wp/b6GTINOL1+BXmP6ApyFh8NnJbfK8jwSqWJ3TZMAkr9y19LoPSESvMR3mn89hk3xT/FdwW5gkw5c7tehF1B4sRu/x4yBbjtvhqeTsDUn/Jv8dCJ0Np1ougRoK1P8dW/tn7tV39lb/lUn5DTDZouWPm1AIpAqkcETQWSEk7rZU/rU73CU/m09tP1yP8Ksvvf+H7gqwGghrSE0n4JIh0Aqkd2DcQ0H9Uvu/KVXfVo/wpyBXnhSCoAEUx2ETjNR4KTXfnKrnq0f1yQbUKnryztCZHmpwbIn/KV//TEnias/Mmu+k7jIz5rYKT5ryDL77KON+TDXww4LRDhlQ6QFeQLAgI4nRA6MUQY2dXAtJ50vfAQITWxhZ/ip/i1/k7HU34t3uP9n/7YIyVMCpgaKPsK8h7xFD/1T/5kl3/1U/v/dYJUwQJUE6j1/3TD0nqVX2uXINoB2/Znuv/CS/UqH/mX/fgz5Lc1RICnVz75U/0ShBrY2hVf9Sm+6k8HlPJVPrKr3hXky0uOtiECfAV5/wfKInSK3wryisCekGCYJrwEnu7X+lQQWq8Bp/rkP60nzSf1r3xV756Q4QnZNjTdrwa3dhFO+abxU3/T61N/6Qmb4pH6l6AV/687IdXQabsAbu0ryPv/jSsVTNuPlD9pvBVkeQKngKfrV5AryIgzulOLUOmESydUml/qPwLr/7FY+CnfNGTqb3p96i/lT4pH6n+vrOFXzSTQ9C2hGpAKKo3fEibNbxo/CSQVaNoPrU/7kfr74f/0N3XU8H86odQA1d/u/6fjt4K8IvDXPUO2BJ2eiCvI7Bkw7Z/Wq58aiNqfxtcAWkHi7yFPC0qEUHwRQldM+deVcTr/tB6tl6CUv/an8T8uSCUguwg1vV/xROC2Qal/1a982nipYBVP/lSvBNb2V/kpvvI/fkIqAdkF4PR+xROhJIA0X61P7SLUtL80Xro+xbvtr/JbQYJBaoCuJGqACJw2KBW84ouwbTzhI/t0fsJbfBAeqkfx1a89IV8QahsmgrEh4e/Eyp/yEQHlPyWo4slfms/0wFV+XydIAdbaW0BSwQng1p8ImgoqzTfth/CXv3R/W4/2K9+2P/L/Y2BMfw6ZJpCuV0PVgFZA7cRV/sJD+9P6FS8dCPKn/BVP+Kf7le8KEgipoSkhP+2vbbgGTEpgEVR4Te9P+7mCPPzMI4BbQopgKSFSfyvI+y8OpPiLLxoY7QBTvopfv9RRgLUvAovA+wisIN/HalcuAscRWEEeh3gDLALvI7CCfB+rXbkIHEdgBXkc4g2wCLyPwAryfax25SJwHIEV5HGIN8Ai8D4CK8j3sdqVi8BxBFaQxyHeAIvA+wisIN/HalcuAscRWEEeh3gDLALvI7CCfB+rXbkIHEdgBXkc4g2wCLyPwAryfax25SJwHIEV5HGIN8Ai8D4CK8j3sdqVi8BxBP4DiljTJrT/1OIAAAAASUVORK5CYII="
+                                         alt=""
+                                         style="width: 100%;" />
+                                </div>
+                                <button style="display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; border-radius: 4px; outline: none; border: none; color: rgb(255, 255, 255);">
+                                    <p style="text-transform: uppercase;">Copy secret key</p>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy">
+                                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                    </svg>
+                                </button>
+                                <p style="text-align: center; font-size: 12px; font-weight: 400; line-height: 18px; max-width: 90%;">Enter 6 digit security code generated by your Authenticator app. Your name on the app will be your The Iron Markets email.</p>
+                                <noscript></noscript>
+                                <div data-input-otp-container="true" style="position: relative; cursor: text; user-select: none; pointer-events: none; --root-height: 40px;">
+                                    <div style="display: flex; gap: 8px;">
+                                        <div class="input_fa"></div>
+                                        <div class="input_fa"></div>
+                                        <div class="input_fa"></div>
+                                        <div class="input_fa"></div>
+                                        <div class="input_fa"></div>
+                                        <div class="input_fa"></div>
+                                    </div>
+                                    <div style="position: absolute; inset: 0px; pointer-events: none;">
+                                        <input autocomplete="one-time-code"
+                                               data-input-otp="true"
+                                               inputmode="numeric"
+                                               pattern="^\d+$"
+                                               maxlength="6"
+                                               value=""
+                                               class="input_f"
+                                               data-input-otp-mss="0"
+                                               data-input-otp-mse="0"
+                                               />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divide" style="display: flex; gap: 12px; align-items: center;">
+                                <button disabled="" class="disabled css-nncgg"><p style="text-transform: uppercase;">Enable 2FA</p></button><button class="css-jklrz7"><p>Cancel</p></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section_titles">
+                        <div class="title">Delete account</div>
+                        <div class="subtitle">Once you delete your account, there is no going back. Please be certain.</div>
+                    </div>
+                    <div class="section_content">
+                        <button class="css-3delch"><p>Delete your account</p></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Transform { get; set; }
+    [Parameter] public EventCallback<string> TransformChanged { get; set; }
+
+    [Parameter]
+    public User? user { get; set; }
+
+    private bool is2FA = false;
+
+    private void Show2FA()
+    {
+        is2FA = true;
+    }
+
+    private void UpdateTransform()
+    {
+        Transform = "100%"; // Update locally
+        TransformChanged.InvokeAsync(Transform); // Notify Parent
+    }
+}

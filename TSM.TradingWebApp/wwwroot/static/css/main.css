@@ -822,7 +822,7 @@ select {
     display: grid;
 }
 .hidden {
-    display: none;
+    display: none !important;
 }
 .aspect-\[1155\/678\] {
     aspect-ratio: 1155/678;

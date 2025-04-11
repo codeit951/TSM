@@ -1,0 +1,402 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-1azirga .select_wrapper {
+    background: rgba(255, 255, 255, 0.024);
+    border-radius: 8px;
+    margin-top: 6px;
+    padding: 10px 8px;
+    border: 1px solid transparent;
+    transition: border 150ms ease-out;
+    position: relative;
+    height: 40px;
+    min-width: 135px;
+    width: 100%;
+}
+
+.css-1azirga .svg_icon {
+    width: 8px;
+    height: 6px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.css-1azirga select {
+    appearance: none;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: white;
+    background: transparent;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.css-1azirga .select_wrapper:hover {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.css-66hwna {
+    height: 100%;
+    margin-top: 88px;
+    max-height: 100vh;
+    overflow: auto;
+    padding-bottom: 105px;
+}
+
+.css-frtgch {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    box-sizing: border-box;
+    max-width: max-content;
+    height: 40px;
+    width: 100% !important;
+}
+
+    .css-frtgch input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .css-frtgch input::placeholder {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+@media screen and (max-width: 768px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+    }
+}
+
+.css-1e9lxrv {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+    .css-1e9lxrv .markets_table {
+        overflow: hidden;
+        box-sizing: border-box;
+        max-height: calc(-104px + 100vh);
+        border-radius: 12px;
+    }
+
+    .css-1e9lxrv .markets_table_wrapper {
+        max-width: calc(-24px + 100vw);
+        height: calc(-170px + 100vh);
+        padding-bottom: 48px;
+        overflow: scroll !important;
+    }
+
+.css-1dwf41g .assets_section_top {
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    padding-left: 12px;
+    display: none;
+}
+
+    .css-1dwf41g .assets_section_top p:first-of-type {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+    }
+
+.css-1dwf41g .assets_section_utils {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.css-12rkt7z {
+    padding: 12px;
+    overflow: scroll;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.024) !important;
+    box-sizing: border-box !important;
+}
+
+    .css-12rkt7z .asset_table_top {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 8px 24px;
+        width: 100%;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .css-12rkt7z .asset_table_top_title {
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .css-12rkt7z table {
+        width: 100%;
+        padding: 24px;
+    }
+
+        .css-12rkt7z table thead th {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .css-12rkt7z table tbody td {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .css-12rkt7z table thead tr, .css-12rkt7z table tbody tr {
+            width: 100%;
+            gap: 12px;
+            -webkit-box-align: center;
+            align-items: center;
+            display: flex;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+        }
+
+        .css-12rkt7z table thead tr {
+            background: transparent;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .css-12rkt7z table tbody {
+            display: grid;
+            gap: 8px;
+            height: 97%;
+            width: 100%;
+            overflow: scroll;
+            padding-top: 12px;
+            mask: linear-gradient(0deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 3px, rgb(0, 0, 0) calc(100% - 18px), rgba(0, 0, 0, 0));
+        }
+
+            .css-12rkt7z table tbody tr:nth-child(2n) {
+                background: transparent;
+            }
+
+            .css-12rkt7z table tbody tr:nth-child(2n+1) {
+                background: rgba(255, 255, 255, 0.024) !important;
+            }
+
+            .css-12rkt7z table tbody tr {
+                padding: 12px 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.1s ease-in-out;
+                height: 52px;
+            }
+
+                .css-12rkt7z table tbody tr:hover {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                }
+
+    .css-12rkt7z .asset {
+        min-width: 50px;
+        max-width: 250px;
+        width: 100%;
+        display: flex;
+        -webkit-box-pack: start;
+        justify-content: flex-start;
+        gap: 2px;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+        .css-12rkt7z .asset .watchlist {
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+        }
+
+    .css-12rkt7z .asset_icon {
+        width: 17px;
+        height: 17px;
+        margin-right: 8px;
+    }
+
+    .css-12rkt7z .asset_name, .css-12rkt7z .asset_symbol {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+        white-space: nowrap;
+    }
+
+    .css-12rkt7z .asset_symbol {
+        display: none;
+    }
+
+    .css-12rkt7z .symbol {
+        min-width: 60px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: none;
+    }
+
+    .css-12rkt7z .type {
+        min-width: 60px;
+        width: 100%;
+        text-align: center;
+        text-transform: capitalize;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+    .css-12rkt7z .price {
+        min-width: 100px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+    .css-12rkt7z .price_mobile {
+        display: none;
+    }
+
+    .css-12rkt7z .fiat_price {
+        min-width: 100px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: none;
+    }
+
+    .css-12rkt7z .value {
+        min-width: 10px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+        .css-12rkt7z .value .action {
+            display: none;
+        }
+
+    .css-12rkt7z .action {
+        min-width: 50px;
+        width: 100%;
+        text-align: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        display: flex;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+        .css-12rkt7z .action button {
+            border: none;
+            cursor: pointer;
+            padding: 6px 12px;
+            max-width: max-content;
+            border-radius: 4px;
+            color: rgb(255, 255, 255);
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: 150ms ease-out;
+        }
+
+            .css-12rkt7z .action button:hover {
+                background: rgb(49, 172, 238);
+            }
+
+@media screen and (max-width: 1274px) {
+    .css-12rkt7z .asset_name {
+        display: none;
+    }
+
+    .css-12rkt7z .asset_symbol {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .css-12rkt7z .type {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1010px) {
+    .css-12rkt7z .price {
+        display: none;
+    }
+
+    .css-12rkt7z .price_mobile {
+        white-space: nowrap;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .css-12rkt7z .asset_table_top {
+        display: grid;
+    }
+
+    .css-12rkt7z .action {
+        display: none;
+    }
+
+    .css-12rkt7z table tbody tr:hover .value .action {
+        display: flex;
+    }
+
+    .css-12rkt7z table tbody tr:hover .value .value_amount {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 368px) {
+    .css-12rkt7z .value {
+        display: none;
+    }
+}

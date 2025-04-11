@@ -46,3 +46,39 @@ window.registerOutsideClick3 = (dotnetHelper) => {
         }
     });
 };
+
+window.registerOutsideClickMining = (dotnetHelper) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let mininghistory = document.getElementById("mininghistory");
+        let stake_balance_button = document.querySelector(".stake_balance_button");
+
+        if (mininghistory && !mininghistory.contains(event.target) && !stake_balance_button.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseHistory");
+        }
+    });
+};
+
+window.registerOutsideClickSubscribe = (dotnetHelper) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let subscribehistory = document.getElementById("subscribehistory");
+        let view_history = document.querySelector(".view_history");
+
+        if (subscribehistory && !subscribehistory.contains(event.target) && !view_history.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseHistory");
+        }
+    });
+};
+
+window.registerOutsideClickReferal = (dotnetHelper) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let referalPanel = document.getElementById("referalPanel");
+        let referal_link = document.querySelector(".referal_link");
+
+        if (referalPanel && !referalPanel.contains(event.target) && !referal_link.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseReferalTransform");
+        }
+    });
+};

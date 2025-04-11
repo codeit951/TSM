@@ -1,24 +1,31 @@
-﻿<div class="css-ytotl3">
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@implements IDisposable
+<ReferalTab @bind-Transform="referalTransform" @rendermode="InteractiveServer" user="user" />
+<ConnectWalletTab @bind-Transform="connectTransform" @rendermode="InteractiveServer" user="user" />
+<div class="css-ytotl3" @ref="swipeElement" style="transform: translateX(@Transform); opacity: 1;">
     <div class="mobile_menu_top">
-        <div class="css-1azk6v6">
-            <div class="left">
-                <div class="user_img_wrapper">
-                    <div class="user_avatar"><p>jl</p></div>
+        @if(user is not null){
+            <div class="css-1azk6v6">
+                <div class="left">
+                    <div class="user_img_wrapper">
+                        <div class="user_avatar"><p> @(user.FirstName.Substring(0, 1) + user.LastName.Substring(0, 1))</p></div>
+                    </div>
+                    <span class="user" style="display: block;">
+                        <p class="user_name" style="display: flex; align-items: center; gap: 6px; line-height: 18px;"><span style="height: 20px;">@(user.FirstName + " " + user.LastName)</span></p>
+                        <p>@user.Plan account</p>
+                    </span>
                 </div>
-                <span class="user">
-                    <p class="user_name" style="display: flex; align-items: center; gap: 6px; line-height: 18px;"><span style="height: 20px;">james lam</span></p>
-                    <p>Starter account</p>
-                </span>
             </div>
-        </div>
+        }
         <div class="mobile_menu_buttons">
-            <button class="settings">
+            <button class="settings" @onclick="OpenSettingsTab">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings">
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                 </svg>
             </button>
-            <button class="close">
+            <button class="close" @onclick="UpdateTransform">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
                     <path d="M18 6 6 18"></path>
                     <path d="m6 6 12 12"></path>
@@ -28,99 +35,99 @@
     </div>
     <div class="mobile_menu_navigation">
         <div class="swipeable-content" style="width: 200%;">
-            <div class="page">
-                <NavLink href="/user/dashboad">
+            <div class="page @(menuDirection=="left"?"slide-left":"slide-right")">
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/dashboard")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-house">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-house">
                         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
                         <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     </svg>
                     <p>Dashboard</p>
-                </NavLink>
-                <NavLink href="/user/deposit">
+                </button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/deposit")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-circle-plus">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-circle-plus">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M8 12h8"></path>
                         <path d="M12 8v8"></path>
                     </svg>
                     <p>Deposit</p>
-                </NavLink>
-                <button>
+                </button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/withdraw")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-circle-minus">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-circle-minus">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M8 12h8"></path>
                     </svg>
                     <p>Withdraw</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/assets")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-wallet-minimal">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-wallet-minimal">
                         <path d="M17 14h.01"></path>
                         <path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14"></path>
                     </svg>
                     <p>Assets</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/markets")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-chart-pie">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chart-pie">
                         <path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"></path>
                         <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
                     </svg>
                     <p>Markets</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/mining")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-coins">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-coins">
                         <circle cx="8" cy="8" r="6"></circle>
                         <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
                         <path d="M7 6h1v4"></path>
@@ -128,33 +135,33 @@
                     </svg>
                     <p>Mining</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/trade")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-trending-up">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-trending-up">
                         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                         <polyline points="16 7 22 7 22 13"></polyline>
                     </svg>
                     <p>Trade</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/subscribe")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-server">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-server">
                         <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
                         <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
                         <line x1="6" x2="6.01" y1="6" y2="6"></line>
@@ -162,7 +169,7 @@
                     </svg>
                     <p>Subscribe</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/signals")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi">
                         <path d="M12 20h.01"></path>
                         <path d="M2 8.82a15 15 0 0 1 20 0"></path>
@@ -171,17 +178,17 @@
                     </svg>
                     <p>Signals</p>
                 </button>
-                <button>
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/stake")'>
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-coins">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-coins">
                         <circle cx="8" cy="8" r="6"></circle>
                         <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
                         <path d="M7 6h1v4"></path>
@@ -189,17 +196,17 @@
                     </svg>
                     <p>Stake</p>
                 </button>
-                <button>
+                <button @onclick="OpenReferralTab">
                     <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-users">
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-users">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
                         <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -207,7 +214,7 @@
                     </svg>
                     <p>Referrals</p>
                 </button>
-                <button>
+                <button @onclick="OpenConnectTab">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link">
                         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                         <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
@@ -215,197 +222,101 @@
                     <p>Connect wallet</p>
                 </button>
             </div>
-            <div class="page">
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-house">
-                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <div class="page @(menuDirection=="right"?"slide-right":"slide-left")">
+                <button @onclick='()=> NavigationManager.NavigateTo("/user/copy-experts")'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy">
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                     </svg>
-                    <p>Dashboard</p>
+                    <p>Copy Experts</p>
                 </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-circle-plus">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M8 12h8"></path>
-                        <path d="M12 8v8"></path>
+                <button @onclick="OpenSettingsTab">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    <p>Deposit</p>
+                    <p>Settings</p>
                 </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-circle-minus">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M8 12h8"></path>
-                    </svg>
-                    <p>Withdraw</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-wallet-minimal">
-                        <path d="M17 14h.01"></path>
-                        <path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14"></path>
-                    </svg>
-                    <p>Assets</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-chart-pie">
-                        <path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"></path>
-                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                    </svg>
-                    <p>Markets</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-coins">
-                        <circle cx="8" cy="8" r="6"></circle>
-                        <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
-                        <path d="M7 6h1v4"></path>
-                        <path d="m16.71 13.88.7.71-2.82 2.82"></path>
-                    </svg>
-                    <p>Mining</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-trending-up">
-                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                        <polyline points="16 7 22 7 22 13"></polyline>
-                    </svg>
-                    <p>Trade</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-server">
-                        <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
-                        <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
-                        <line x1="6" x2="6.01" y1="6" y2="6"></line>
-                        <line x1="6" x2="6.01" y1="18" y2="18"></line>
-                    </svg>
-                    <p>Subscribe</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi">
-                        <path d="M12 20h.01"></path>
-                        <path d="M2 8.82a15 15 0 0 1 20 0"></path>
-                        <path d="M5 12.859a10 10 0 0 1 14 0"></path>
-                        <path d="M8.5 16.429a5 5 0 0 1 7 0"></path>
-                    </svg>
-                    <p>Signals</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-coins">
-                        <circle cx="8" cy="8" r="6"></circle>
-                        <path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path>
-                        <path d="M7 6h1v4"></path>
-                        <path d="m16.71 13.88.7.71-2.82 2.82"></path>
-                    </svg>
-                    <p>Stake</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="20"
-                         height="20"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="lucide lucide-users">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <p>Referrals</p>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                    </svg>
-                    <p>Connect wallet</p>
-                </button>
+
             </div>
+
         </div>
+        
     </div>
     <div class="css-gf189n">
-        <div class="css-1mye1gr"></div>
-        <div class="css-1lamffl"></div>
+        <div class="@(menuDirection=="left"?"css-1mye1gr":"css-1lamffl")"></div>
+        <div class="@(menuDirection=="right"?"css-1mye1gr":"css-1lamffl")"></div>
     </div>
 </div>
+
+@code{
+    [Parameter]
+    public string Transform { get; set; }
+    [Parameter] public EventCallback<string> TransformChanged { get; set; }
+
+    [Parameter] public EventCallback<string> OpenSettings { get; set; }
+
+    private string referalTransform = "100%";
+    private string connectTransform = "100%";
+
+    private string menuDirection = "left";
+    private ElementReference swipeElement;
+    private DotNetObjectReference<SideBarMenu>? dotNetRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("gestureHelper.addSwipeListener", swipeElement, dotNetRef);
+        }
+    }
+
+    [JSInvokable]
+    public void OnSwipeLeft()
+    {
+        menuDirection = "right";
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnSwipeRight()
+    {
+        menuDirection = "left";
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        dotNetRef?.Dispose();
+    }
+
+    private void OpenReferralTab()
+    {
+        referalTransform = "0%";
+    }
+
+    private void OpenConnectTab()
+    {
+        connectTransform = "0%";
+    }
+
+    [Parameter]
+    public User? user { get; set; }
+
+    private void UpdateTransform()
+    {
+        Transform = "-100%"; // Update locally
+        TransformChanged.InvokeAsync(Transform); // Notify Parent
+    }
+
+    private async Task OpenSettingsTab()
+    {
+        await OpenSettings.InvokeAsync("0%");
+    }
+
+    private void NavigateTo(string url)
+    {
+        NavigationManager.NavigateTo(url);
+    }
+}

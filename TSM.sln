@@ -6,10 +6,18 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.CoreBusiness", "TSM.CoreBusiness\TSM.CoreBusiness.csproj", "{26623F9B-5F45-474A-9B70-16718EBBA034}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.TradingWebApp", "TSM.TradingWebApp\TSM.TradingWebApp.csproj", "{24F52B82-9A6B-45AF-9AF9-3D5B4B03AF21}"
+	ProjectSection(ProjectDependencies) = postProject
+		{898CB518-33CC-4824-B916-22918CCC23F0} = {898CB518-33CC-4824-B916-22918CCC23F0}
+		{EE7D7C50-01B1-4427-A684-4EBE23A93904} = {EE7D7C50-01B1-4427-A684-4EBE23A93904}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TSM.Plugins", "TSM.Plugins", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.InMemoryStore", "TSM.Plugins\TSM.InMemoryStore\TSM.InMemoryStore.csproj", "{5A490FA8-258C-49A0-9C53-57A7BE99182A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.UseCase", "TSM.UseCase\TSM.UseCase.csproj", "{EE7D7C50-01B1-4427-A684-4EBE23A93904}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSM.EFCoreSqlServer", "TSM.Plugins\TSM.EFCoreSqlServer\TSM.EFCoreSqlServer.csproj", "{898CB518-33CC-4824-B916-22918CCC23F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +37,21 @@ Global
 		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A490FA8-258C-49A0-9C53-57A7BE99182A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7D7C50-01B1-4427-A684-4EBE23A93904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7D7C50-01B1-4427-A684-4EBE23A93904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7D7C50-01B1-4427-A684-4EBE23A93904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7D7C50-01B1-4427-A684-4EBE23A93904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{898CB518-33CC-4824-B916-22918CCC23F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898CB518-33CC-4824-B916-22918CCC23F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898CB518-33CC-4824-B916-22918CCC23F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898CB518-33CC-4824-B916-22918CCC23F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5A490FA8-258C-49A0-9C53-57A7BE99182A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{898CB518-33CC-4824-B916-22918CCC23F0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9026B94A-8E32-4946-A891-8AFE92CC26C5}

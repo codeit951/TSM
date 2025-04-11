@@ -1,0 +1,184 @@
+﻿@page "/user/mining"
+
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<link href="pages/mining.css" rel="stylesheet" />
+
+<div class="scrollbar-hide css-66hwna">
+    <MiningHistoryComponent @bind-Transform="historyTransform" @rendermode="InteractiveServer" />
+    <div class="css-6ymeda"></div>
+    <div class="css-1euahi7">
+        <div class="top">
+            <div class="css-14iwxg8">
+                <div class="card_balances">
+                    <div class="card_balance">
+                        <span class="title wrapper">
+                            Total minings
+                            <button class="eyes_button">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     class="lucide lucide-eye-off eye">
+                                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+                                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+                                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+                                    <path d="m2 2 20 20"></path>
+                                </svg>
+                            </button>
+                        </span>
+                        <span class="value" style="display: block;">$ 0.00</span>
+                        <h3 class="value hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                    </div>
+                    <div class="card_balance active">
+                        <p class="title">Active minings:</p>
+                        <p class="value">0</p>
+                    </div>
+                    <div class="card_balance closed">
+                        <p class="title">Closed minings:</p>
+                        <p class="value">0</p>
+                    </div>
+                </div>
+                <span class="stake_balance_button" @onclick="ShowHistory">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-clock">
+                        <path d="M16 22h2a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"></path>
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                        <circle cx="8" cy="16" r="6"></circle>
+                        <path d="M9.5 17.5 8 16.25V14"></path>
+                    </svg>
+                    <p>View minings</p>
+                </span>
+            </div>
+        </div>
+        <div class="mid_section">
+            <div class="mid_section_top"><p>Pools</p></div>
+            <div class="stake_cards_wrapper">
+                <div class="grids css-113fuih">
+                    <div class="stake_card css-1abtjwe">
+                        <div class="stake_card_top">
+                            <div class="stake_card_info">
+                                <img src="/asseticons/BTC.svg" alt="Bitcoin icon" />
+                                <span>
+                                    <p>BitcoinPool12</p>
+                                    <p>BTC</p>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stake_card_details">
+                            <span class="stake_card_detail">
+                                <p>Minumum</p>
+                                <p>0.02273 BTC</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Maximum</p>
+                                <p>10 BTC</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Cycle</p>
+                                <p>Daily</p>
+                            </span>
+                        </div>
+                        <div class="stake_card_footer">
+                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
+                        </div>
+                    </div>
+                    <div class="stake_card css-1abtjwe">
+                        <div class="stake_card_top">
+                            <div class="stake_card_info">
+                                <img src="/asseticons/DOGE.svg" alt="Dogecoin icon" />
+                                <span>
+                                    <p>Dogecoin</p>
+                                    <p>DOGE</p>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stake_card_details">
+                            <span class="stake_card_detail">
+                                <p>Minumum</p>
+                                <p>2600 DOGE</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Maximum</p>
+                                <p>100000 DOGE</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Cycle</p>
+                                <p>Daily</p>
+                            </span>
+                        </div>
+                        <div class="stake_card_footer">
+                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
+                        </div>
+                    </div>
+                    <div class="stake_card css-1abtjwe">
+                        <div class="stake_card_top">
+                            <div class="stake_card_info">
+                                <img src="/asseticons/XRP.svg" alt="Ripple icon" />
+                                <span>
+                                    <p>Dragonmint#77</p>
+                                    <p>XRP</p>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="stake_card_details">
+                            <span class="stake_card_detail">
+                                <p>Minumum</p>
+                                <p>500 XRP</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Maximum</p>
+                                <p>10000 XRP</p>
+                            </span>
+                            <span class="stake_card_detail">
+                                <p>Cycle</p>
+                                <p>Daily</p>
+                            </span>
+                        </div>
+                        <div class="stake_card_footer">
+                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<MineAndStakeModelComponent @bind-IsActive="showMining" @rendermode="InteractiveServer" />
+@code{
+    private string historyTransform = "100%";
+
+    private bool showMining = false;
+
+    private async Task ShowHistory()
+    {
+        historyTransform = "0%";
+    }
+
+    private async Task ShowMining()
+    {
+        showMining = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("registerOutsideClickMining", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void CloseHistory()
+    {
+        historyTransform = "100%";
+        StateHasChanged(); // Ensure UI updates
+    }
+}

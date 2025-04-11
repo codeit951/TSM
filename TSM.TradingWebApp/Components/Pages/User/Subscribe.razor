@@ -1,0 +1,241 @@
+﻿@page "/user/subscribe"
+
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+
+<link href="pages/subscribe.css" rel="stylesheet" />
+
+<div class="scrollbar-hide css-66hwna">
+    <SubscribeHistoryComponent @rendermode="InteractiveServer" @bind-Transform="historyTransform" />
+    <div class="css-6ymeda"></div>
+    <div class="css-ud2h04">
+        <div class="top">
+            <div class="css-y0p2sv">
+                <div class="top_wrapper">
+                    <span class="balance">
+                        <span class="eyes_wrapper">
+                            <p>Subscription Balance</p>
+                            <button class="eyes_button">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     class="lucide lucide-eye-off eye">
+                                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+                                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+                                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+                                    <path d="m2 2 20 20"></path>
+                                </svg>
+                            </button>
+                        </span>
+                        <span class="user_balance" style="display: block;">$0.00</span>
+                        <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                    </span>
+                    <button class="subscribe_balance_button" @onclick="OpenModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
+                            <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                            <line x1="2" x2="22" y1="10" y2="10"></line>
+                        </svg>
+                        <p>Deposit</p>
+                    </button>
+                </div>
+                <span class="subscribe_info_card_top">
+                    <p>No active subscription</p>
+                    <p class="text-btn view_history" @onclick="ShowHistory">View history</p>
+                </span>
+            </div>
+        </div>
+        <div class="mid_section">
+            <div class="mid_section_top"><p>Plans</p></div>
+            <div class="subscribe_cards_wrapper">
+                <div class="grids css-113fuih">
+                    <div class="subscribe_card css-1e50szj">
+                        <div class="subscribe_card_top"><p class="subscribe_title">Starter plan</p></div>
+                        <div class="subscribe_card_details">
+                            <span class="subscribe_card_detail">
+                                <p>Minumum</p>
+                                <p>$5,000.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Maximum</p>
+                                <p>$19,999.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Plan duration</p>
+                                <p>10 days</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>ROI</p>
+                                <p class="roi">200%</p>
+                            </span>
+                        </div>
+                        <div class="subscribe_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="5000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subscribe_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
+                        </div>
+                    </div>
+                    <div class="subscribe_card css-1e50szj">
+                        <div class="subscribe_card_top"><p class="subscribe_title">Lite plan</p></div>
+                        <div class="subscribe_card_details">
+                            <span class="subscribe_card_detail">
+                                <p>Minumum</p>
+                                <p>$20,000.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Maximum</p>
+                                <p>$49,500.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Plan duration</p>
+                                <p>3 days</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>ROI</p>
+                                <p class="roi">250%</p>
+                            </span>
+                        </div>
+                        <div class="subscribe_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="20000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subscribe_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
+                        </div>
+                    </div>
+                    <div class="subscribe_card css-1e50szj">
+                        <div class="subscribe_card_top"><p class="subscribe_title">Classic plan</p></div>
+                        <div class="subscribe_card_details">
+                            <span class="subscribe_card_detail">
+                                <p>Minumum</p>
+                                <p>$50,000.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Maximum</p>
+                                <p>$99,500.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Plan duration</p>
+                                <p>14 days</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>ROI</p>
+                                <p class="roi">350%</p>
+                            </span>
+                        </div>
+                        <div class="subscribe_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="50000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subscribe_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
+                        </div>
+                    </div>
+                    <div class="subscribe_card css-1e50szj">
+                        <div class="subscribe_card_top"><p class="subscribe_title">Pro plan</p></div>
+                        <div class="subscribe_card_details">
+                            <span class="subscribe_card_detail">
+                                <p>Minumum</p>
+                                <p>$100,000.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Maximum</p>
+                                <p>$1,000,000.00</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>Plan duration</p>
+                                <p>20 days</p>
+                            </span>
+                            <span class="subscribe_card_detail">
+                                <p>ROI</p>
+                                <p class="roi">500%</p>
+                            </span>
+                        </div>
+                        <div class="subscribe_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="100000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subscribe_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<NewDepositComponent @bind-IsActive="IsDepositActive" @rendermode="InteractiveServer" />
+@code {
+
+    private string historyTransform = "100%";
+
+    private bool IsDepositActive = false;
+
+    private void OpenModal()
+    {
+        IsDepositActive = true;
+    }
+
+    private async Task ShowHistory()
+    {
+        historyTransform = "0%";
+        await JS.InvokeVoidAsync("registerOutsideClickSubscribe", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void CloseHistory()
+    {
+        historyTransform = "100%";
+        StateHasChanged(); // Ensure UI updates
+    }
+}

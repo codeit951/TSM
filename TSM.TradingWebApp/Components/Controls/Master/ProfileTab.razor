@@ -1,0 +1,105 @@
+﻿<div class="scrollbar-hide css-7v5cjc" style="transform: translateX(@Transform);opacity:1;">
+    <div class="top">
+        <div role="button" @onclick="UpdateTransform" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+            <p class="top_title" style="text-transform: capitalize;">Personal Settings</p>
+        </div>
+        <button @onclick="UpdateTransform"><Icon Name="IconName.X" /></button>
+    </div>
+    <div class="content scrollbar-hide css-inwg8j" style="background-color: transparent;">
+        <div class="css-12m2m7s">
+            <div class="form">
+                <div class="section">
+                    <div class="section_content">
+                        <button class="false css-1ky7uhq">
+                            <label>Profile picture:</label>
+                            <div class="file_upload_wrapper">
+                                <div class="progress" style="width: 0%;"></div>
+                                <div class="upload_wrapper">
+                                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="profile" class="icon" />
+                                    <p><strong>Click here to upload your profile image</strong></p>
+                                    <input type="file" accept="image/png, image/gif, image/jpeg, image/svg" style="opacity: 0; position: absolute; pointer-events: none;" />
+                                </div>
+                            </div>
+                        </button>
+                        <div class="css-jdqo73">
+                            <label>First name:</label>
+                            <div class="input_wrapper"><input type="text" name="firstName" placeholder="Simon" class="no-zoom-14px" value="Simon" /></div>
+                        </div>
+                        <div class="css-jdqo73">
+                            <label>Last name:</label>
+                            <div class="input_wrapper"><input type="text" name="lastName" placeholder="Anthony" class="no-zoom-14px" value="Anthony" /></div>
+                        </div>
+                        <div class="country_dropdown">
+                            <div class="css-1wnllbt" style="cursor: pointer;">
+                                <label>Country:</label>
+                                <div class="select_wrapper">
+                                    <button @onclick="ToggleCountryDropDown">
+                                        <img loading="lazy" width="16" src="https://flagcdn.com/w20/fm.png" srcset="https://flagcdn.com/w40/fm.png 2x" alt="Flag of Micronesia" />
+                                        <p class="has_country">Micronesia</p>
+                                    </button>
+                                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <g transform="translate(-1391 -130)" fill="currentColor">
+                                                <g transform="translate(1250 116)">
+                                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
+                                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <SelectCountryDropDownComponent @bind-IsOpen="isCountryDropDownOpen" @rendermode="InteractiveServer" />
+                        </div>
+                        <div class="phone_dropdown">
+                            <div class="css-13blo34" style="cursor: pointer;">
+                                <label>Phone number:</label>
+                                <div class="select_wrapper"><input type="text" placeholder="+69154353443" autocomplete="off" class="no-zoom-14px" value="+69154353443" /></div>
+                            </div>
+                        </div>
+                        <div class="section_footer">
+                            <button class="false css-nncgg"><p>Save</p></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section_content">
+                        <div class="box_with_button">
+                            <div class="css-jdqo73">
+                                <label>Email address:</label>
+                                <div class="input_wrapper"><input type="email" placeholder="loadedapps@gmail.com" class="no-zoom-14px" value="loadedapps@gmail.com" /></div>
+                            </div>
+                        </div>
+                        <div class="section_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Save</p></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Transform { get; set; }
+    [Parameter] public EventCallback<string> TransformChanged { get; set; }
+
+    [Parameter]
+    public User? user { get; set; }
+
+    private bool isCountryDropDownOpen = false;
+
+    private void ToggleCountryDropDown()
+    {
+        isCountryDropDownOpen = !isCountryDropDownOpen;
+    }
+
+    private void UpdateTransform()
+    {
+        Transform = "100%"; // Update locally
+        TransformChanged.InvokeAsync(Transform); // Notify Parent
+    }
+}

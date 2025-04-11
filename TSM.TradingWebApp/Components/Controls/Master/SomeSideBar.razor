@@ -1,6 +1,6 @@
 ﻿
 @rendermode InteractiveServer
-
+@inject NavigationManager Navigation
 @inject IJSRuntime JS
 
 <div class="css-1sxj0v3">
@@ -9,6 +9,7 @@
         <SettingsTab @bind-Transform="settingsTransform" @rendermode="InteractiveServer" user="user" />
         <div class="css-6ymeda"></div>
         <NotificationTab @rendermode="InteractiveServer" @bind-Transform="Transform" />
+        <SideBarMenu @bind-Transform="menuTransform" @rendermode="InteractiveServer" user="user" OpenSettings="OpenSettingsTab" />
         <div class="left">
             <span class="titles">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +25,9 @@
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 </svg>
-                <p style="text-transform: capitalize;">Dashboard</p>
+                <p style="text-transform: capitalize;">@currentPage</p>
             </span>
+            <span class="menu" @onclick="UpdateMenuTransform"><Icon Name="IconName.List" Size="IconSize.x3" /></span>
             <span class="menu"><img src="./The Iron Markets_files/menu.svg" alt="" /></span>
         </div>
         <div class="right">
@@ -47,7 +49,7 @@
                     <div class="css-1vnlbrl">
                         <div class="css-j3nbck">
                             <div class="dropdown_content">
-                                <span class="dropdown_item">
+                                <a href="/user/deposit" class="dropdown_item">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                     width="16"
                                     height="16"
@@ -63,8 +65,8 @@
                                         <path d="M12 8v8"></path>
                                     </svg>
                                     <p>Add funds</p>
-                                </span>
-                                <span class="dropdown_item">
+                                </a>
+                                <a href="/user/withdraw" class="dropdown_item">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                     width="16"
                                     height="16"
@@ -79,7 +81,7 @@
                                         <path d="M8 12h8"></path>
                                     </svg>
                                     <p>Withdraw funds</p>
-                                </span>
+                                </a>
                                 <span class="dropdown_item settings_link" @onclick="UpdateSettingsTransform">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                     width="16"
@@ -144,6 +146,7 @@
 
     private string Transform = "100%";
     private string settingsTransform = "100%";
+    private string menuTransform = "-100%";
 
     private bool IsProfileDropDown = false;
 
@@ -152,9 +155,20 @@
         Transform = "0%";
     }
 
+    private void OpenSettingsTab(string transform)
+    {
+        settingsTransform = transform;
+        StateHasChanged(); // Ensure UI updates
+    }
+
     private void UpdateSettingsTransform()
     {
         settingsTransform = "0%";
+    }
+
+    private void UpdateMenuTransform()
+    {
+        menuTransform = "0%";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -182,8 +196,30 @@
     [JSInvokable]
     public void CloseSettingsTransform()
     {
-        settingsTransform = "100%";
-        StateHasChanged(); // Ensure UI updates
+        //settingsTransform = "100%";
+        //StateHasChanged(); // Ensure UI updates
     }
  
+    private string currentPage = "";
+
+    protected override void OnInitialized()
+    {
+        SetCurrentPage();
+        Navigation.LocationChanged += (s, e) => SetCurrentPage();
+    }
+
+    private void SetCurrentPage()
+    {
+        var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var segments = uri.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        if (segments.Length >= 2)
+        {
+            currentPage = segments[1]; // "details"
+        }
+        else
+        {
+            currentPage = "";
+        }
+    }
 }

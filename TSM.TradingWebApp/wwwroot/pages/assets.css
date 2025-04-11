@@ -1,0 +1,971 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-1azirga .select_wrapper {
+    background: rgba(255, 255, 255, 0.024);
+    border-radius: 8px;
+    margin-top: 6px;
+    padding: 10px 8px;
+    border: 1px solid transparent;
+    transition: border 150ms ease-out;
+    position: relative;
+    height: 40px;
+    min-width: 135px;
+    width: 100%;
+}
+
+.css-1azirga .svg_icon {
+    width: 8px;
+    height: 6px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.css-1azirga select {
+    appearance: none;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: white;
+    background: transparent;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.css-1azirga .select_wrapper:hover {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.css-66hwna {
+    height: 100%;
+    margin-top: 88px;
+    max-height: 100vh;
+    overflow: auto;
+    padding-bottom: 105px;
+}
+
+.css-51u8x3 {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+    .css-51u8x3 .top {
+        display: grid;
+        grid-template-columns: 2fr 2fr;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .css-51u8x3 .account_section_title {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.48);
+        line-height: 18px;
+        font-weight: 600;
+    }
+
+    .css-51u8x3 .assets_table {
+        max-width: calc(-16px + 100vw);
+        border-radius: 12px;
+        max-height: max-content;
+        box-sizing: border-box;
+        margin-top: 8px;
+        overflow: hidden !important;
+    }
+
+    .css-51u8x3 .assets_table_wrapper {
+        max-width: calc(-24px + 100vw);
+        overflow: scroll;
+        max-height: 48vh;
+        padding-bottom: 18px;
+    }
+
+@media screen and (max-width: 1200px) {
+    .css-51u8x3 .top {
+        grid-template-columns: auto;
+    }
+
+    .css-51u8x3 .assets_table {
+        padding-bottom: 100px;
+    }
+}
+
+.css-176modi {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.024);
+}
+
+    .css-176modi .balance_card_top {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .css-176modi .balance_card_top_wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .css-176modi .balance_card_top .balance .balance_wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .css-176modi .balance_card_top .balance .balance_wrapper .eyes_button {
+            outline: none;
+            border: none;
+            background: transparent;
+            padding: 0px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.75);
+            transition: 150ms ease-out;
+            margin: 0px !important;
+            height: 16px !important;
+        }
+
+            .css-176modi .balance_card_top .balance .balance_wrapper .eyes_button:hover {
+                color: rgb(255, 255, 255);
+            }
+
+        .css-176modi .balance_card_top .balance .balance_wrapper .label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 16px;
+            font-weight: 600;
+        }
+
+    .css-176modi .balance_card_top .balance .user_balance {
+        font-size: 24px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+        line-height: 32px;
+        font-feature-settings: "tnum";
+        transform: translateY(4px);
+        animation: 0.2s ease-out 0s 1 normal forwards running fadeInFromBottom;
+    }
+
+        .css-176modi .balance_card_top .balance .user_balance.hidden i {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(4px);
+            animation: 0.1s ease-out 0s 1 normal forwards running fadeInFromBottom;
+        }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(3) {
+                animation-delay: 0.25s;
+            }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(4) {
+                animation-delay: 0.33s;
+            }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(5) {
+                animation-delay: 0.46s;
+            }
+
+            .css-176modi .balance_card_top .balance .user_balance.hidden i:nth-child(6) {
+                animation-delay: 0.57s;
+            }
+
+    .css-176modi .balance_card_bottom {
+        margin-top: 44px;
+        overflow: scroll;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+@media screen and (max-width: 768px) {
+    .css-176modi {
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.024);
+        display: block;
+    }
+}
+
+.css-15whyo0 {
+    padding: 0px 6px;
+}
+
+.css-15whyo0 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 16px;
+}
+
+    .css-15whyo0 .bars {
+        display: flex;
+        gap: 4px;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .css-15whyo0 .titles {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        gap: 24px;
+    }
+
+.css-x7ktbl {
+    width: 100%;
+    height: 100%;
+    padding: 24px 24px 40px;
+    background-color: rgba(255, 255, 255, 0.024);
+    border-radius: 12px;
+    min-height: 312px;
+}
+
+    .css-x7ktbl .activity_wrapper {
+        display: grid;
+        margin-top: 16px;
+        padding-top: 12px;
+    }
+
+        .css-x7ktbl .activity_wrapper .activity {
+            font-size: 14px;
+            color: rgb(255, 255, 255);
+            line-height: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+            transition: 150ms ease-in-out;
+            padding: 10px 12px;
+        }
+
+            .css-x7ktbl .activity_wrapper .activity .activity_date {
+                font-size: 14px;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            .css-x7ktbl .activity_wrapper .activity:hover {
+                border-radius: 6px;
+                background-color: rgba(255, 255, 255, 0.05);
+                border-color: transparent;
+            }
+
+.css-1n03u6g .assets_section_top {
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    padding-left: 12px;
+    display: none;
+}
+
+    .css-1n03u6g .assets_section_top p:first-of-type {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+    }
+
+.css-1n03u6g .assets_section_utils {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.css-pe4x9p {
+    padding: 12px;
+    overflow: scroll;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.024) !important;
+    box-sizing: border-box !important;
+}
+
+    .css-pe4x9p .asset_table_top {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 8px 24px;
+        width: 100%;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .css-pe4x9p .asset_table_top_title {
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .css-pe4x9p table {
+        width: 100%;
+        padding: 24px;
+    }
+
+        .css-pe4x9p table thead th {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .css-pe4x9p table tbody td {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .css-pe4x9p table thead tr,
+        .css-pe4x9p table tbody tr {
+            width: 100%;
+            gap: 12px;
+            -webkit-box-align: center;
+            align-items: center;
+            display: flex;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+            padding-right: 105px !important;
+        }
+
+        .css-pe4x9p table thead tr {
+            background: transparent;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .css-pe4x9p table tbody {
+            display: grid;
+            gap: 8px;
+            height: 97%;
+            width: 100%;
+            overflow: scroll;
+            padding-top: 12px;
+            mask: linear-gradient(0deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 3px, rgb(0, 0, 0) calc(100% - 18px), rgba(0, 0, 0, 0));
+        }
+
+            .css-pe4x9p table tbody tr:nth-child(2n) {
+                background: transparent;
+            }
+
+            .css-pe4x9p table tbody tr:nth-child(2n + 1) {
+                background: rgba(255, 255, 255, 0.024) !important;
+            }
+
+            .css-pe4x9p table tbody tr {
+                padding: 12px 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: 0.1s ease-in-out;
+                height: 52px;
+            }
+
+                .css-pe4x9p table tbody tr:hover {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                }
+
+    .css-pe4x9p .asset {
+        min-width: 50px;
+        max-width: 250px;
+        width: 100%;
+        display: flex;
+        -webkit-box-pack: start;
+        justify-content: flex-start;
+        gap: 2px;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .css-pe4x9p .asset_icon {
+        width: 17px;
+        height: 17px;
+        margin-right: 8px;
+    }
+
+    .css-pe4x9p .asset_name,
+    .css-pe4x9p .asset_symbol {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgb(255, 255, 255);
+        white-space: nowrap;
+    }
+
+    .css-pe4x9p .asset_symbol {
+        display: none;
+    }
+
+    .css-pe4x9p .symbol {
+        min-width: 60px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: none;
+    }
+
+    .css-pe4x9p .type {
+        min-width: 60px;
+        width: 100%;
+        text-align: center;
+        text-transform: capitalize;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+    .css-pe4x9p .price {
+        min-width: 100px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+    .css-pe4x9p .fiat_price {
+        min-width: 100px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: none;
+    }
+
+    .css-pe4x9p .value {
+        min-width: 10px;
+        width: 100%;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        display: grid;
+        place-content: center;
+    }
+
+        .css-pe4x9p .value .action {
+            display: none;
+        }
+
+    .css-pe4x9p .action {
+        min-width: 80px;
+        width: 100%;
+        align-content: center;
+        display: flex;
+        gap: 6px;
+        text-align: left;
+        padding-left: 50px;
+    }
+
+        .css-pe4x9p .action button {
+            border: none;
+            cursor: pointer;
+            padding: 6px 12px;
+            max-width: max-content;
+            border-radius: 4px;
+            color: rgb(255, 255, 255);
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: 150ms ease-out;
+        }
+
+            .css-pe4x9p .action button:hover {
+                background: rgb(49, 172, 238);
+            }
+
+@media screen and (max-width: 1200px) {
+    .css-pe4x9p .asset_name {
+        display: none;
+    }
+
+    .css-pe4x9p .asset_symbol {
+        display: block;
+    }
+
+    .css-pe4x9p .actual_price {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1010px) {
+    .css-pe4x9p .type {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .css-pe4x9p .asset_table_top {
+        display: grid;
+    }
+
+    .css-pe4x9p .price {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .css-pe4x9p .asset {
+        width: 100%;
+        max-width: unset;
+    }
+
+    .css-pe4x9p .action {
+        display: none;
+        padding-left: 20px;
+    }
+
+    .css-pe4x9p table thead tr,
+    .css-pe4x9p table tbody tr {
+        padding-right: 0px !important;
+    }
+
+        .css-pe4x9p table tbody tr:hover .value .action {
+            display: flex;
+        }
+
+        .css-pe4x9p table tbody tr:hover .value .value_amount {
+            display: none !important;
+        }
+}
+
+@media screen and (max-width: 500px) {
+    .css-pe4x9p table tbody tr:hover .value .action {
+        place-content: center;
+        padding-right: 20px;
+    }
+
+    .css-pe4x9p table tbody tr:hover .value .value_amount {
+        display: none !important;
+    }
+}
+
+.css-frtgch {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    box-sizing: border-box;
+    max-width: max-content;
+    height: 40px;
+    width: 100% !important;
+}
+
+    .css-frtgch input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .css-frtgch input::placeholder {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+@media screen and (max-width: 768px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .css-frtgch input {
+        max-width: unset;
+        width: 100%;
+    }
+}
+/*! CSS Used keyframes */
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(8px);
+    }
+
+    50% {
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@-webkit-keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes fadeInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+        filter: blur(0px);
+    }
+}

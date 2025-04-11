@@ -1,0 +1,95 @@
+﻿@page "/user/withdraw"
+
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<div class="scrollbar-hide css-66hwna">
+    <div class="css-93wr2k">
+        <div class="css-0">
+            <div class="deposits_table">
+                <div class="css-1g7kala">
+                    <div class="transaction_table_top">
+                        <div class="transaction_header_wrapper">
+                            <p class="transaction_table_top_title">Withdraws</p>
+                            <button class="transaction_button" type="button" @onclick="OpenModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
+                                    <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                                    <line x1="2" x2="22" y1="10" y2="10"></line>
+                                </svg>
+                                <p>Withdraw now</p>
+                            </button>
+                        </div>
+                        <div class="table_utils">
+                            <div class="css-frtgch">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.3-4.3"></path>
+                                </svg>
+                                <input placeholder="Search for withdraw" class="no-zoom-14px">
+                            </div>
+                            <div class="select_dropdown css-1azirga">
+                                <div class="select_wrapper">
+                                    <select>
+                                        <option value="all">All</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="declined">Declined</option>
+                                        <option value="regular">Regular</option>
+                                        <option value="signal">Signal</option>
+                                        <option value="subscription">Subscription</option>
+                                    </select>
+                                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <g transform="translate(-1391 -130)" fill="currentColor">
+                                                <g transform="translate(1250 116)">
+                                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transaction_table_wrapper scrollbar-hide">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="date">Date</th>
+                                    <th class="ref">Reference</th>
+                                    <th class="type">Method</th>
+                                    <th class="type">Type</th>
+                                    <th class="amount">Amount</th>
+                                    <th class="total">Total (USD) </th>
+                                    <th class="status">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="date"><p>21/12/2024</p></td>
+                                    <td class="ref"><p>#232323232</p></td>
+                                    <td class="type"><p>Crypto</p></td>
+                                    <td class="type"><p>Deposit</p></td>
+                                    <td class="amount"><img src="./asseticons/SOL.svg" alt="SOL icon" class="amount_icon"><p class="amount_name"> 500 SOL</p></td>
+                                    <td class="total"><p>$52.838K</p></td>
+                                    <td class="status"><span class="pending">Pending</span></td>
+                                </tr>
+            @* <p class="empty_state">You have not made any deposits yet, <strong>Click here to make a deposit.</strong> </p> *@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<NewWithdrawComponent @bind-IsActive="IsActive" @rendermode="InteractiveServer" />
+@code{
+    private bool IsActive = false;
+    
+    private void OpenModal()
+    {
+        IsActive = true;
+    }
+}

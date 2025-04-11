@@ -1,0 +1,480 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-1vv7r1s {
+    display: grid;
+    gap: 6px;
+    margin-top: 0px !important;
+}
+
+    .css-1vv7r1s label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .css-1vv7r1s .input_wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        gap: 4px;
+        border: 1px solid transparent;
+        transition: border 150ms ease-in-out;
+        min-width: 135px;
+        height: 42px;
+        margin-top: 6px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.024);
+        position: relative;
+        padding: 10px 8px !important;
+    }
+
+        .css-1vv7r1s .input_wrapper .show_btn {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            position: absolute;
+            right: 0px;
+        }
+
+        .css-1vv7r1s .input_wrapper:hover {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+    .css-1vv7r1s input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+        .css-1vv7r1s input:-webkit-autofill, .css-1vv7r1s input:-webkit-autofill:hover, .css-1vv7r1s input:-webkit-autofill:focus, .css-1vv7r1s input:-webkit-autofill:active {
+            background-clip: text;
+            -webkit-text-fill-color: rgb(255, 255, 255);
+            transition: background-color 5000s ease-in-out;
+            box-shadow: transparent 0px 0px 20px 20px inset;
+        }
+
+        .css-1vv7r1s input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+.css-nncgg {
+    background: rgb(49, 172, 238);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+    .css-nncgg.disabled {
+        background-color: grey;
+        pointer-events: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+.css-inwg8j {
+    width: 100%;
+    margin-top: 24px;
+    position: relative;
+    height: calc(100% - 40px);
+    overflow-x: hidden;
+    padding-bottom: 200px;
+}
+
+.css-3delch {
+    background: rgb(255, 51, 68);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+.css-7v5cjc {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(0px);
+    padding: 24px 16px 16px;
+    opacity: 1;
+    max-width: 400px;
+    width: 100%;
+    overflow-y: auto;
+    transition: 300ms ease-in-out;
+    background: rgb(30, 33, 36) !important;
+    backdrop-filter: blur(200px) !important;
+}
+
+    .css-7v5cjc .top {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+        .css-7v5cjc .top .top_title {
+            font-size: 14px;
+            line-height: 18px;
+            font-weight: 600;
+            color: rgb(255, 255, 255);
+        }
+
+        .css-7v5cjc .top button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+            .css-7v5cjc .top button:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+                filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(334deg) brightness(200%) contrast(100%);
+            }
+
+@media (max-width: 768px) {
+    .css-7v5cjc {
+        max-width: unset;
+        width: 100vw;
+        background-color: rgb(5, 8, 11) !important;
+    }
+}
+
+.css-94nc50 .section:not(:first-of-type) {
+    margin-top: 32px;
+}
+
+.css-94nc50 .form {
+    margin-top: 16px;
+    display: grid;
+    gap: 16px;
+}
+
+.css-94nc50 .section_titles .title {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    color: rgb(255, 255, 255);
+}
+
+.css-94nc50 .section_titles .subtitle {
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 2px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.css-94nc50 .section_content {
+    margin-top: 24px;
+    display: grid;
+    gap: 16px;
+}
+
+.css-94nc50 .section_footer {
+    margin-top: 16px;
+}
+
+.css-yxtzq2 {
+    background: rgb(1, 178, 139);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+/*! CSS Used from: Embedded */
+.css-1vv7r1s {
+    display: grid;
+    gap: 6px;
+    margin-top: 0px !important;
+}
+
+    .css-1vv7r1s label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .css-1vv7r1s .input_wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        gap: 4px;
+        border: 1px solid transparent;
+        transition: border 150ms ease-in-out;
+        min-width: 135px;
+        height: 42px;
+        margin-top: 6px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.024);
+        position: relative;
+        padding: 10px 8px !important;
+    }
+
+        .css-1vv7r1s .input_wrapper .show_btn {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            position: absolute;
+            right: 0px;
+        }
+
+        .css-1vv7r1s .input_wrapper:hover {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+    .css-1vv7r1s input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+        .css-1vv7r1s input:-webkit-autofill, .css-1vv7r1s input:-webkit-autofill:hover, .css-1vv7r1s input:-webkit-autofill:focus, .css-1vv7r1s input:-webkit-autofill:active {
+            background-clip: text;
+            -webkit-text-fill-color: rgb(255, 255, 255);
+            transition: background-color 5000s ease-in-out;
+            box-shadow: transparent 0px 0px 20px 20px inset;
+        }
+
+        .css-1vv7r1s input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+.css-nncgg {
+    background: rgb(49, 172, 238);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+    .css-nncgg.disabled {
+        background-color: grey;
+        pointer-events: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+.css-inwg8j {
+    width: 100%;
+    margin-top: 24px;
+    position: relative;
+    height: calc(100% - 40px);
+    overflow-x: hidden;
+    padding-bottom: 200px;
+}
+
+.css-3delch {
+    background: rgb(255, 51, 68);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+.css-94nc50 .section:not(:first-of-type) {
+    margin-top: 32px;
+}
+
+.css-94nc50 .form {
+    margin-top: 16px;
+    display: grid;
+    gap: 16px;
+}
+
+.css-94nc50 .section_titles .title {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    color: rgb(255, 255, 255);
+}
+
+.css-94nc50 .section_titles .subtitle {
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 2px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.css-94nc50 .section_content {
+    margin-top: 24px;
+    display: grid;
+    gap: 16px;
+}
+
+.css-94nc50 .section_footer {
+    margin-top: 16px;
+}
+
+.css-yxtzq2 {
+    background: rgb(1, 178, 139);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+.input_fa {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 1.125rem;
+    line-height: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    outline: none;
+}
+
+.input_f {
+    position: absolute;
+    inset: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    text-align: left;
+    opacity: 1;
+    color: transparent;
+    pointer-events: all;
+    background: transparent;
+    caret-color: transparent;
+    border: 0px solid transparent;
+    outline: transparent solid 0px;
+    box-shadow: none;
+    line-height: 1;
+    letter-spacing: -0.5em;
+    font-size: var(--root-height);
+    font-family: monospace;
+    font-variant-numeric: tabular-nums;
+}

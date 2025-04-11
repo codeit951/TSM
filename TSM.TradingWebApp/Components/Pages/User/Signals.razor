@@ -1,0 +1,234 @@
+﻿@page "/user/signals"
+
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<link href="pages/signals.css" rel="stylesheet" />
+
+<div class="scrollbar-hide css-66hwna">
+    <SignalsHistoryComponent @bind-Transform="historyTransform" @rendermode="InteractiveServer" />
+    <div class="css-6ymeda"></div>
+    <div class="css-140tsbc">
+        <div class="top">
+            <div class="css-1vdt97u">
+                <span class="balance">
+                    <span class="eyes_wrapper">
+                        <p>Signal Balance</p>
+                        <button class="eyes_button">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="14"
+                                 height="14"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.5"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="lucide lucide-eye-off eye">
+                                <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+                                <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+                                <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+                                <path d="m2 2 20 20"></path>
+                            </svg>
+                        </button>
+                    </span>
+                    <span class="user_balance" style="display: block;">$0.00</span>
+                    <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                </span>
+                <button class="signal_balance_button" @onclick="OpenModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
+                        <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                        <line x1="2" x2="22" y1="10" y2="10"></line>
+                    </svg>
+                    <p>Deposit</p>
+                </button>
+            </div>
+            <div class="css-sqwiyb">
+                <span class="signal_info_card_top">
+                    <p>No active signal</p>
+                    <p class="text-btn view_history" @onclick="ShowHistory">View history</p>
+                </span>
+                <div class="signal_info_card_bottom">
+                    <div class="signal_strength_wrapper">
+                        <span>
+                            <p class="account_section_title signal_strength">Signal strength</p>
+                            <p class="red" style="font-size: 14px; font-weight: 600;">0%</p>
+                        </span>
+                        <div class="signal_wrapper">
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mid_section">
+            <div class="mid_section_top"><p>Signals</p></div>
+            <div class="signal_cards_wrapper">
+                <div class="grids css-113fuih">
+                    <div class="signal_card css-k9n2yz">
+                        <div class="signal_card_top"><p class="signal_title">AD V5</p></div>
+                        <div class="signal_card_details">
+                            <span class="signal_card_detail">
+                                <p>Signal price</p>
+                                <p>$2,000.00</p>
+                            </span>
+                            <span class="signal_card_detail">
+                                <p>Signal strength</p>
+                                <p class="signal_strength">10%</p>
+                            </span>
+                        </div>
+                        <div class="signal_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="2000.000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="signal_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
+                        </div>
+                    </div>
+                    <div class="signal_card css-k9n2yz">
+                        <div class="signal_card_top"><p class="signal_title">R25-M</p></div>
+                        <div class="signal_card_details">
+                            <span class="signal_card_detail">
+                                <p>Signal price</p>
+                                <p>$5,000.00</p>
+                            </span>
+                            <span class="signal_card_detail">
+                                <p>Signal strength</p>
+                                <p class="signal_strength">25%</p>
+                            </span>
+                        </div>
+                        <div class="signal_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="5000.000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="signal_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
+                        </div>
+                    </div>
+                    <div class="signal_card css-k9n2yz">
+                        <div class="signal_card_top"><p class="signal_title">BC-IRC LEVEL2 Pro</p></div>
+                        <div class="signal_card_details">
+                            <span class="signal_card_detail">
+                                <p>Signal price</p>
+                                <p>$10,000.00</p>
+                            </span>
+                            <span class="signal_card_detail">
+                                <p>Signal strength</p>
+                                <p class="signal_strength">50%</p>
+                            </span>
+                        </div>
+                        <div class="signal_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="10000.000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="signal_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
+                        </div>
+                    </div>
+                    <div class="signal_card css-k9n2yz">
+                        <div class="signal_card_top"><p class="signal_title">RBF V6 25000</p></div>
+                        <div class="signal_card_details">
+                            <span class="signal_card_detail">
+                                <p>Signal price</p>
+                                <p>$25,000.00</p>
+                            </span>
+                            <span class="signal_card_detail">
+                                <p>Signal strength</p>
+                                <p class="signal_strength">100%</p>
+                            </span>
+                        </div>
+                        <div class="signal_card_amount">
+                            <div class="css-v6puf8">
+                                <label>Amount</label>
+                                <div class="amountbox_wrapper">
+                                    <input type="number" placeholder="25000.000" /><span class="amount_select"><p>USD</p></span>
+                                </div>
+                                <div class="captions">
+                                    <span class="caption">
+                                        <p>Current balance</p>
+                                        <p>$0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="signal_card_footer">
+                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="signal_history"></div>
+    </div>
+</div>
+<NewDepositComponent @bind-IsActive="IsDepositActive" @rendermode="InteractiveServer" />
+@code {
+
+    private string historyTransform = "100%";
+
+    private bool IsDepositActive = false;
+
+    private void OpenModal()
+    {
+        IsDepositActive = true;
+    }
+
+    private async Task ShowHistory()
+    {
+        historyTransform = "0%";
+        await JS.InvokeVoidAsync("registerOutsideClickSubscribe", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void CloseHistory()
+    {
+        historyTransform = "100%";
+        StateHasChanged(); // Ensure UI updates
+    }
+}

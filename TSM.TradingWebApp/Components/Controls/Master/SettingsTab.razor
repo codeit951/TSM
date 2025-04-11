@@ -29,7 +29,7 @@
         </div>
         <div class="settings_options">
             <ul class="settings_option css-cgifpv">
-                <li class="settings_option_item payments">
+                <li class="settings_option_item payments" @onclick="TogglePayments">
                     <div class="settings_option_item_icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -50,14 +50,60 @@
                         <p class="description">Deposit and Withdraw</p>
                     </div>
                 </li>
+                <li class="settings_option_item payments @(IsPaymentShow?"":"hidden")">
+                    <a href="/user/deposit">
+                    <div class="settings_option_item_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             class="lucide lucide-credit-card">
+                            <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                            <line x1="2" x2="22" y1="10" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="settings_option_item_content">
+                        <p class="title">Deposit</p>
+                        <p class="description">Deposit funds into your account</p>
+                    </div>
+                    </a>
+                </li>
+                <li class="settings_option_item payments @(IsPaymentShow?"":"hidden")">
+                    <a href="/user/withdraw">
+                    <div class="settings_option_item_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             class="lucide lucide-credit-card">
+                            <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                            <line x1="2" x2="22" y1="10" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="settings_option_item_content">
+                        <p class="title">Withdraw</p>
+                        <p class="description">Withdrawals might take up to 24 hours to process</p>
+                    </div>
+                    </a>
+                </li>
             </ul>
             <ul class="settings_option css-cgifpv">
                 <p class="title option_title">Profile</p>
                 @if (user is not null)
                 {
-                    @if (user.EmailStatus != StatusType.Active)
+                    @if (user.Status != StatusType.Active)
                     {
-                        <li class="settings_option_item verification">
+                        <li class="settings_option_item verification" @onclick="OpenVerifyModal">
                             <div class="settings_option_item_icon">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -81,7 +127,7 @@
                         </li>
                     }
                 }
-                <li class="settings_option_item personal">
+                <li class="settings_option_item personal" @onclick="OpenProfileModal">
                     <div class="settings_option_item_icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="16"
@@ -102,7 +148,7 @@
                         <p class="description">Your personal information</p>
                     </div>
                 </li>
-                <li class="settings_option_item security">
+                <li class="settings_option_item security" @onclick="OpenSecurityModal">
                     <div class="settings_option_item_icon">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="16"
@@ -197,6 +243,9 @@
         </div>
     </div>
 </div>
+<VerificationTab @bind-Transform="verifyTransform" @rendermode="InteractiveServer" user="user" />
+<ProfileTab @bind-Transform="profileTransform" @rendermode="InteractiveServer" user="user" />
+<SecurityTab @bind-Transform="securityTransform" @rendermode="InteractiveServer" user="user" />
 @code{
     [Parameter]
     public string Transform { get; set; }
@@ -204,6 +253,32 @@
 
     [Parameter]
     public User? user { get; set; }
+
+    private string verifyTransform = "100%";
+    private string profileTransform = "100%";
+    private string securityTransform = "100%";
+
+    private void OpenProfileModal()
+    {
+        profileTransform = "0%";
+    }
+
+    private void OpenSecurityModal()
+    {
+        securityTransform = "0%";
+    }
+
+    private void OpenVerifyModal()
+    {
+        verifyTransform = "0%";
+    }
+
+    private bool IsPaymentShow = false;
+
+    private void TogglePayments()
+    {
+        IsPaymentShow = !IsPaymentShow;
+    }
 
     private void UpdateTransform()
     {

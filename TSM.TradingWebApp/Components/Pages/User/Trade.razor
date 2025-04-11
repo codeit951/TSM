@@ -1,0 +1,12 @@
+﻿@page "/user/trade"
+@layout Layout.UserLayout
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+
+<div class="scrollbar-hide css-66hwna">
+    <div class="css-1mq6rco">
+        <TradeAreaComponent @rendermode="InteractiveServer" />
+        <TradeHistoryComponent @rendermode="InteractiveServer" />
+    </div>
+</div>
