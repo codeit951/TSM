@@ -1,0 +1,65 @@
+﻿@page "/crypto"
+@using Microsoft.AspNetCore.SignalR.Client
+@using TSM.TradingWebApp.Prices
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h3>Real-Time BTC Price</h3>
+<p>Status: @hubConnection?.State</p>
+@if (price == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>BTC: $@price</p>
+    @CryptoPriceWorker.CurrentPrice
+}
+
+@code {
+    private HubConnection hubConnection;
+    private decimal price;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/cryptohub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.On<string, decimal>("ReceivePrice", async(symbol, newPrice) =>
+        {
+            if (symbol == "BTC")
+            {
+                await InvokeAsync(() =>
+                {
+                    price = newPrice;
+                    CryptoPriceWorker.CurrentPrice = newPrice;
+                    Console.WriteLine($"Updated price: {price}");
+                    UpdateUI();
+                });
+            }
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task UpdateUI()
+    {
+        this.StateHasChanged();
+        await Task.Yield();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    { 
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection != null)
+        {
+            await hubConnection.StopAsync();
+            await hubConnection.DisposeAsync();
+        }
+    }
+}

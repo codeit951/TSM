@@ -7,10 +7,10 @@ using TSM.CoreBusiness;
 using TSM.EFCoreSqlServer;
 using TSM.InMemoryStore;
 using TSM.TradingWebApp.Components;
+using TSM.TradingWebApp.Prices;
 using TSM.UseCase.Assets;
 using TSM.UseCase.PluginInterfaces;
 using TSM.UseCase.Users;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +32,6 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddUserStore<UsersRepositoryEF>()
     .AddRoleStore<RoleRepositoryEF>()
     .AddDefaultTokenProviders();
-// Change the lifetimes of the `UserStore` and `RoleStore` to transient
-builder.Services.AddTransient<IUserStore<User>, UsersRepositoryEF>();
-builder.Services.AddTransient<IRoleStore<IdentityRole>, RoleRepositoryEF>();
 
 // Configure authentication cookie settings
 builder.Services.ConfigureApplicationCookie(options =>
@@ -55,15 +52,23 @@ builder.Services.AddDbContext<TSMContext>(options =>
 {
     options.UseSqlServer(connection,
          sql => sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-},ServiceLifetime.Transient);
+},ServiceLifetime.Scoped);
 
-builder.Services.AddTransient<IAssetsRepository, AssetsRepositoryEF>();
-builder.Services.AddTransient<IUserRepository, UsersRepositoryEF>();
+builder.Services.AddDbContext<TSMContext2>(options =>
+{
+    options.UseSqlServer(connection,
+         sql => sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+}, ServiceLifetime.Scoped);
+
+builder.Services.AddScoped<IAssetsRepository, AssetsRepositoryEF>();
+builder.Services.AddScoped<IUserRepository, UsersRepositoryEF>();
+builder.Services.AddScoped<TSMContext>();
 
 builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>();
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();
 builder.Services.AddTransient<IUpdateUserBalanceUseCase, UpdateUserBalanceUseCase>();
 builder.Services.AddTransient<IAddTradeUseCase, AddTradeUseCase>();
+builder.Services.AddTransient<IGetUserByEmailUseCase, GetUserByEmailUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();
@@ -71,8 +76,11 @@ builder.Services.AddTransient<IViewAssetByIdUseCase, ViewAssetByIdUseCase>();
 builder.Services.AddTransient<IDeleteAssetUseCase, DeleteAssetUseCase>();
 builder.Services.AddTransient<IUpdateAssetUseCase, UpdateAssetUseCase>();
 
-var app = builder.Build();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<CryptoPriceWorker>();
 
+var app = builder.Build();
+app.MapHub<CryptoHub>("/cryptohub");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

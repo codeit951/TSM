@@ -1,10 +1,11 @@
 ﻿
 /*! CSS Used from: Embedded */
 .css-1ov6cn9 .balance_card_bottom {
-    margin-top: 44px;
+    margin-top: 10px;
     overflow: scroll;
     position: relative;
     padding-bottom: 20px;
+    height: 280px;
 }
 
 .css-1ov6cn9 .balance_card_bottom_title {

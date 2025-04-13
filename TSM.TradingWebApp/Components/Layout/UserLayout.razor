@@ -1,4 +1,4 @@
-﻿@inject UserManager<User> UserManager
+﻿@inject IGetUserByEmailUseCase GetUserByEmailUseCase
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inherits LayoutComponentBase
 <link href="static/css/dashboard.css" rel="stylesheet" />
@@ -40,7 +40,7 @@
 
         if (!string.IsNullOrEmpty(username))
         {
-            user = await UserManager.FindByNameAsync(username);
+            user = await GetUserByEmailUseCase.Execute(username);
         }
     }
 }

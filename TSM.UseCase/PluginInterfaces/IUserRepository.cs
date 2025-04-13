@@ -10,6 +10,7 @@ namespace TSM.UseCase.PluginInterfaces
     public interface IUserRepository
     {
         Task AddTrade(Guid userID, Trade trade);
+        Task<User?> GetByEmailAsync(string email);
         Task<List<User>> GetUsersByName(string name);
         Task UpdateTrade(Guid userID, Trade trade);
         Task UpdateUserBalance(Guid userID, List<Balance> balances);

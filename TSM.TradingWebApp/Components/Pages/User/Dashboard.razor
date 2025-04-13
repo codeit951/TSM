@@ -3,6 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @layout Layout.UserLayout
 @attribute [Authorize]
+@rendermode InteractiveServer
 
 <div class="scrollbar-hide css-66hwna">
     <div class="css-1mq6rco">
@@ -30,7 +31,8 @@
         if (!string.IsNullOrEmpty(username))
         {
             user = await UserManager.FindByNameAsync(username);
-           
+            StateHasChanged();
         }
     }
-}
+
+    }

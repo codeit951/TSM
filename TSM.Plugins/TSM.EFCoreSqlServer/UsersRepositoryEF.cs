@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TSM.CoreBusiness;
 using TSM.UseCase.PluginInterfaces;
@@ -13,10 +14,12 @@ namespace TSM.EFCoreSqlServer
     public class UsersRepositoryEF : IUserStore<User>, IUserPasswordStore<User>, IUserRepository
     {
         private readonly TSMContext db;
+        private readonly TSMContext2 context2;
 
-        public UsersRepositoryEF(TSMContext db)
+        public UsersRepositoryEF(TSMContext db, TSMContext2 context2)
         {
             this.db = db;
+            this.context2 = context2;
         }
         public async Task AddTrade(Guid userID, Trade trade)
         {
@@ -52,18 +55,27 @@ namespace TSM.EFCoreSqlServer
 
         public async Task<User?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return await db.Users.Include(u => u.Trades).Include(u=>u.Balances).FirstOrDefaultAsync(u => u.UserID.ToString() == userId, cancellationToken);
+            return await db.Users.Include(u => u.Trades).Include(u=>u.Balances).ThenInclude(b => b.Asset).FirstOrDefaultAsync(u => u.UserID.ToString() == userId, cancellationToken);
             
         }
 
-        public Task<User?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<User?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return db.Users
+            return await db.Users
                 .Include(u => u.Trades)
                 .Include(u => u.Balances)
+                .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.Email == normalizedUserName, cancellationToken); // Include token
         }
 
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await context2.Users
+                .Include(u => u.Trades)
+                .Include(u => u.Balances)
+                .ThenInclude(b => b.Asset)
+                .FirstOrDefaultAsync(u => u.Email == email);
+        }
 
         public Task<string?> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
@@ -81,7 +93,7 @@ namespace TSM.EFCoreSqlServer
 
         public async Task<List<User>> GetUsersByName(string name)
         {
-            return await db.Users.Include(u => u.Trades).Include(u => u.Balances).Where(u => u.FirstName.ToLower().IndexOf(name.ToLower()) >= 0 || u.LastName.ToLower().IndexOf(name.ToLower()) >= 0).ToListAsync();
+            return await db.Users.Include(u => u.Trades).Include(u => u.Balances).ThenInclude(b => b.Asset).Where(u => u.FirstName.ToLower().IndexOf(name.ToLower()) >= 0 || u.LastName.ToLower().IndexOf(name.ToLower()) >= 0).ToListAsync();
             
         }
 
@@ -142,7 +154,7 @@ namespace TSM.EFCoreSqlServer
             {
                 foreach (var balance in balances)
                 {
-                    var existingBalance = await db.Balances.FindAsync(balance.BalanceId);
+                    var existingBalance = await db.Balances.FirstOrDefaultAsync(b=>b.UserId==userID&&b.AssetId==balance.AssetId);
                     if (existingBalance != null)
                     {
                         existingBalance.Available = balance.Available;

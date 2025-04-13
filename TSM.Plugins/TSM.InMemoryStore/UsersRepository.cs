@@ -83,6 +83,11 @@ namespace TSM.InMemoryStore
             return Task.FromResult(user);
         }
 
+        public Task<User?> GetByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.Email);

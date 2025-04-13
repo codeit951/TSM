@@ -1,5 +1,5 @@
 ﻿@rendermode InteractiveServer
-
+@inject NavigationManager NavigationManager
 
 <div class="balance_card_top">
     <div class="balance_card_top_wrapper">
@@ -16,6 +16,7 @@
                 </button>
             </span>
             <span class="user_balance" style="display: block;">$0.00</span>
+
             <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
         </div>
     </div>
@@ -28,62 +29,19 @@
         </p><button class="assets_button">View all assets</button>
     </span>
     <div class="balance_card_bottom_wrapper">
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/BTC.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Bitcoin</p>
-                    <p>BTC</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 BTC</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/ETH.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Ethereum</p>
-                    <p>ETH</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 ETH</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/USD.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>United States Dollars</p>
-                    <p>USD</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 USD</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/AAPL.svg" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Apple</p>
-                    <p>AAPL</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 AAPL</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
+        @if (user is not null)
+        {
+            foreach (var balance in user.Balances)
+            {
+                if (balance.Asset.IsStar)
+                {
+                    <p>@price</p>
+                    <BalanceListItem Balance="balance" ToUsd="price" />
+                }
+            }
+
+        }
+
     </div>
 </div>
 <div class="balance_card_bottom scrollbar-hide @(showTab==2?"":"hidden")">
@@ -127,11 +85,11 @@
         {
             <div class="account_summary_new_item">
                 <span>
-                <img src="img/verify.svg" alt="icon">
-                <p class="title">Verification</p>
-            </span>
-            <p class="value" style="color: rgb(255, 51, 68);">Your account is not verified</p>
-        </div>
+                    <img src="img/verify.svg" alt="icon">
+                    <p class="title">Verification</p>
+                </span>
+                <p class="value" style="color: rgb(255, 51, 68);">Your account is not verified</p>
+            </div>
         }
     </div>
 </div>
@@ -139,6 +97,36 @@
 @code{
     [Parameter]
     public User? user { get; set; }
+
+    private HubConnection hubConnection;
+    private decimal? price = 10;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/cryptohub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.On<string, decimal>("ReceivePrice", (symbol, newPrice) =>
+        {
+            if (symbol == "BTC")
+            {
+                price = newPrice;
+                StateHasChanged();
+            }
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection != null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
 
     private int showTab = 1;
 
