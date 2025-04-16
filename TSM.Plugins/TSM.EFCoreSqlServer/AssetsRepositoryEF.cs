@@ -11,14 +11,15 @@ namespace TSM.EFCoreSqlServer
 {
     public class AssetsRepositoryEF : IAssetsRepository
     {
-        private readonly TSMContext db;
+        private readonly IDbContextFactory<TSMContext> contextFactory;
 
-        public AssetsRepositoryEF(TSMContext db)
+        public AssetsRepositoryEF(IDbContextFactory<TSMContext> contextFactory)
         {
-            this.db = db;
+            this.contextFactory = contextFactory;
         }
         public async Task AddAssets(Asset asset)
         {
+            await using var db = this.contextFactory.CreateDbContext();
             db.Assets?.Add(asset);
             await db.SaveChangesAsync();
            
@@ -26,6 +27,7 @@ namespace TSM.EFCoreSqlServer
 
         public async Task DeleteAssets(int assetId)
         {
+            await using var db = this.contextFactory.CreateDbContext();
             var existingAsset = await db.Assets.FindAsync(assetId);
             if (existingAsset != null)
             {
@@ -36,16 +38,25 @@ namespace TSM.EFCoreSqlServer
 
         public async Task<Asset> GetAssetsByID(int assetId)
         {
+            await using var db = this.contextFactory.CreateDbContext();
             return await db.Assets.FindAsync(assetId);
         }
 
         public async Task<List<Asset>> GetAssetsByName(string assetName)
         {
+            await using var db = this.contextFactory.CreateDbContext();
             return await db.Assets.Where(a=>a.AssetName.ToLower().IndexOf(assetName.ToLower()) >= 0|| a.AssetSymbol.ToLower().IndexOf(assetName.ToLower()) >= 0).ToListAsync();
+        }
+
+        public async Task<List<Asset>> GetAssetsByType(string assetType)
+        {
+            await using var db = this.contextFactory.CreateDbContext();
+            return await db.Assets.Where(a => a.AssetType.ToLower().IndexOf(assetType.ToLower()) >= 0).ToListAsync();
         }
 
         public async Task UpdateAssets(Asset asset)
         {
+            await using var db = this.contextFactory.CreateDbContext();
             var existingAsset = await db.Assets.FindAsync(asset.AssetId);
             if (existingAsset != null)
             {

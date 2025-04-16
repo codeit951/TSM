@@ -1,0 +1,26 @@
+
+@rendermode InteractiveServer
+
+@if(balance is not null){
+<div class="css-a0n6wz">
+    <span class="balance_card_bottom_asset_left">
+        <img src="AssetIcons/@(balance.Asset.AssetSymbol).png" alt="icon">
+        <span class="balance_card_asset_titles">
+            <p>@balance.Asset.AssetName</p>
+            <p>@balance.Asset.AssetSymbol</p>
+        </span>
+    </span>
+    <span class="balance_card_bottom_asset_right">
+            <p>@(((ToUsd * balance.Available) ?? 0).ToString("C", CultureInfo.CreateSpecificCulture("en-US")))</p>
+        <p>@balance.Available @balance.Asset.AssetSymbol</p>
+    </span>
+    <button class="balance_card_button">Deposit</button>
+</div>
+}
+@code{
+    [Parameter]
+    public Balance? balance { get; set; }
+
+    [Parameter]
+    public decimal? ToUsd { get; set; }
+}

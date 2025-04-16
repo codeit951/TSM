@@ -1,4 +1,7 @@
 ﻿@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject CryptoPriceService PriceService
+@inject IViewAssetsByTypeUseCase ViewAssetsByType
 
 
 <div class="balance_card_top">
@@ -28,62 +31,33 @@
         </p><button class="assets_button">View all assets</button>
     </span>
     <div class="balance_card_bottom_wrapper">
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/BTC.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Bitcoin</p>
-                    <p>BTC</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 BTC</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/ETH.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Ethereum</p>
-                    <p>ETH</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 ETH</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/USD.png" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>United States Dollars</p>
-                    <p>USD</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 USD</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
-        <div class="css-a0n6wz">
-            <span class="balance_card_bottom_asset_left">
-                <img src="cryptoIcons/AAPL.svg" alt="icon">
-                <span class="balance_card_asset_titles">
-                    <p>Apple</p>
-                    <p>AAPL</p>
-                </span>
-            </span>
-            <span class="balance_card_bottom_asset_right">
-                <p>$0.00</p>
-                <p>0.0000 AAPL</p>
-            </span>
-            <button class="balance_card_button">Deposit</button>
-        </div>
+        @if (user is not null)
+        {
+            foreach (var balance in user.Balances)
+            {
+                if (balance.Asset.IsStar)
+                {
+                    if (price is not null && price.ContainsKey(balance.Asset.AssetSymbol))
+                    {
+                        <BalanceListItem Balance="balance" ToUsd="@price[balance.Asset.AssetSymbol]" />
+                    }
+                    else if (otherprices is not null && otherprices.ContainsKey(balance.Asset.AssetSymbol))
+                    {
+                        <BalanceListItem Balance="balance" ToUsd="@otherprices[balance.Asset.AssetSymbol]" />
+                    }
+                    else if (stockprices is not null && stockprices.ContainsKey(balance.Asset.AssetSymbol))
+                    {
+                        <BalanceListItem Balance="balance" ToUsd="@stockprices[balance.Asset.AssetSymbol]" />
+                    }
+                    else
+                    {
+                        <BalanceListItem Balance="balance" />
+                    }
+                }
+            }
+
+        }
+
     </div>
 </div>
 <div class="balance_card_bottom scrollbar-hide @(showTab==2?"":"hidden")">
@@ -139,6 +113,39 @@
 @code{
     [Parameter]
     public User? user { get; set; }
+
+    private Dictionary<string, decimal>? price;
+
+    private ForexPrice forexPrice;
+    private Dictionary<string, decimal>? otherprices;
+
+    private StockPrice stockPrice;
+    private Dictionary<string, decimal>? stockprices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        price = PriceService.Prices;
+        PriceService.OnPriceUpdated += HandlePriceUpdate;
+
+        forexPrice = new ForexPrice(ViewAssetsByType);
+        await forexPrice.FetchPricesAsync();
+        otherprices = forexPrice.Prices;
+        
+        stockPrice = new StockPrice(ViewAssetsByType);
+        await stockPrice.GetStockPrice();
+        stockprices = stockPrice.Prices;
+    }
+
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        price = newPrice;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PriceService.OnPriceUpdated -= HandlePriceUpdate;
+    }
 
     private int showTab = 1;
 

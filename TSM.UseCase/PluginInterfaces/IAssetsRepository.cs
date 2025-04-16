@@ -13,6 +13,7 @@ namespace TSM.UseCase.PluginInterfaces
         Task DeleteAssets(int assetId);
         Task<Asset> GetAssetsByID(int assetId);
         Task<List<Asset>> GetAssetsByName(string assetName);
+        Task<List<Asset>> GetAssetsByType(string assetType);
         Task UpdateAssets(Asset asset);
     }
 }

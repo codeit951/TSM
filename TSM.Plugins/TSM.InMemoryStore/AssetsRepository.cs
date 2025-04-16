@@ -8,7 +8,7 @@ using TSM.UseCase.PluginInterfaces;
 
 namespace TSM.InMemoryStore
 {
-    public class AssetsRepository : IAssetsRepository
+    public class AssetsRepository /*: IAssetsRepository*/
     {
         private List<Asset> assets;
         public AssetsRepository()

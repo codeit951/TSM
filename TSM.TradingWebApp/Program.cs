@@ -48,17 +48,23 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthorization(); //  Ensure Authorization is also added
 
-string conn = builder.Configuration["ConnectionStrings:BrokerDB"];
-DbConnection connection = new SqlConnection(conn);
-
-builder.Services.AddDbContext<TSMContext>(options =>
+builder.Services.AddDbContextFactory<TSMContext>((services, options) =>
 {
-    options.UseSqlServer(connection,
-         sql => sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-},ServiceLifetime.Transient);
+    var connectionString = builder.Configuration["ConnectionStrings:BrokerDB"];
+    options.UseSqlServer(
+        connectionString,
+        sql =>
+        {
+            sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            sql.EnableRetryOnFailure(maxRetryCount: 5); // Add resiliency
+        }
+    );
+}, ServiceLifetime.Scoped);
 
-builder.Services.AddTransient<IAssetsRepository, AssetsRepositoryEF>();
-builder.Services.AddTransient<IUserRepository, UsersRepositoryEF>();
+
+
+builder.Services.AddScoped<IAssetsRepository, AssetsRepositoryEF>();
+builder.Services.AddScoped<IUserRepository, UsersRepositoryEF>();
 
 builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>();
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();
@@ -70,6 +76,11 @@ builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();
 builder.Services.AddTransient<IViewAssetByIdUseCase, ViewAssetByIdUseCase>();
 builder.Services.AddTransient<IDeleteAssetUseCase, DeleteAssetUseCase>();
 builder.Services.AddTransient<IUpdateAssetUseCase, UpdateAssetUseCase>();
+builder.Services.AddTransient<IViewAssetsByTypeUseCase, ViewAssetsByTypeUseCase>();
+
+builder.Services.AddSingleton<CryptoPriceService>();
+builder.Services.AddHostedService<CryptoPriceWorker>();
+builder.Services.AddSingleton<PricePageState>();
 
 var app = builder.Build();
 
