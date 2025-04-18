@@ -1,12 +1,13 @@
 @rendermode InteractiveServer
-
+@inject CryptoPriceService PriceService
+@inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
-
+@inject DynamicStateContainer State
 <div class="form">
     <div class="css-1azirga">
         <label>Type:</label>
         <div class="select_wrapper">
-            <select name="type" id="type_select">
+            <select name="type" id="type_select" @onchange="HandleTypeChange">
                 <option value="Crypto">Crypto</option>
                 <option value="Stocks">Stocks</option>
                 <option value="Forex">Forex</option>
@@ -28,10 +29,10 @@
                 <label>Amount:</label>
                 <div class="amountbox_wrapper">
                     <input type="number" placeholder="100">
-                    <div class="amount_select" @onclick="ToggleCoinsAndBalanceDropdown">
+                    <div class="amount_select buy" @onclick="ToggleCoinsAndBalanceDropdown">
                         <span class="icon_divider">
-                            <img src="./asseticons/BTC.svg" alt="">
-                            <p>BTC</p>
+                            <img src="./asseticons/@(selectedAsset).png" alt="">
+                            <p>@selectedAsset</p>
                         </span>
                         <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd">
@@ -44,15 +45,26 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @rendermode="InteractiveServer" />
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("buydd")" />
                 <div class="captions">
                     <span class="caption">
                         <p>Current USD balance:</p>
-                        <p class="value">0 USD</p>
+                        <p class="value">@mainBalance.ToString("C") USD</p>
                     </span>
                     <span class="caption">
-                        <p>Current BTC price</p>
-                        <p class="value" style="color: rgb(91, 222, 76);">$NaN</p>
+                        <p>Current @selectedAsset price</p>
+                        @if (selectedType == "Crypto"&& price is not null && price.ContainsKey(selectedAsset))
+                        {
+                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAsset].ToString("C")</p>
+                        }
+                        else if (selectedType == "Stocks" && stockprices is not null && stockprices.ContainsKey(selectedAsset))
+                        {
+                        <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAsset].ToString("C")</p>
+                        }
+                        else if (selectedType == "Forex" && otherprices is not null && otherprices.ContainsKey(selectedAsset))
+                        {
+                        <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAsset].ToString("C")</p>
+                        }
                     </span>
                 </div>
             </div>
@@ -63,7 +75,7 @@
                 <div class="amountbox_wrapper">
                     <input type="number" placeholder="-1.500" class="no-zoom-14px">
                     <div class="amount_select">
-                        <p>BTC</p>
+                        <p>@selectedAsset</p>
                     </div>
                 </div>
             </div>
@@ -72,7 +84,7 @@
                 <div class="amountbox_wrapper">
                     <input type="number" placeholder="1.500" class="no-zoom-14px">
                     <div class="amount_select">
-                        <p>BTC</p>
+                        <p>@selectedAsset</p>
                     </div>
                 </div>
             </div>
@@ -81,11 +93,11 @@
             <label>Leverage:</label>
             <div class="leverage_buttons">
                 <div class="css-y41jdg">
-                    <div class="input_wrapper" style="overflow: hidden;"><input type="number" placeholder="100" class="no-zoom-14px" value="5" style="transform: scale(0.98); font-weight: 500; opacity: 0; z-index: 99;"><input inputmode="decimal" rows="2" type="text" value="5x" style="text-align: start; position: absolute; left: 0px; top: 0px; user-select: none; pointer-events: none; padding-left: 3px; height: 100%;"></div>
+                    <div class="input_wrapper" style="overflow: hidden;"><input type="number" placeholder="100" class="no-zoom-14px" value="5" style="transform: scale(0.98); font-weight: 500; opacity: 0; z-index: 99;"><input inputmode="decimal" rows="2" type="text" value="@(leverage)x" style="text-align: start; position: absolute; left: 0px; top: 0px; user-select: none; pointer-events: none; padding-left: 3px; height: 100%;"></div>
                 </div>
-                <button type="button" class="css-40mlel">50x</button><button type="button" class="css-40mlel">250x</button><button type="button" class="css-40mlel">500x</button>
+                <button type="button" class="css-40mlel" @onclick="@(() => leverage = 50)">50x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 250)">250x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 500)">500x</button>
             </div>
-            <RangeInput TValue="int" @bind-Value="amount1" Min="0" Max="100" class="custom-range" />
+            <RangeInput TValue="int" @bind-Value="leverage" Min="0" Max="500" class="custom-range" />
         </div>
         <div class="css-1azirga">
             <label>Duration:</label>
@@ -129,20 +141,93 @@
     </button>
 </div>
 @code {
-    int amount1 = 10;
+    [Parameter]
+    public User? user { get; set; }
+
+
+    int leverage = 5;
+
+    private string selectedAsset = "BTC";
+
+    private decimal selectedAssetBalance = 0.0m;
+
+    private decimal mainBalance = 0.0m;
+
+    private string selectedType = "Crypto";
 
     private bool isCoinsAndBalanceDropdownOpen = false;
+
+    private Dictionary<string, decimal>? price;
+
+    private ForexPrice forexPrice;
+    private Dictionary<string, decimal>? otherprices;
+
+    private StockPrice stockPrice;
+    private Dictionary<string, decimal>? stockprices;
+
+
+    private void HandleTypeChange(ChangeEventArgs e)
+    {
+        selectedType = e.Value?.ToString() ?? "Crypto";
+        selectedAsset = selectedType switch
+        {
+            "Crypto" => "BTC",
+            "Stocks" => "AAPL",
+            "Forex" => "USD",
+            _ => "BTC"
+        };
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+        mainBalance = user?.Balances
+            .FirstOrDefault(b => b.Asset.AssetSymbol == "USD")?.Available ?? 0.0m;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        State.SetValue("TradingView", "BITGET:BTCUSDT");
+
+        price = PriceService.Prices;
+        PriceService.OnPriceUpdated += HandlePriceUpdate;
+
+        forexPrice = new ForexPrice(ViewAssetsByType);
+        await forexPrice.FetchPricesAsync();
+        otherprices = forexPrice.Prices;
+
+        stockPrice = new StockPrice(ViewAssetsByType);
+        await stockPrice.GetStockPrice();
+        stockprices = stockPrice.Prices;
+    }
+
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        price = newPrice;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PriceService.OnPriceUpdated -= HandlePriceUpdate;
+    }
 
     private void ToggleCoinsAndBalanceDropdown()
     {
         isCoinsAndBalanceDropdownOpen = !isCoinsAndBalanceDropdownOpen;
     }
 
+    private void HandleAssetSelection(string symbol)
+    {
+        // Handle selected asset symbol
+        selectedAsset = symbol;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("registerOutsideClick2", DotNetObjectReference.Create(this));
+            await JS.InvokeVoidAsync("registerOutsideClick2", DotNetObjectReference.Create(this), "buydd");
         }
     }
 

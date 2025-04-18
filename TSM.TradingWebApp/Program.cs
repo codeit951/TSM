@@ -7,6 +7,9 @@ using TSM.CoreBusiness;
 using TSM.EFCoreSqlServer;
 using TSM.InMemoryStore;
 using TSM.TradingWebApp.Components;
+using TSM.TradingWebApp.Components.Controls.Common;
+using TSM.TradingWebApp.Data;
+using TSM.TradingWebApp.Prices;
 using TSM.UseCase.Assets;
 using TSM.UseCase.PluginInterfaces;
 using TSM.UseCase.Users;
@@ -81,6 +84,9 @@ builder.Services.AddTransient<IViewAssetsByTypeUseCase, ViewAssetsByTypeUseCase>
 builder.Services.AddSingleton<CryptoPriceService>();
 builder.Services.AddHostedService<CryptoPriceWorker>();
 builder.Services.AddSingleton<PricePageState>();
+// Scoped for user-specific state, Singleton for app-wide state
+builder.Services.AddScoped<DynamicStateContainer>();
+builder.Services.AddScoped(typeof(IAsyncDisposable), typeof(TradingViewComponent));
 
 var app = builder.Build();
 

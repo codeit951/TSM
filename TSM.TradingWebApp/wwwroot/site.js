@@ -23,14 +23,47 @@
 
     });
 };
-window.registerOutsideClick2 = (dotnetHelper) => {
+window.registerOutsideClick2 = (dotnetHelper, id) => {
     document.addEventListener("mousedown", (event) => {
         
-        let coinsbaldown = document.getElementById("coinsbalarea");
-        let coinsbalButton = document.querySelector(".amount_select");
+        let coinsbaldown = document.getElementById(id);
+        let coinsbalButton = document.querySelector(".buy");
 
         if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
             dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdown");
+        }
+    });
+};
+window.registerOutsideClickSell = (dotnetHelper, id) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let coinsbaldown = document.getElementById(id);
+        let coinsbalButton = document.querySelector(".sell");
+
+        if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownSell");
+        }
+    });
+};
+window.registerOutsideClickConvertFrom = (dotnetHelper, id) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let coinsbaldown = document.getElementById(id);
+        let coinsbalButton = document.querySelector(".from");
+
+        if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownConvert");
+        }
+    });
+};
+window.registerOutsideClickConvertTo = (dotnetHelper, id) => {
+    document.addEventListener("mousedown", (event) => {
+
+        let coinsbaldown = document.getElementById(id);
+        let coinsbalButton = document.querySelector(".to");
+
+        if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
+            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownConvert");
         }
     });
 };
