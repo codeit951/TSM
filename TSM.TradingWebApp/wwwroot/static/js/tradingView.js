@@ -32,7 +32,7 @@ export function updateTradingView(containerId, symbol) {
 
 export function disposeTradingView(containerId) {
     if (widget) {
-        widget.remove();
+        //widget.remove();
         widget = null;
     }
 }

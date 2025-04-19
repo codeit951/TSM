@@ -2,7 +2,6 @@
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
-@inject DynamicStateContainer State
 <div class="form">
     <div class="css-1azirga">
         <label>Type:</label>
@@ -185,7 +184,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        State.SetValue("TradingView", "BITGET:BTCUSDT");
 
         price = PriceService.Prices;
         PriceService.OnPriceUpdated += HandlePriceUpdate;

@@ -48,16 +48,11 @@ namespace TSM.TradingWebApp.Prices
 
                     } 
                 }
-                await Task.Delay(3000, stoppingToken);
+                await Task.Delay(10000, stoppingToken);
             }
         }
 
-        private Task<decimal> FetchPriceAsync()
-        {
-            var random = new Random();
-            return Task.FromResult(30000m + random.Next(0, 500));
-        }
-
+        
         private async Task<decimal> FetchPriceAsync(string symbol, CancellationToken stoppingToken)
         {
             decimal price = 0;

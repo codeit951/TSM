@@ -52,7 +52,7 @@ window.registerOutsideClickConvertFrom = (dotnetHelper, id) => {
         let coinsbalButton = document.querySelector(".from");
 
         if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
-            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownConvert");
+            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownFrom");
         }
     });
 };
@@ -63,7 +63,7 @@ window.registerOutsideClickConvertTo = (dotnetHelper, id) => {
         let coinsbalButton = document.querySelector(".to");
 
         if (coinsbaldown && !coinsbaldown.contains(event.target) && !coinsbalButton.contains(event.target)) {
-            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownConvert");
+            dotnetHelper.invokeMethodAsync("CloseCoinsAndBalanceDropdownTo");
         }
     });
 };

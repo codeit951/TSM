@@ -2,18 +2,17 @@
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
-@inject DynamicStateContainer State
 <div class="form">
     <div class="form">
         <div class="amount_with_dropdown">
             <div class=" css-v6puf8">
                 <label>From:</label>
                 <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.03" class="no-zoom-14px">
+                    <input type="number" placeholder="0.03" value="@FromAmount" @oninput="HandleFromAmountChange" class="no-zoom-14px">
                     <div class="amount_select from" @onclick="ToggleCoinsAndBalanceDropdown">
                         <span class="icon_divider">
-                            <img src="./asseticons/@(selectedAsset).png" alt="">
-                            <p>@selectedAsset</p>
+                            <img src="./asseticons/@(selectedAssetFrom).png" alt="">
+                            <p>@selectedAssetFrom</p>
                         </span>
                         <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd">
@@ -26,16 +25,36 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("fromdd")" />
-                <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;"><button class=" disabled css-40mlel" value="10" type="button" disabled="">10%</button><button class=" disabled css-40mlel" value="25" type="button" disabled="">25%</button><button class=" disabled css-40mlel" value="50" type="button" disabled="">50%</button><button class=" disabled css-40mlel" value="75" type="button" disabled="">75%</button><button class=" disabled css-40mlel" value="MAX" type="button" disabled="">MAX</button></div>
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("convertddfrom")" />
+                <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;">
+                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(10))">10%</button>
+                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(25))">25%</button>
+                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(50))">50%</button>
+                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(75))">75%</button>
+                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(100))">MAX</button>
+                </div>
                 <div class="captions">
                     <span class="caption">
-                        <p>Current @selectedAsset balance:</p>
-                        <p class="value">0 JPY</p>
+                        <p>Current @selectedAssetFrom balance:</p>
+                        <p class="value">@FromBalance @selectedAssetFrom</p>
                     </span>
                     <span class="caption">
-                        <p>Current @selectedAsset price</p>
-                        <p class="value" style="color: rgb(91, 222, 76);">$0.007</p>
+                        <p>Current @selectedAssetFrom price</p>
+                        @if (price is not null && price.ContainsKey(selectedAssetFrom))
+                        {
+                            FromPrice = price[selectedAssetFrom];
+                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAssetFrom].ToString("C")</p>
+                        }
+                        else if (stockprices is not null && stockprices.ContainsKey(selectedAssetFrom))
+                        {
+                            FromPrice = stockprices[selectedAssetFrom];
+                            <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAssetFrom].ToString("C")</p>
+                        }
+                        else if (otherprices is not null && otherprices.ContainsKey(selectedAssetFrom))
+                        {
+                            FromPrice = otherprices[selectedAssetFrom];
+                            <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAssetFrom].ToString("C")</p>
+                        }
                     </span>
                 </div>
             </div>
@@ -44,11 +63,11 @@
             <div class=" css-v6puf8">
                 <label>To:</label>
                 <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.0000" disabled="" class="no-zoom-14px" value="0.0000">
+                    <input type="number" placeholder="0.0000" disabled="" class="no-zoom-14px" @bind-value="ToAmount">
                     <div class="amount_select to" @onclick="ToggleCoinsAndBalanceDropdown2">
                         <span class="icon_divider">
-                            <img src="./asseticons/@(selectedAsset).png" alt="">
-                            <p>AUD</p>
+                            <img src="./asseticons/@(selectedAssetTo).png" alt="">
+                            <p>@selectedAssetTo</p>
                         </span>
                         <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd">
@@ -61,15 +80,29 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" user="user" @rendermode="InteractiveServer" elementId="@("todd")" />
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" user="user" @rendermode="InteractiveServer" elementId="@("convertddto")" />
                 <div class="captions">
                     <span class="caption">
-                        <p>Current AUD balance:</p>
-                        <p class="value">0 AUD</p>
+                        <p>Current @selectedAssetTo balance:</p>
+                        <p class="value">@ToBalance @selectedAssetTo</p>
                     </span>
                     <span class="caption">
-                        <p>Current AUD price</p>
-                        <p class="value" style="color: rgb(91, 222, 76);">$0.607</p>
+                        <p>Current @selectedAssetTo price</p>
+                        @if (price is not null && price.ContainsKey(selectedAssetTo))
+                        {
+                            ToPrice = price[selectedAssetTo];
+                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAssetTo].ToString("C")</p>
+                        }
+                        else if (stockprices is not null && stockprices.ContainsKey(selectedAssetTo))
+                        {
+                            ToPrice = stockprices[selectedAssetTo];
+                            <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAssetTo].ToString("C")</p>
+                        }
+                        else if (otherprices is not null && otherprices.ContainsKey(selectedAssetTo))
+                        {
+                            ToPrice = otherprices[selectedAssetTo];
+                            <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAssetTo].ToString("C")</p>
+                        }
                     </span>
                 </div>
             </div>
@@ -84,27 +117,93 @@
     [Parameter]
     public User? user { get; set; }
 
-    private string selectedAsset = "BTC";
+    private string selectedAssetFrom = "USD";
+    private decimal FromBalance = 0.0m;
+    private decimal FromAmount = 0.0m;
+    private decimal FromPrice = 0.0m;
+    private string selectedAssetTo = "BTC";
+    private decimal ToBalance = 0.0m;
+    private decimal ToAmount = 0.0m;
+    private decimal ToPrice = 0.0m;
 
-    private string selectedType = "Crypto";
-
+    private string selectedType = "All";
 
     private bool isCoinsAndBalanceDropdownOpen = false;
     private bool isCoinsAndBalanceDropdownOpen2 = false;
 
+    private Dictionary<string, decimal>? price;
+
+    private ForexPrice forexPrice;
+    private Dictionary<string, decimal>? otherprices;
+
+    private StockPrice stockPrice;
+    private Dictionary<string, decimal>? stockprices;
+
+    private void CalculatePercentage(int percentage){
+        FromAmount = FromBalance * percentage / 100;
+        decimal convertedUSD = FromAmount * FromPrice;
+        ToAmount = convertedUSD / ToPrice;
+    }
+
+    private void HandleFromAmountChange(ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value.ToString(), out decimal value))
+        {
+            FromAmount = value;
+            decimal convertedUSD = FromAmount * FromPrice;
+            ToAmount = convertedUSD / ToPrice;
+        }
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+        FromBalance = user?.Balances
+            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
+        ToBalance = user?.Balances
+            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        price = PriceService.Prices;
+        PriceService.OnPriceUpdated += HandlePriceUpdate;
+
+        forexPrice = new ForexPrice(ViewAssetsByType);
+        await forexPrice.FetchPricesAsync();
+        otherprices = forexPrice.Prices;
+
+        stockPrice = new StockPrice(ViewAssetsByType);
+        await stockPrice.GetStockPrice();
+        stockprices = stockPrice.Prices;
+    }
+
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        price = newPrice;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PriceService.OnPriceUpdated -= HandlePriceUpdate;
+    }
 
     private void HandleAssetSelection(string symbol)
     {
         // Handle selected asset symbol
-        selectedAsset = symbol;
-
+        selectedAssetFrom = symbol;
+        FromBalance = user?.Balances
+            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
     }
 
     private void HandleAssetSelection2(string symbol)
     {
         // Handle selected asset symbol
-        //selectedAsset = symbol;
-
+        selectedAssetTo = symbol;
+        ToBalance = user?.Balances
+            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
     }
 
     private void ToggleCoinsAndBalanceDropdown()
@@ -120,15 +219,21 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("registerOutsideClickConvertFrom", DotNetObjectReference.Create(this), "convertddfrom");
-            await JS.InvokeVoidAsync("registerOutsideClickConvertTo", DotNetObjectReference.Create(this), "convertddto");
+            //await JS.InvokeVoidAsync("registerOutsideClickConvertFrom", DotNetObjectReference.Create(this), "convertddfrom");
+            //await JS.InvokeVoidAsync("registerOutsideClickConvertTo", DotNetObjectReference.Create(this), "convertddto");
           }
     }
 
     [JSInvokable]
-    public void CloseCoinsAndBalanceDropdownConvert()
+    public void CloseCoinsAndBalanceDropdownFrom()
     {
         isCoinsAndBalanceDropdownOpen = false;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void CloseCoinsAndBalanceDropdownTo()
+    {
         isCoinsAndBalanceDropdownOpen2 = false;
         StateHasChanged();
     }

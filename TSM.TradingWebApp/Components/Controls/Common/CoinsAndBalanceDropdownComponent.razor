@@ -24,10 +24,9 @@
                 {
                     <div class="error-message">@errorMessage</div>
                 }
-                @if (!isLoading)
+                
+                @foreach (var asset in FilteredAssets)
                 {
-                    foreach (var asset in FilteredAssets)
-                    {
                         <div class="asset-item"
                         style="display: flex; align-items: center; justify-content: space-between;"
                         @onclick="(() => OnClickAsset(asset))">
@@ -43,8 +42,8 @@
                                 <p>@asset.Amount @asset.Symbol</p>
                             </span>
                         </div>
-                    }
                 }
+                
             </div>
         </div>
     </div>
@@ -66,7 +65,7 @@
     public EventCallback<bool> IsOpenChanged { get; set; }
 
     [Parameter]
-    public string SelectedType { get; set; } = "Crypto";
+    public string SelectedType { get; set; } = "All";
 
     [Parameter]
     public EventCallback<string> SelectedTypeChanged { get; set; }
@@ -112,6 +111,7 @@
                     "Crypto" => await GetCryptoAssetsAsync(),
                     "Stocks" => await GetStockAssetsAsync(),
                     "Forex" => await GetForexAssetsAsync(),
+                    "All" => await GetAllAssetsAsync(),
                     _ => await GetCryptoAssetsAsync()
                 };
             }
@@ -176,6 +176,54 @@
                     Name: balance.Asset.AssetName,
                     Symbol: balance.Asset.AssetSymbol,
                     Value: balance.Available * await GetCryptoCurrentPriceAsync(balance.Asset.AssetSymbol),
+                    Amount: balance.Available,
+                    tv: balance.Asset.TradingView
+                ));
+            }
+        }
+
+        return assets;
+    }
+
+    private async Task<List<Asset>> GetAllAssetsAsync()
+    {
+        if (user?.Balances == null)
+            return new List<Asset>();
+
+        var assets = new List<Asset>();
+
+        foreach (var balance in user.Balances)
+        {
+            if (balance.Asset?.AssetType == "Crypto" &&
+                balance.Asset.Status == StatusType.Active)
+            {
+                assets.Add(new Asset(
+                    Name: balance.Asset.AssetName,
+                    Symbol: balance.Asset.AssetSymbol,
+                    Value: balance.Available * await GetCryptoCurrentPriceAsync(balance.Asset.AssetSymbol),
+                    Amount: balance.Available,
+                    tv: balance.Asset.TradingView
+                ));
+            }
+            else if (balance.Asset?.AssetType == "Stock" &&
+                balance.Asset.Status == StatusType.Active)
+            {
+                assets.Add(new Asset(
+                    Name: balance.Asset.AssetName,
+                    Symbol: balance.Asset.AssetSymbol,
+                    Value: balance.Available * await GetStockCurrentPriceAsync(balance.Asset.AssetSymbol),
+                    Amount: balance.Available,
+                    tv: balance.Asset.TradingView
+
+                ));
+            }
+            else if (balance.Asset?.AssetType == "Fiat" &&
+                balance.Asset.Status == StatusType.Active)
+            {
+                assets.Add(new Asset(
+                    Name: balance.Asset.AssetName,
+                    Symbol: balance.Asset.AssetSymbol,
+                    Value: balance.Available * await GetFiatCurrentPriceAsync(balance.Asset.AssetSymbol),
                     Amount: balance.Available,
                     tv: balance.Asset.TradingView
                 ));
