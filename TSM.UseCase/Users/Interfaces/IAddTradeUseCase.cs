@@ -4,6 +4,6 @@ namespace TSM.UseCase.Users
 {
     public interface IAddTradeUseCase
     {
-        Task Execute(Guid UserID, Trade trade);
+        Task<string> Execute(Guid UserID, Trade trade);
     }
 }

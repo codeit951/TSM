@@ -13,7 +13,9 @@ namespace TSM.CoreBusiness
         public DateTime Time { get; set; } = DateTime.UtcNow;
         public DateTime CloseTime { get; set; }
         public string Duration { get; set; } = string.Empty;
-        public string Symbol { get; set; } = string.Empty;
+        public string Symbol1 { get; set; } = string.Empty;
+
+        public string Symbol2 { get; set; } = string.Empty;
         public string Side { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public decimal Quantity { get; set; }

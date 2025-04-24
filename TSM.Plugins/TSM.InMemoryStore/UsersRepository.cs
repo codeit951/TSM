@@ -199,5 +199,10 @@ namespace TSM.InMemoryStore
             }
             return Task.CompletedTask;
         }
+
+        Task<string> IUserRepository.AddTrade(Guid userID, Trade trade)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

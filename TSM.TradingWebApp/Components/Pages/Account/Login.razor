@@ -85,7 +85,7 @@
         user = await UserManager.FindByNameAsync(loginModel.Email);
         if (user != null && await UserManager.CheckPasswordAsync(user, loginModel.Password))
         {
-            //await setBalance();
+            await setBalance();
             var result = await SignInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
             if (result.Succeeded)
             {

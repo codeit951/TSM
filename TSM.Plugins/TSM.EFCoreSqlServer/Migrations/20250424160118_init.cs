@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TSM.EFCoreSqlServer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,8 +70,8 @@ namespace TSM.EFCoreSqlServer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AssetId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Available = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Locked = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Available = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    Locked = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -100,14 +100,15 @@ namespace TSM.EFCoreSqlServer.Migrations
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CloseTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Symbol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Symbol1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Symbol2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Side = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StopLoss = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TakeProfit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Fee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ClosePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    StopLoss = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    TakeProfit = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    Fee = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
+                    ClosePrice = table.Column<decimal>(type: "decimal(18,8)", precision: 18, scale: 8, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsCopied = table.Column<bool>(type: "bit", nullable: false),
@@ -142,7 +143,7 @@ namespace TSM.EFCoreSqlServer.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserID", "Country", "CreatedOn", "Default_Currency", "Email", "EmailStatus", "FirstName", "LastLogin", "LastName", "Password", "Phone", "Plan", "ProfileImage", "ReferralCode", "ReferrerCode", "Roles", "Status", "_2FAKey" },
-                values: new object[] { new Guid("0f0ffd14-6e96-4ed8-9f91-8306ef42e943"), "United States", new DateTime(2025, 4, 10, 15, 54, 20, 665, DateTimeKind.Utc).AddTicks(6570), "USD", "Test@gmail.com", 1, "Test", new DateTime(2025, 4, 10, 15, 54, 20, 665, DateTimeKind.Utc).AddTicks(6767), "User", "AQAAAAIAAYagAAAAENO/b30WB3r+Z9XXAJw8IYQNKcaiKeemI6VHHuY/iS9vFEp7xN9a1y2vUz1eKQ/OkQ==", "1234567890", "Starter", null, "Test123", "Test123", "[\"User\"]", 0, "" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), "United States", new DateTime(2025, 4, 23, 16, 1, 19, 739, DateTimeKind.Local).AddTicks(6017), "USD", "Test@gmail.com", 1, "Test", new DateTime(2025, 4, 23, 16, 1, 19, 739, DateTimeKind.Local).AddTicks(6017), "User", "AQAAAAIAAYagAAAAENO/b30WB3r+Z9XXAJw8IYQNKcaiKeemI6VHHuY/iS9vFEp7xN9a1y2vUz1eKQ/OkQ==", "1234567890", "Starter", null, "Test123", "Test123", "[\"User\"]", 0, "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Balances_AssetId",

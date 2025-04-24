@@ -224,7 +224,11 @@ namespace TSM.EFCoreSqlServer.Migrations
                         .HasPrecision(18, 8)
                         .HasColumnType("decimal(18,8)");
 
-                    b.Property<string>("Symbol")
+                    b.Property<string>("Symbol1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Symbol2")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -318,14 +322,14 @@ namespace TSM.EFCoreSqlServer.Migrations
                     b.HasData(
                         new
                         {
-                            UserID = new Guid("0ff795be-372d-4d70-9d85-826d2cd5f751"),
+                            UserID = new Guid("11111111-1111-1111-1111-111111111111"),
                             Country = "United States",
-                            CreatedOn = new DateTime(2025, 4, 10, 21, 34, 31, 97, DateTimeKind.Utc).AddTicks(5845),
+                            CreatedOn = new DateTime(2025, 4, 23, 16, 1, 19, 739, DateTimeKind.Local).AddTicks(6017),
                             Default_Currency = "USD",
                             Email = "Test@gmail.com",
                             EmailStatus = 1,
                             FirstName = "Test",
-                            LastLogin = new DateTime(2025, 4, 10, 21, 34, 31, 97, DateTimeKind.Utc).AddTicks(6247),
+                            LastLogin = new DateTime(2025, 4, 23, 16, 1, 19, 739, DateTimeKind.Local).AddTicks(6017),
                             LastName = "User",
                             Password = "AQAAAAIAAYagAAAAENO/b30WB3r+Z9XXAJw8IYQNKcaiKeemI6VHHuY/iS9vFEp7xN9a1y2vUz1eKQ/OkQ==",
                             Phone = "1234567890",

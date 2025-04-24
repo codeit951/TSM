@@ -9,7 +9,7 @@ namespace TSM.UseCase.PluginInterfaces
 {
     public interface IUserRepository
     {
-        Task AddTrade(Guid userID, Trade trade);
+        Task<string> AddTrade(Guid userID, Trade trade);
         Task<List<User>> GetUsersByName(string name);
         Task UpdateTrade(Guid userID, Trade trade);
         Task UpdateUserBalance(Guid userID, List<Balance> balances);

@@ -17,13 +17,13 @@ namespace TSM.UseCase.Users
             this.userRepository = userRepository;
         }
 
-        public async Task Execute(Guid UserID, Trade trade)
+        public async Task<string> Execute(Guid UserID, Trade trade)
         {
             if (trade == null)
             {
                 throw new ArgumentNullException(nameof(trade));
             }
-            await userRepository.AddTrade(UserID, trade);
+            return await userRepository.AddTrade(UserID, trade);
         }
     }
 }

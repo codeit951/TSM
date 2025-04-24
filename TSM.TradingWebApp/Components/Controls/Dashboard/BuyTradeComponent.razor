@@ -6,6 +6,7 @@
 
 <EditForm Model="tradeModel" OnValidSubmit="PlaceTrade">
     <DataAnnotationsValidator />
+    <ValidationSummary />
     <div class="form">
         <div class="css-1azirga">
             <label>Type:</label>
@@ -51,6 +52,7 @@
                         </div>
                     </div>
                     <ValidationMessage For="@(() => tradeModel.Quantity)" class="text-danger small fw-light" />
+                    <small class="text-danger small fw-light">@otherError</small>
                     <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("buydd")" />
                     <div class="captions">
                         <span class="caption">
@@ -185,12 +187,21 @@
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
 
+    private string otherError = string.Empty;
+
 
     private void HandleTypeChange(ChangeEventArgs e)
     {
         selectedType = e.Value?.ToString() ?? "Crypto";
         tradeModel.OrderType = selectedType;
         selectedAsset = selectedType switch
+        {
+            "Crypto" => "BTC",
+            "Stocks" => "AAPL",
+            "Forex" => "USD",
+            _ => "BTC"
+        };
+        tradeModel.Symbol1 = selectedType switch
         {
             "Crypto" => "BTC",
             "Stocks" => "AAPL",
@@ -242,6 +253,7 @@
     {
         // Handle selected asset symbol
         selectedAsset = symbol;
+        tradeModel.Symbol1 = symbol;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -261,15 +273,38 @@
 
     private async Task PlaceTrade()
     {
-        // Implement trade placement logic here
-        // You can access the tradeModel properties to get the values entered by the user
-        // For example: tradeModel.OrderType, tradeModel.Amount, etc.
-        // Example: Displaying the trade model values in a console log
-        Console.WriteLine($"Order Type: {tradeModel.OrderType}");
-        Console.WriteLine($"Amount: {tradeModel.Quantity}");
-        Console.WriteLine($"Selected Asset: {selectedAsset}");
-        Console.WriteLine($"Leverage: {tradeModel.Leverage}");
-        // Reset the form after placing the trade
-        tradeModel = new TradeModel();
+        if (CheckBalance())
+        {
+            // Implement trade placement logic here
+            // You can access the tradeModel properties to get the values entered by the user
+            // For example: tradeModel.OrderType, tradeModel.Amount, etc.
+            // Example: Displaying the trade model values in a console log
+            Console.WriteLine($"Order Type: {tradeModel.OrderType}");
+            Console.WriteLine($"Amount: {tradeModel.Quantity}");
+            Console.WriteLine($"Selected Asset: {selectedAsset}");
+            Console.WriteLine($"Leverage: {tradeModel.Leverage}");
+            Console.WriteLine($"Symbol: {tradeModel.Symbol1}");
+            // Reset the form after placing the trade
+            tradeModel = new TradeModel();
+        }
+        else
+        {
+            otherError = "Insufficient USD balance";
+        }
+    }
+
+    private bool CheckBalance()
+    {
+        var userBalance = user?.Balances?.FirstOrDefault(b => b.Asset.AssetSymbol == selectedAsset);
+
+        if (userBalance == null)
+        {
+            return false; // User balance not found
+        }
+        else if (tradeModel.Quantity > userBalance.Available)
+        {
+            return false; // Insufficient balance
+        }
+        return true; // Sufficient balance
     }
 }

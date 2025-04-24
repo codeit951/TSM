@@ -18,18 +18,62 @@ namespace TSM.EFCoreSqlServer
         {
             this.contextFactory = contextFactory;
         }
-        public async Task AddTrade(Guid userID, Trade trade)
+
+        public async Task<string> AddTrade(Guid userID, Trade trade)
         {
-            await using var db = this.contextFactory.CreateDbContext();
-            var user = await db.Users.Include(u => u.Trades).FirstOrDefaultAsync(u => u.UserID == userID);
-            if (user != null)
+            if (trade == null)
             {
-                if (user.Trades == null)
+                return "0"; // Or better, throw ArgumentNullException
+            }
+
+            const string STATUS_SUCCESS = "1";
+            const string STATUS_INSUFFICIENT_BALANCE = "0";
+            const string STATUS_ASSET_NOT_FOUND = "2";
+            const string STATUS_USER_NOT_FOUND = "3";
+
+            await using var db = this.contextFactory.CreateDbContext();
+            await using var transaction = await db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var user = await db.Users
+                    .Include(u => u.Trades)
+                    .FirstOrDefaultAsync(u => u.UserID == userID);
+
+                if (user == null)
                 {
-                    user.Trades = new List<Trade>();
+                    return STATUS_USER_NOT_FOUND;
                 }
+
+                user.Trades ??= new List<Trade>();
                 user.Trades.Add(trade);
+
+                var assetSymbol = trade.Side == "Buy" ? trade.Symbol2 : trade.Symbol1;
+                var balance = await db.Balances
+                    .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == assetSymbol);
+
+                if (balance == null)
+                {
+                    return STATUS_ASSET_NOT_FOUND;
+                }
+
+                if (trade.Quantity > balance.Available)
+                {
+                    return STATUS_INSUFFICIENT_BALANCE;
+                }
+
+                balance.Available -= trade.Quantity;
+                balance.Locked += trade.Quantity;
+
                 await db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return STATUS_SUCCESS;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
             }
         }
 

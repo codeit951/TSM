@@ -55,10 +55,10 @@ namespace TSM.EFCoreSqlServer
                      Default_Currency = "USD",
                      ReferralCode = "Test123",
                      ReferrerCode = "Test123",
-                     UserID = Guid.NewGuid(),
+                     UserID = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                      Status = StatusType.InActive,
-                     CreatedOn = DateTime.UtcNow,
-                     LastLogin = DateTime.UtcNow,
+                     CreatedOn =Convert.ToDateTime("2025-04-23T15:01:19.7396017Z"),
+                     LastLogin = Convert.ToDateTime("2025-04-23T15:01:19.7396017Z"),
                      Roles = new List<string> { "User" },
                      EmailStatus = StatusType.Active,
                      Plan = "Starter"
@@ -99,7 +99,7 @@ namespace TSM.EFCoreSqlServer
                     AssetName = "Apple",
                     AssetSymbol = "AAPL",
                     TradingView = "BITGET:LTCUSDT",
-                    AssetType = "Crypto",
+                    AssetType = "Stock",
                     IsStar = true,
                 }
                 );
