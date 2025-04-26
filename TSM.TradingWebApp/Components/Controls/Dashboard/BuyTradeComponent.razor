@@ -3,7 +3,12 @@
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
 @inject DynamicStateContainer State
+@inject IAddTradeUseCase AddTradeUseCase
+@inject UserState userState
+@implements IAsyncDisposable
+@inject UserManager<User> UserManager
 
+<ToastComponent @ref="toastComponent" Timeout="3000" />
 <EditForm Model="tradeModel" OnValidSubmit="PlaceTrade">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -53,7 +58,7 @@
                     </div>
                     <ValidationMessage For="@(() => tradeModel.Quantity)" class="text-danger small fw-light" />
                     <small class="text-danger small fw-light">@otherError</small>
-                    <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("buydd")" />
+                    <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("buydd")" />
                     <div class="captions">
                         <span class="caption">
                             <p>Current USD balance:</p>
@@ -63,14 +68,17 @@
                             <p>Current @selectedAsset price</p>
                             @if (selectedType == "Crypto"&& price is not null && price.ContainsKey(selectedAsset))
                             {
+                                selectPrice = price[selectedAsset];
                                 <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAsset].ToString("C")</p>
                             }
                             else if (selectedType == "Stocks" && stockprices is not null && stockprices.ContainsKey(selectedAsset))
                             {
+                                selectPrice = stockprices[selectedAsset];
                                 <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAsset].ToString("C")</p>
                             }
                             else if (selectedType == "Forex" && otherprices is not null && otherprices.ContainsKey(selectedAsset))
                             {
+                                selectPrice = otherprices[selectedAsset];
                                 <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAsset].ToString("C")</p>
                             }
                         </span>
@@ -154,7 +162,7 @@
     </div>
 </EditForm>
 @code {
-    [Parameter]
+    
     public User? user { get; set; }
 
 
@@ -175,6 +183,8 @@
 
     private string selectedType = "Crypto";
 
+    private decimal selectPrice = 0.0m;
+
     private bool isCoinsAndBalanceDropdownOpen = false;
 
     private TradeModel tradeModel = new TradeModel();
@@ -188,6 +198,12 @@
     private Dictionary<string, decimal>? stockprices;
 
     private string otherError = string.Empty;
+
+    private string AlertMessage = string.Empty;
+
+    private ToastComponent? toastComponent;
+
+    private IDisposable _subscription;
 
 
     private void HandleTypeChange(ChangeEventArgs e)
@@ -210,17 +226,18 @@
         };
     }
 
-    public override async Task SetParametersAsync(ParameterView parameters)
+    
+    protected override void OnAfterRender(bool firstRender)
     {
-        await base.SetParametersAsync(parameters);
-        mainBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == "USD")?.Available ?? 0.0m;
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            State.SetValue("TradeView", "BITGET:BTCUSDT");
+        }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        State.SetValue("TradingView", "BITGET:BTCUSDT");
-
         price = PriceService.Prices;
         PriceService.OnPriceUpdated += HandlePriceUpdate;
 
@@ -231,6 +248,20 @@
         stockPrice = new StockPrice(ViewAssetsByType);
         await stockPrice.GetStockPrice();
         stockprices = stockPrice.Prices;
+
+        _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                mainBalance = user?.Balances
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == "USD")?.Available ?? 0.0m;
+                StateHasChanged();
+            });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
@@ -254,6 +285,7 @@
         // Handle selected asset symbol
         selectedAsset = symbol;
         tradeModel.Symbol1 = symbol;
+        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -276,16 +308,53 @@
         if (CheckBalance())
         {
             // Implement trade placement logic here
-            // You can access the tradeModel properties to get the values entered by the user
-            // For example: tradeModel.OrderType, tradeModel.Amount, etc.
-            // Example: Displaying the trade model values in a console log
-            Console.WriteLine($"Order Type: {tradeModel.OrderType}");
-            Console.WriteLine($"Amount: {tradeModel.Quantity}");
-            Console.WriteLine($"Selected Asset: {selectedAsset}");
-            Console.WriteLine($"Leverage: {tradeModel.Leverage}");
-            Console.WriteLine($"Symbol: {tradeModel.Symbol1}");
-            // Reset the form after placing the trade
-            tradeModel = new TradeModel();
+            Trade trade = new Trade()
+                {
+                    UserID = user.UserID,
+                    Duration = tradeModel.Duration.ToString(),
+                    Symbol1 = tradeModel.Symbol1,
+                    Symbol2 = tradeModel.Symbol2,
+                    Side = tradeModel.Side,
+                    Price = selectPrice,
+                    Quantity = tradeModel.Quantity,
+                    StopLoss = tradeModel.StopLoss,
+                    TakeProfit = tradeModel.TakeProfit,
+                    Fee = 0.0m,
+                    Status = "Running",
+                    State = "Live",
+                    OrderType = tradeModel.OrderType,
+                    Leverage = tradeModel.Leverage.ToString()
+                };
+            var status = await AddTradeUseCase.Execute(trade.UserID,trade);
+            if (status == null)
+            {
+                otherError = "Trade placement failed";
+                return;
+            }
+            else if (status == "0")
+            {
+                AlertMessage = "Insufficient USD balance!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
+            else if(status == "1")
+            {
+                // Reset the form after placing the trade
+                tradeModel = new TradeModel();
+                AlertMessage = "Trade Placed Successfully!";
+                toastComponent?.ShowToast(MyToastType.Success, "Trade", AlertMessage);
+                user = await UserManager.FindByNameAsync(user.Email);
+                userState.SetCurrentUser(user);
+            }
+            else if (status == "2")
+            {
+                AlertMessage = "ASSET NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
+            else if (status == "3")
+            {
+                AlertMessage = "USER NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
         }
         else
         {

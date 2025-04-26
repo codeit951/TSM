@@ -1,13 +1,14 @@
 ﻿@using System.Threading
 @using System.Threading.Tasks
+@rendermode InteractiveServer
 
 <div class="@ToastCssClass" style="@(Show ? "" : "display:none;")">
-    <div class="toast-content relative">
-        <h3 class="toast-heading">@Heading</h3>
-        <p class="toast-message">@Message</p>
-        <button class="toast-close" @onclick="CloseToast">&times;</button>
+    <div class="mytoast-content relative">
+        <h3 class="mytoast-heading">@Heading</h3>
+        <p class="mytoast-message">@Message</p>
+        <button class="mytoast-close" @onclick="CloseToast">&times;</button>
     </div>
-    <div class="toast-progress" style="@ProgressStyle"></div>
+    <div class="mytoast-progress" style="@ProgressStyle"></div>
 </div>
 
 @code {
@@ -22,7 +23,7 @@
     private string ProgressStyle = "";
     private Timer? _dismissTimer;
 
-    private string ToastCssClass => $"toast {GetMyToastTypeClass()} {(expanded ? "expanded" : "")} {(exiting ? "exiting" : "")}";
+    private string ToastCssClass => $"mytoast {GetMyToastTypeClass()} {(expanded ? "expanded" : "")} {(exiting ? "exiting" : "")}";
 
     public void ShowToast(MyToastType type, string heading, string message, int? timeout = null)
     {
@@ -95,10 +96,10 @@
     private string GetMyToastTypeClass() =>
         Type switch
         {
-            MyToastType.Success => "toast-success",
-            MyToastType.Danger => "toast-danger",
-            MyToastType.Info => "toast-info",
-            MyToastType.Warning => "toast-warning",
-            _ => "toast-success",
+            MyToastType.Success => "mytoast-success",
+            MyToastType.Danger => "mytoast-danger",
+            MyToastType.Info => "mytoast-info",
+            MyToastType.Warning => "mytoast-warning",
+            _ => "mytoast-success",
         };
 }

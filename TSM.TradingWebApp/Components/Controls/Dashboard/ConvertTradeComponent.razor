@@ -2,6 +2,8 @@
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
+@inject UserState userState
+@implements IAsyncDisposable
 <div class="form">
     <div class="form">
         <div class="amount_with_dropdown">
@@ -25,7 +27,7 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("convertddfrom")" />
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("convertddfrom")" />
                 <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;">
                     <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(10))">10%</button>
                     <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(25))">25%</button>
@@ -80,7 +82,7 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" user="user" @rendermode="InteractiveServer" elementId="@("convertddto")" />
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" @rendermode="InteractiveServer" elementId="@("convertddto")" />
                 <div class="captions">
                     <span class="caption">
                         <p>Current @selectedAssetTo balance:</p>
@@ -114,7 +116,7 @@
     </button>
 </div>
 @code{
-    [Parameter]
+    
     public User? user { get; set; }
 
     private string selectedAssetFrom = "USD";
@@ -139,6 +141,8 @@
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
 
+    private IDisposable _subscription;
+
     private void CalculatePercentage(int percentage){
         FromAmount = FromBalance * percentage / 100;
         decimal convertedUSD = FromAmount * FromPrice;
@@ -155,15 +159,6 @@
         }
     }
 
-    public override async Task SetParametersAsync(ParameterView parameters)
-    {
-        await base.SetParametersAsync(parameters);
-        FromBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
-        ToBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
-    }
-
     protected override async Task OnInitializedAsync()
     {
 
@@ -177,6 +172,22 @@
         stockPrice = new StockPrice(ViewAssetsByType);
         await stockPrice.GetStockPrice();
         stockprices = stockPrice.Prices;
+
+        _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+            user = Cuser;
+                FromBalance = user?.Balances
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
+                ToBalance = user?.Balances
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
+            StateHasChanged();
+            });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)

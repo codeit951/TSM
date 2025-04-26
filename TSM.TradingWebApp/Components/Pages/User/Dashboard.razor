@@ -2,6 +2,8 @@
 @inject UserManager<User> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PricePageState PageState
+@inject UserState State
+@rendermode InteractiveServer
 @layout Layout.UserLayout
 @attribute [Authorize]
 
@@ -9,19 +11,20 @@
     <div class="css-1mq6rco">
         <div class="css-sai4f1" >
             <div class="balance_card css-1pbigpn" >
-                <BalanceCard user="user" />
+                <BalanceCard />
             </div>
             <div class="balance_card css-1ov6cn9">
-                <BalanceCard user="user" />
+                <BalanceCard />
             </div>
             <CategoryComponent />
         </div>
-        <TradeAreaComponent @rendermode="InteractiveServer" user="user" />
+        <TradeAreaComponent @rendermode="InteractiveServer" />
         <TradeHistoryComponent @rendermode="InteractiveServer" />
     </div>
 </div>
 @code {
     private User? user;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,7 +35,7 @@
         if (!string.IsNullOrEmpty(username))
         {
             user = await UserManager.FindByNameAsync(username);
-            
+            State.SetCurrentUser(user);
         }
     }
 

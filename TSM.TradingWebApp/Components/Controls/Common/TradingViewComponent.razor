@@ -1,4 +1,4 @@
-﻿
+﻿@rendermode InteractiveServer
 @inject DynamicStateContainer State
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
@@ -11,6 +11,7 @@
     private IJSObjectReference? module;
     private DotNetObjectReference<TradingViewComponent>? objRef;
     private IDisposable subscription;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -28,7 +29,9 @@
     {
         subscription = State.Observe<string>("TradeView")
             .Subscribe(_ => UpdateWidget());
+        
     }
+
 
     private async void UpdateWidget()
     {

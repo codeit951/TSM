@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using System.Net.NetworkInformation;
 using TSM.CoreBusiness;
 using TSM.EFCoreSqlServer;
 using TSM.InMemoryStore;
@@ -87,6 +89,7 @@ builder.Services.AddSingleton<PricePageState>();
 // Scoped for user-specific state, Singleton for app-wide state
 builder.Services.AddScoped<DynamicStateContainer>();
 builder.Services.AddScoped(typeof(IAsyncDisposable), typeof(TradingViewComponent));
+builder.Services.AddScoped<UserState>();
 
 var app = builder.Build();
 

@@ -20,7 +20,6 @@
         </div>
 
     }
-    <ToastComponent @ref="toastComponent" Timeout="3000" />
     <EditForm Model="loginModel" method="post" FormName="LoginForm" OnValidSubmit="HandleLogin">
 
         <div class="css-1axhzbi">
@@ -75,7 +74,6 @@
 
     private string ErrorMessage = string.Empty;
 
-    private ToastComponent? toastComponent;
 
     private User? user;
 
@@ -109,14 +107,12 @@
         {
             // incorrect password
             ErrorMessage = "Invalid account password!";
-            toastComponent?.ShowToast(MyToastType.Danger, "Success!", ErrorMessage);
             return;
         }
         else
         {
             // account not found
             ErrorMessage = "Account not found!";
-            toastComponent?.ShowToast(MyToastType.Danger, "Success!", ErrorMessage);
             return;
         }
     }

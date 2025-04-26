@@ -14,21 +14,20 @@
                     </div>
                 </div>
                 <div class="@(currentTab==0?"":"hidden")">
-                <BuyTradeComponent user="user" />
+                <BuyTradeComponent />
                 </div>
                 <div class="@(currentTab==1?"":"hidden")">
-                    <SellTradeComponent user="user" />
+                    <SellTradeComponent />
                     </div>
                 <div class="@(currentTab==2?"":"hidden")">
-                    <ConvertTradeComponent user="user" />
+                    <ConvertTradeComponent />
                     </div>
             </div>
         </div>
     </div>
 </div>
 @code{
-    [Parameter]
-    public User? user { get; set; }
+    
     private int currentTab = 0;
 
 

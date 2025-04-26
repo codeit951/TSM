@@ -2,6 +2,8 @@
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject IJSRuntime JS
+@inject UserState userState
+@implements IAsyncDisposable
 <div class="form">
     <div class="css-1azirga">
         <label>Type:</label>
@@ -44,7 +46,7 @@
                         </svg>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" user="user" @rendermode="InteractiveServer" elementId="@("selldd")" />
+                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("selldd")" />
                 <div class="captions">
                     <span class="caption">
                         <p>Current @selectedAsset balance:</p>
@@ -140,7 +142,7 @@
     </button>
 </div>
 @code {
-    [Parameter]
+    
     public User? user { get; set; }
 
     int leverage = 5;
@@ -163,6 +165,8 @@
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
 
+    IDisposable _subscription;
+
     private void HandleTypeChange(ChangeEventArgs e)
     {
         selectedType = e.Value?.ToString() ?? "Crypto";
@@ -175,16 +179,9 @@
         };
     }
 
-    public override async Task SetParametersAsync(ParameterView parameters)
-    {
-        await base.SetParametersAsync(parameters);
-        mainBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAsset)?.Available ?? 0.0m;
-    }
-
+    
     protected override async Task OnInitializedAsync()
     {
-
         price = PriceService.Prices;
         PriceService.OnPriceUpdated += HandlePriceUpdate;
 
@@ -195,6 +192,20 @@
         stockPrice = new StockPrice(ViewAssetsByType);
         await stockPrice.GetStockPrice();
         stockprices = stockPrice.Prices;
+
+        _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                mainBalance = user?.Balances
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAsset)?.Available ?? 0.0m;
+                StateHasChanged();
+            });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)

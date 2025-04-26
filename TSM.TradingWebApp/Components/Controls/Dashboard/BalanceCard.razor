@@ -2,7 +2,8 @@
 @inject NavigationManager NavigationManager
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
-
+@inject UserState State
+@implements IAsyncDisposable
 
 <div class="balance_card_top">
     <div class="balance_card_top_wrapper">
@@ -111,7 +112,7 @@
 </div>
 
 @code{
-    [Parameter]
+    
     public User? user { get; set; }
 
     private Dictionary<string, decimal>? price;
@@ -121,6 +122,8 @@
 
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
+
+    private IDisposable _subscription;
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,6 +137,18 @@
         stockPrice = new StockPrice(ViewAssetsByType);
         await stockPrice.GetStockPrice();
         stockprices = stockPrice.Prices;
+
+        _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+       {
+           user = Cuser;
+           StateHasChanged();
+       });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)

@@ -2,6 +2,8 @@
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
 @inject DynamicStateContainer State
+@inject UserState userState
+@implements IAsyncDisposable
 <div class="css-1kyvdx0">
     <div class="css-1ug4zh5"></div>
     <div class="full scrollbar-hide css-cg9ir8 coinsbalarea" id="@elementId" style="@(IsOpen ? "display:block;" : "display:none;")">
@@ -55,7 +57,7 @@
     private bool isLoading;
     private string errorMessage;
 
-    [Parameter]
+    
     public User? user { get; set; }
 
     [Parameter]
@@ -82,6 +84,8 @@
     [Parameter]
     public string elementId { get; set; } = string.Empty;
 
+    IDisposable _subscription;
+
     private IEnumerable<Asset> FilteredAssets => AssetList?
         .Where(a => a.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
                     a.Symbol.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
@@ -91,6 +95,21 @@
     {
         await base.OnParametersSetAsync();
         await LoadAssetsAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                StateHasChanged();
+            });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 
     private async Task LoadAssetsAsync()

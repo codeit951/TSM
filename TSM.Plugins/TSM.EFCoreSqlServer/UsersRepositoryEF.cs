@@ -22,60 +22,60 @@ namespace TSM.EFCoreSqlServer
         public async Task<string> AddTrade(Guid userID, Trade trade)
         {
             if (trade == null)
-            {
-                return "0"; // Or better, throw ArgumentNullException
-            }
+                throw new ArgumentNullException(nameof(trade));
 
             const string STATUS_SUCCESS = "1";
             const string STATUS_INSUFFICIENT_BALANCE = "0";
             const string STATUS_ASSET_NOT_FOUND = "2";
             const string STATUS_USER_NOT_FOUND = "3";
 
-            await using var db = this.contextFactory.CreateDbContext();
-            await using var transaction = await db.Database.BeginTransactionAsync();
+            await using var db = contextFactory.CreateDbContext();
 
-            try
+            var strategy = db.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
             {
-                var user = await db.Users
-                    .Include(u => u.Trades)
-                    .FirstOrDefaultAsync(u => u.UserID == userID);
+                await using var transaction = await db.Database.BeginTransactionAsync();
 
-                if (user == null)
+                try
                 {
-                    return STATUS_USER_NOT_FOUND;
+                    var user = await db.Users
+                        .Include(u => u.Trades)
+                        .FirstOrDefaultAsync(u => u.UserID == userID);
+
+                    if (user == null)
+                        return STATUS_USER_NOT_FOUND;
+
+                    user.Trades ??= new List<Trade>();
+                    user.Trades.Add(trade);
+
+                    var assetSymbol = trade.Side == "Buy" ? trade.Symbol2 : trade.Symbol1;
+
+                    var balance = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == assetSymbol);
+
+                    if (balance == null)
+                        return STATUS_ASSET_NOT_FOUND;
+
+                    if (trade.Quantity > balance.Available)
+                        return STATUS_INSUFFICIENT_BALANCE;
+
+                    balance.Available -= trade.Quantity;
+                    balance.Locked += trade.Quantity;
+
+                    await db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return STATUS_SUCCESS;
                 }
-
-                user.Trades ??= new List<Trade>();
-                user.Trades.Add(trade);
-
-                var assetSymbol = trade.Side == "Buy" ? trade.Symbol2 : trade.Symbol1;
-                var balance = await db.Balances
-                    .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == assetSymbol);
-
-                if (balance == null)
+                catch
                 {
-                    return STATUS_ASSET_NOT_FOUND;
+                    await transaction.RollbackAsync();
+                    throw;
                 }
-
-                if (trade.Quantity > balance.Available)
-                {
-                    return STATUS_INSUFFICIENT_BALANCE;
-                }
-
-                balance.Available -= trade.Quantity;
-                balance.Locked += trade.Quantity;
-
-                await db.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return STATUS_SUCCESS;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+            });
         }
+
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
