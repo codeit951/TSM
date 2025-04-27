@@ -161,8 +161,11 @@
         </button>
     </div>
 </EditForm>
+<Preload LoadingText="Loading..." />
 @code {
-    
+
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
     public User? user { get; set; }
 
 
@@ -226,7 +229,7 @@
         };
     }
 
-    
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
@@ -285,7 +288,7 @@
         // Handle selected asset symbol
         selectedAsset = symbol;
         tradeModel.Symbol1 = symbol;
-        
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -305,6 +308,7 @@
 
     private async Task PlaceTrade()
     {
+        PreloadService.Show(SpinnerColor.Light, "Placing Trade...");
         if (CheckBalance())
         {
             // Implement trade placement logic here
@@ -325,7 +329,7 @@
                     OrderType = tradeModel.OrderType,
                     Leverage = tradeModel.Leverage.ToString()
                 };
-            var status = await AddTradeUseCase.Execute(trade.UserID,trade);
+            var status = await AddTradeUseCase.Execute(trade.UserID, trade);
             if (status == null)
             {
                 otherError = "Trade placement failed";
@@ -358,13 +362,14 @@
         }
         else
         {
-            otherError = "Insufficient USD balance";
+            otherError = $"Insufficient {tradeModel.Symbol2} balance";
         }
+        PreloadService.Hide();
     }
 
     private bool CheckBalance()
     {
-        var userBalance = user?.Balances?.FirstOrDefault(b => b.Asset.AssetSymbol == selectedAsset);
+        var userBalance = user?.Balances?.FirstOrDefault(b => b.Asset.AssetSymbol == tradeModel.Symbol2);
 
         if (userBalance == null)
         {

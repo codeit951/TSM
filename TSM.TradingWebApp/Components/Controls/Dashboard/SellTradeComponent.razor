@@ -4,125 +4,21 @@
 @inject IJSRuntime JS
 @inject UserState userState
 @implements IAsyncDisposable
-<div class="form">
-    <div class="css-1azirga">
-        <label>Type:</label>
-        <div class="select_wrapper">
-            <select name="type" id="type_select" @onchange="HandleTypeChange">
-                <option value="Crypto">Crypto</option>
-                <option value="Stocks">Stocks</option>
-                <option value="Forex">Forex</option>
-            </select>
-            <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" fill-rule="evenodd">
-                    <g transform="translate(-1391 -130)" fill="currentColor">
-                        <g transform="translate(1250 116)">
-                            <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
-                        </g>
-                    </g>
-                </g>
-            </svg>
-        </div>
-    </div>
+@inject IAddTradeUseCase AddTradeUseCase
+@inject UserManager<User> UserManager
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+<EditForm Model="sellTradeModel" OnValidSubmit="PlaceSellTrade">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
     <div class="form">
-        <div class="amount_with_dropdown">
-            <div class=" css-v6puf8">
-                <label>Amount:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.03">
-                    <div class="amount_select sell" @onclick="ToggleCoinsAndBalanceDropdown">
-                        <span class="icon_divider">
-                            <img src="./asseticons/@(selectedAsset).png" alt="">
-                            <p>@selectedAsset</p>
-                        </span>
-                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                            <g fill="none" fill-rule="evenodd">
-                                <g transform="translate(-1391 -130)" fill="currentColor">
-                                    <g transform="translate(1250 116)">
-                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("selldd")" />
-                <div class="captions">
-                    <span class="caption">
-                        <p>Current @selectedAsset balance:</p>
-                        <p class="value">@mainBalance</p>
-                    </span>
-                    <span class="caption">
-                        <p>Current @selectedAsset price</p>
-                        @if (selectedType == "Crypto" && price is not null && price.ContainsKey(selectedAsset))
-                        {
-                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAsset].ToString("C")</p>
-                        }
-                        else if (selectedType == "Stocks" && stockprices is not null && stockprices.ContainsKey(selectedAsset))
-                        {
-                            <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAsset].ToString("C")</p>
-                        }
-                        else if (selectedType == "Forex" && otherprices is not null && otherprices.ContainsKey(selectedAsset))
-                        {
-                            <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAsset].ToString("C")</p>
-                        }
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="sl_tp_wrapper">
-            <div class="css-v6puf8">
-                <label>Stop Loss:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="-1.500" class="no-zoom-14px">
-                    <div class="amount_select">
-                        <p>@selectedAsset</p>
-                    </div>
-                </div>
-            </div>
-            <div class="css-v6puf8">
-                <label>Take Profit:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="1.500" class="no-zoom-14px">
-                    <div class="amount_select">
-                        <p>@selectedAsset</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="css-86fwon">
-            <label>Leverage:</label>
-            <div class="leverage_buttons">
-                <div class="css-y41jdg">
-                    <div class="input_wrapper" style="overflow: hidden;"><input type="number" placeholder="100" class="no-zoom-14px" value="5" style="transform: scale(0.98); font-weight: 500; opacity: 0; z-index: 99;"><input inputmode="decimal" rows="2" type="text" value="@(leverage)x" style="text-align: start; position: absolute; left: 0px; top: 0px; user-select: none; pointer-events: none; padding-left: 3px; height: 100%;"></div>
-                </div>
-                <button type="button" class="css-40mlel" @onclick="@(() => leverage = 50)">50x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 250)">250x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 500)">500x</button>
-            </div>
-            <RangeInput TValue="int" @bind-Value="leverage" Min="0" Max="500" class="custom-range" />
-        </div>
         <div class="css-1azirga">
-            <label>Duration:</label>
+            <label>Type:</label>
             <div class="select_wrapper">
-                <select name="duration">
-                    <option value="2 minutes">2 minutes</option>
-                    <option value="5 minutes">5 minutes</option>
-                    <option value="10 minutes">10 minutes</option>
-                    <option value="30 minutes">30 minutes</option>
-                    <option value="1 hour">1 hour</option>
-                    <option value="2 hours">2 hours</option>
-                    <option value="4 hours">4 hours</option>
-                    <option value="6 hours">6 hours</option>
-                    <option value="8 hours">8 hours</option>
-                    <option value="10 hours">10 hours</option>
-                    <option value="20 hours">20 hours</option>
-                    <option value="1 day">1 day</option>
-                    <option value="2 days">2 days</option>
-                    <option value="3 days">3 days</option>
-                    <option value="4 days">4 days</option>
-                    <option value="5 days">5 days</option>
-                    <option value="6 days">6 days</option>
-                    <option value="1 weeks">1 weeks</option>
-                    <option value="2 weeks">2 weeks</option>
+                <select name="type" id="type_select" @onchange="HandleTypeChange">
+                    <option value="Crypto">Crypto</option>
+                    <option value="Stocks">Stocks</option>
+                    <option value="Forex">Forex</option>
                 </select>
                 <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
                     <g fill="none" fill-rule="evenodd">
@@ -134,18 +30,150 @@
                     </g>
                 </svg>
             </div>
+            <ValidationMessage For="@(() => sellTradeModel.OrderType)" class="text-danger small fw-light" />
         </div>
+        <div class="form">
+            <div class="amount_with_dropdown">
+                <div class=" css-v6puf8">
+                    <label>Amount:</label>
+                    <div class="amountbox_wrapper">
+                        <InputNumber @bind-Value="sellTradeModel.Quantity" placeholder="100" />
+                        <div class="amount_select sell" @onclick="ToggleCoinsAndBalanceDropdown">
+                            <span class="icon_divider">
+                                <img src="./asseticons/@(selectedAsset).png" alt="">
+                                <p>@selectedAsset</p>
+                            </span>
+                            <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-1391 -130)" fill="currentColor">
+                                        <g transform="translate(1250 116)">
+                                            <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <ValidationMessage For="@(() => sellTradeModel.Quantity)" class="text-danger small fw-light" />
+                    <small class="text-danger small fw-light">@otherError</small>
+                    <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("selldd")" />
+                    <div class="captions">
+                        <span class="caption">
+                            <p>Current @selectedAsset balance:</p>
+                            <p class="value">@mainBalance @selectedAsset</p>
+                        </span>
+                        <span class="caption">
+                            <p>Current @selectedAsset price</p>
+                            @if (selectedType == "Crypto" && price is not null && price.ContainsKey(selectedAsset))
+                            {
+                                selectPrice = price[selectedAsset];
+                                <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAsset].ToString("C")</p>
+                            }
+                            else if (selectedType == "Stocks" && stockprices is not null && stockprices.ContainsKey(selectedAsset))
+                            {
+                                selectPrice = stockprices[selectedAsset];
+                                <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAsset].ToString("C")</p>
+                            }
+                            else if (selectedType == "Forex" && otherprices is not null && otherprices.ContainsKey(selectedAsset))
+                            {
+                                selectPrice = otherprices[selectedAsset];
+                                <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAsset].ToString("C")</p>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sl_tp_wrapper">
+                <div class="css-v6puf8">
+                    <label>Stop Loss:</label>
+                    <div class="amountbox_wrapper">
+                        <InputNumber @bind-Value="sellTradeModel.StopLoss" class="no-zoom-14px" placeholder="-1.500" />
+                        <div class="amount_select">
+                            <p>@selectedAsset</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="css-v6puf8">
+                    <label>Take Profit:</label>
+                    <div class="amountbox_wrapper">
+                        <InputNumber @bind-Value="sellTradeModel.TakeProfit" class="no-zoom-14px" placeholder="1.500" />
+                        <div class="amount_select">
+                            <p>@selectedAsset</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="css-86fwon">
+                <label>Leverage:</label>
+                <div class="leverage_buttons">
+                    <div class="css-y41jdg">
+                        <div class="input_wrapper" style="overflow: hidden;">
+                            <InputNumber @bind-Value="sellTradeModel.Leverage" class="no-zoom-14px" placeholder="5" style="transform: scale(0.98); font-weight: 500; opacity: 0; z-index: 99;" />
+                            <input inputmode="decimal" rows="2" type="text" value="@(leverage)x" style="text-align: start; position: absolute; left: 0px; top: 0px; user-select: none; pointer-events: none; padding-left: 3px; height: 100%;">
+                        </div>
+                    </div>
+                    <button type="button" class="css-40mlel" @onclick="@(() => leverage = 50)">50x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 250)">250x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 500)">500x</button>
+                    <ValidationMessage For="@(() => sellTradeModel.Leverage)" class="text-danger small fw-light" />
+                </div>
+                <RangeInput TValue="int" @bind-Value="leverage" Min="0" Max="500" class="custom-range" />
+            </div>
+            <div class="css-1azirga">
+                <label>Duration:</label>
+                <div class="select_wrapper">
+                    <InputSelect @bind-Value="sellTradeModel.Duration">
+                        <option value="2">2 minutes</option>
+                        <option value="5">5 minutes</option>
+                        <option value="10">10 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                        <option value="240">4 hours</option>
+                        <option value="360">6 hours</option>
+                        <option value="480">8 hours</option>
+                        <option value="600">10 hours</option>
+                        <option value="1200">20 hours</option>
+                        <option value="1440">1 day</option>
+                        <option value="2880">2 days</option>
+                        <option value="4320">3 days</option>
+                        <option value="5760">4 days</option>
+                        <option value="7200">5 days</option>
+                        <option value="8640">6 days</option>
+                        <option value="10080">1 weeks</option>
+                        <option value="20160">2 weeks</option>
+                    </InputSelect>
+                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fill-rule="evenodd">
+                            <g transform="translate(-1391 -130)" fill="currentColor">
+                                <g transform="translate(1250 116)">
+                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <ValidationMessage For="@(() => sellTradeModel.Duration)" class="text-danger small fw-light" />
+            </div>
+        </div>
+        <div class="divider_24px" aria-hidden="true"></div>
+        <button class="css-nncgg" type="submit">
+            <p> Sell</p>
+        </button>
     </div>
-    <div class="divider_24px" aria-hidden="true"></div>
-    <button class="disabled css-nncgg" disabled="">
-        <p> Sell</p>
-    </button>
-</div>
+</EditForm>
+<Preload LoadingText="Loading..." />
 @code {
-    
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
     public User? user { get; set; }
 
-    int leverage = 5;
+    private int leverage
+    {
+        get => sellTradeModel.Leverage;
+        set
+        {
+            sellTradeModel.Leverage = value;
+        }
+    }
 
     private string selectedAsset = "BTC";
 
@@ -155,7 +183,11 @@
 
     private string selectedType = "Crypto";
 
+    private decimal selectPrice = 0.0m;
+
     private bool isCoinsAndBalanceDropdownOpen = false;
+
+    private TradeModel sellTradeModel = new TradeModel();
 
     private Dictionary<string, decimal>? price;
 
@@ -164,6 +196,12 @@
 
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
+
+    private string otherError = string.Empty;
+
+    private string AlertMessage = string.Empty;
+
+    private ToastComponent? toastComponent;
 
     IDisposable _subscription;
 
@@ -177,11 +215,20 @@
             "Forex" => "USD",
             _ => "BTC"
         };
+        sellTradeModel.Symbol1 = selectedType switch
+        {
+            "Crypto" => "BTC",
+            "Stocks" => "AAPL",
+            "Forex" => "USD",
+            _ => "BTC"
+        };
     }
 
-    
+
     protected override async Task OnInitializedAsync()
     {
+        sellTradeModel.Side = "Sell";
+
         price = PriceService.Prices;
         PriceService.OnPriceUpdated += HandlePriceUpdate;
 
@@ -228,7 +275,7 @@
     {
         // Handle selected asset symbol
         selectedAsset = symbol;
-        
+        sellTradeModel.Symbol1 = symbol;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -244,5 +291,81 @@
     {
         isCoinsAndBalanceDropdownOpen = false;
         StateHasChanged();
+    }
+
+    private async Task PlaceSellTrade()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Placing Trade...");
+        if (CheckBalance())
+        {
+            // Implement trade placement logic here
+            Trade trade = new Trade()
+                {
+                    UserID = user.UserID,
+                    Duration = sellTradeModel.Duration.ToString(),
+                    Symbol1 = sellTradeModel.Symbol1,
+                    Symbol2 = sellTradeModel.Symbol2,
+                    Side = sellTradeModel.Side,
+                    Price = selectPrice,
+                    Quantity = sellTradeModel.Quantity,
+                    StopLoss = sellTradeModel.StopLoss,
+                    TakeProfit = sellTradeModel.TakeProfit,
+                    Fee = 0.0m,
+                    Status = "Running",
+                    State = "Live",
+                    OrderType = sellTradeModel.OrderType,
+                    Leverage = sellTradeModel.Leverage.ToString()
+                };
+            var status = await AddTradeUseCase.Execute(trade.UserID, trade);
+            if (status == null)
+            {
+                otherError = "Trade placement failed";
+                return;
+            }
+            else if (status == "0")
+            {
+                AlertMessage = "Insufficient USD balance!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
+            else if (status == "1")
+            {
+                // Reset the form after placing the trade
+                sellTradeModel = new TradeModel();
+                AlertMessage = "Trade Placed Successfully!";
+                toastComponent?.ShowToast(MyToastType.Success, "Trade", AlertMessage);
+                user = await UserManager.FindByNameAsync(user.Email);
+                userState.SetCurrentUser(user);
+            }
+            else if (status == "2")
+            {
+                AlertMessage = "ASSET NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
+            else if (status == "3")
+            {
+                AlertMessage = "USER NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Trade", AlertMessage);
+            }
+        }
+        else
+        {
+            otherError = $"Insufficient {sellTradeModel.Symbol1} balance";
+        }
+        PreloadService.Hide();
+    }
+
+    private bool CheckBalance()
+    {
+        var userBalance = user?.Balances?.FirstOrDefault(b => b.Asset.AssetSymbol == sellTradeModel.Symbol1);
+
+        if (userBalance == null)
+        {
+            return false; // User balance not found
+        }
+        else if (sellTradeModel.Quantity > userBalance.Available)
+        {
+            return false; // Insufficient balance
+        }
+        return true; // Sufficient balance
     }
 }
