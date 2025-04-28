@@ -23,6 +23,8 @@ namespace TSM.CoreBusiness
         public string Side { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public decimal Quantity { get; set; }
+        public decimal Profit { get; set; }
+        public decimal Loss { get; set; }
         public decimal StopLoss { get; set; }
         public decimal TakeProfit { get; set; }
         public decimal Fee { get; set; }

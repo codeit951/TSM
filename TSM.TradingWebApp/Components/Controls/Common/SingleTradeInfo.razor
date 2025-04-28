@@ -1,0 +1,183 @@
+﻿@inject UserState userState
+@implements IAsyncDisposable
+@inject CryptoPriceService PriceService
+@inject IViewAssetsByTypeUseCase ViewAssetsByType
+
+<div class="trade-info-card">
+    @if (trade is not null)
+    {
+        <div class="card-header">
+            <div class="symbol-container">
+                <img src="AssetIcons/@(trade.Symbol1).png" alt="Crypto" class="crypto-icon" />
+            <span class="pair">@(trade.Symbol1+"/"+trade.Symbol2)</span>
+            </div>
+            <span class="status @(trade.Status=="Closed"?"closed":"open")">@(trade.Status == "Closed" ? "Closed" : "Open")</span>
+        </div>
+        <div class="card-body">
+            <div class="detail-row">
+                <span class="label">Side</span>
+                <span class="value type-@trade.Side.ToLower()">@trade.Side.ToUpper()</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Type</span>
+                <span class="value">@trade.OrderType</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Entry Price</span>
+                <span class="value">@trade.Price.ToString("C")</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Current Price</span>
+                <span class="value">@price.ToString("C")</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Size</span>
+                <span class="value">@trade.Quantity</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Entry Time</span>
+                <span class="value">@trade.Time UTC</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Take Profit</span>
+                <span class="value">@trade.TakeProfit</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Stop Loss</span>
+                <span class="value">@trade.StopLoss</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Duration</span>
+                <span class="value">@trade.Duration</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Leverage</span>
+                <span class="value">@trade.Leverage</span>
+            </div>
+            <div class="detail-row pnl">
+                <span class="label">P/L</span>
+                <span class="value @(ProfitLoss.ProfitLossDollar < 0 ? "pnl-negative" : "pnl-positive")">
+                    @(ProfitLoss.ProfitLossDollar < 0
+                        ? "-" + ProfitLoss.ProfitLossDollar.ToString("C").Replace("-", "").Replace("(", "").Replace(")", "")
+                        : "+"+ProfitLoss.ProfitLossDollar.ToString("C"))
+                    (@ProfitLoss.ProfitLossPercent.ToString("N2")%)
+                </span>
+
+
+            </div>
+            @if (trade.Status=="Closed")
+            {
+                <div class="detail-row">
+                    <span class="label">Close Time</span>
+                    <span class="value">@trade.CloseTime</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Close Price</span>
+                    <span class="value">@trade.ClosePrice</span>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-danger">Close Trade</button>
+        </div>
+    }
+</div>
+@code {
+    [Parameter]
+    public int TradeId { get; set; }
+
+    private User? user;
+
+    private Trade? trade;
+
+    IDisposable? _subscription;
+
+    private decimal price = 0.0m;
+
+    private ForexPrice forexPrice;
+
+    private StockPrice stockPrice;
+    private string symbol;
+
+    private (decimal ProfitLossDollar, decimal ProfitLossPercent) ProfitLoss;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Fetch trade data based on TradeId
+        // Update the UI accordingly
+        if (user is not null)
+        {
+            trade = user.Trades.FirstOrDefault(t => t.OrderID == TradeId);
+
+            if (trade is not null)
+            {
+                symbol = trade.Side == "Buy" ? trade.Symbol1 : trade.Symbol2;
+
+                if (trade.OrderType=="Crypto")
+                {
+                    price = PriceService.Prices[symbol];
+                    PriceService.OnPriceUpdated += HandlePriceUpdate;
+                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                }
+                else if (trade.OrderType=="Forex")
+                {
+                    forexPrice = new ForexPrice(ViewAssetsByType);
+                    await forexPrice.FetchPricesAsync();
+                    price = forexPrice.Prices[symbol];
+                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                }
+                else if (trade.OrderType == "Stocks")
+                {
+                    stockPrice = new StockPrice(ViewAssetsByType);
+                    await stockPrice.GetStockPrice();
+                    price = stockPrice.Prices[symbol];
+                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                }
+            }
+            
+        }
+    }
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        if (trade.OrderType=="Crypto")
+        {
+            price = newPrice[symbol];
+            ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _subscription = userState.CurrentUserObservable.Subscribe(user =>
+        {
+            this.user = user;
+            StateHasChanged();
+        });
+    }
+
+    public static (decimal ProfitLossDollar, decimal ProfitLossPercent) CalculateProfitLoss(
+    decimal entryPrice,
+    decimal exitPrice,
+    decimal margin,
+    decimal leverage)
+    {
+        if (entryPrice <= 0 || exitPrice <= 0 || margin <= 0 || leverage <= 0)
+            throw new ArgumentException("All values must be positive and non-zero.");
+
+        decimal positionSize = margin * leverage;
+        decimal priceChangePercent = (exitPrice - entryPrice) / entryPrice;
+        decimal profitLossDollar = positionSize * priceChangePercent;
+        decimal profitLossPercent = (profitLossDollar / margin) * 100;
+
+        return (profitLossDollar, profitLossPercent);
+    }
+
+
+    public async ValueTask DisposeAsync()
+    {
+        // Dispose of any resources if necessary
+        _subscription?.Dispose();
+    }
+
+}

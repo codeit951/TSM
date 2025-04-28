@@ -208,6 +208,7 @@
     private void HandleTypeChange(ChangeEventArgs e)
     {
         selectedType = e.Value?.ToString() ?? "Crypto";
+        sellTradeModel.OrderType = selectedType;
         selectedAsset = selectedType switch
         {
             "Crypto" => "BTC",
@@ -228,7 +229,8 @@
     protected override async Task OnInitializedAsync()
     {
         sellTradeModel.Side = "Sell";
-
+        sellTradeModel.Symbol1 = "USD";
+        sellTradeModel.Symbol2 = "BTC";
         price = PriceService.Prices;
         PriceService.OnPriceUpdated += HandlePriceUpdate;
 
@@ -275,7 +277,7 @@
     {
         // Handle selected asset symbol
         selectedAsset = symbol;
-        sellTradeModel.Symbol1 = symbol;
+        sellTradeModel.Symbol2 = symbol;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

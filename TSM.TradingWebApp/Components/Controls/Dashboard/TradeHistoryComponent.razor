@@ -1,29 +1,30 @@
-﻿<div class="css-1i1ptr">
+﻿<style>
+    .trade_table_top div{
+        width:100%!important;
+    }
+</style>
+<div class="css-1i1ptr">
     <div class="css-1tr1jbf">
         <div class="trade_table_top">
-            <p class="trade_table_top_title">Trades</p>
-            <div class="trade_switcher"><button class="active">Open</button><button class="">Closed</button></div>
+            
+            <Tabs Class="w-100" EnableFadeEffect="true" NavStyle="NavStyle.Pills">
+                <Tab Title="Trades" Disabled="true" Style="color: #fff;">
+
+                </Tab>
+                <Tab Title="Open" Active="true" Style="color: #fff;">
+                    <Content>
+                        <br />
+                        <OpenTradeHistoryComponent />
+                    </Content>
+                </Tab>
+                <Tab Title="Closed" Style="color: #fff;">
+                    <Content>
+                        <br />
+                        <ClosedTradeHistoryComponent />
+                    </Content>
+                </Tab>
+            </Tabs>
         </div>
-        <table class="css-1bey2fx">
-            <thead>
-                <tr>
-                    <th class="date">Date</th>
-                    <th class="asset">Trade</th>
-                    <th class="size">Direction</th>
-                    <th class="amount">Amount</th>
-                    <th class="entry">Entry price</th>
-                    <th class="pnl">Profit</th>
-                    <th class="action">Action</th>
-                </tr>
-            </thead>
-            <tbody class="scrollbar-hide">
-                <p class="empty_state">No Open trades yet. </p>
-            </tbody>
-        </table>
-        <div class="css-187r8zr">
-            <div class="trade_wrapper scrollbar-hide">
-                <p class="empty_state">No Open trades yet. </p>
-            </div>
-        </div>
+        
     </div>
 </div>

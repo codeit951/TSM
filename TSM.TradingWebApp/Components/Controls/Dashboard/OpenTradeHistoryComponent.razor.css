@@ -1,0 +1,6 @@
+﻿td.text-start {
+    color: #fff;
+}
+tr:hover td {
+    color: #aeacac !important;
+}

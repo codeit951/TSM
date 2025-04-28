@@ -28,5 +28,6 @@ namespace TSM.CoreBusiness
         public byte[]? ProfileImage { get; set; }
         public List<Balance>? Balances { get; set; }
         public List<Trade>? Trades { get; set; }
+        public List<Transaction>? Transactions { get; set; }
     }
 }

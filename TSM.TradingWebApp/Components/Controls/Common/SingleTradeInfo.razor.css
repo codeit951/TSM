@@ -1,0 +1,123 @@
+﻿
+.trade-info-card {
+    background-color: #1e1e1e; /* Slightly lighter dark shade for the card */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333; /* Subtle border */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444; /* Separator */
+}
+
+/* Added container for symbol and icon */
+.symbol-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+/* Style for the SVG icon */
+.crypto-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px;
+    vertical-align: middle; /* Helps align with text */
+}
+
+.pair {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+    .status.open {
+        background-color: #007bff; /* Blue for open */
+        color: #ffffff;
+    }
+
+    .status.closed {
+        background-color: #6c757d; /* Gray for closed */
+        color: #ffffff;
+    }
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Spacing between rows */
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95em;
+}
+
+.label {
+    color: #aaa; /* Lighter gray for labels */
+}
+
+.value {
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+.type-buy {
+    color: #28a745; /* Green for buy */
+    font-weight: bold;
+}
+
+.type-sell {
+    color: #dc3545; /* Red for sell */
+    font-weight: bold;
+}
+
+.pnl .label {
+    font-weight: bold;
+}
+
+.pnl-positive {
+    color: #28a745; /* Green for profit */
+    font-weight: bold;
+}
+
+.pnl-negative {
+    color: #dc3545; /* Red for loss */
+    font-weight: bold;
+}
+
+.card-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #444; /* Separator */
+    text-align: right;
+}
+
+.btn-close {
+    background-color: #dc3545; /* Red for close button */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+    .btn-close:hover {
+        background-color: #c82333; /* Darker red on hover */
+    }

@@ -18,11 +18,15 @@ namespace TSM.EFCoreSqlServer
         public DbSet<Trade>? Trades { get; set; }
         public DbSet<Balance>? Balances { get; set; }
         public DbSet<Asset>? Assets { get; set; }
+        public DbSet<Transaction>? Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Trade>()
                 .HasKey(t => new { t.OrderID, t.UserID });
+
+            modelBuilder.Entity<Transaction>()
+                .HasKey(t => new { t.TransactionID, t.UserID });
 
             //modelBuilder.Entity<Balance>()
             //    .HasKey(b => new { b.BalanceId, b.UserId,b.AssetId });
@@ -43,7 +47,12 @@ namespace TSM.EFCoreSqlServer
                 entity.Property(t => t.TakeProfit).HasPrecision(18, 8);
             });
 
-            modelBuilder.Entity<User>().HasData(
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.Property(t => t.Amount).HasPrecision(18, 8);
+            });
+
+                modelBuilder.Entity<User>().HasData(
                  new User
                  {
                      FirstName = "Test",

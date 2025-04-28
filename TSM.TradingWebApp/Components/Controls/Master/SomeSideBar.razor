@@ -200,27 +200,39 @@
         //StateHasChanged(); // Ensure UI updates
     }
  
-    private string currentPage = "";
 
-    protected override void OnInitialized()
+private string currentPage = "";
+
+protected override void OnInitialized()
+{
+    Navigation.LocationChanged += OnLocationChanged;
+    SetCurrentPage();
+}
+
+private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+{
+    SetCurrentPage();
+}
+
+private void SetCurrentPage()
+{
+    var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
+    var segments = uri.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+    if (segments.Length >= 2)
     {
-        SetCurrentPage();
-        Navigation.LocationChanged += (s, e) => SetCurrentPage();
+        currentPage = segments[1]; // e.g., "details"
     }
-
-    private void SetCurrentPage()
+    else
     {
-        var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
-        var segments = uri.Split('/', StringSplitOptions.RemoveEmptyEntries);
-
-        if (segments.Length >= 2)
-        {
-            currentPage = segments[1]; // "details"
-        }
-        else
-        {
-            currentPage = "";
-        }
-        StateHasChanged(); // Ensure UI updates
+        currentPage = "";
     }
+    StateHasChanged();
+}
+
+public void Dispose()
+{
+    Navigation.LocationChanged -= OnLocationChanged;
+}
+
 }
