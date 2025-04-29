@@ -8,6 +8,13 @@
 @implements IAsyncDisposable
 @inject UserManager<User> UserManager
 
+    <style>
+    .estimated-text {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    }
+    </style>
 <ToastComponent @ref="toastComponent" Timeout="3000" />
 <EditForm Model="tradeModel" OnValidSubmit="PlaceTrade">
     <DataAnnotationsValidator />
@@ -89,20 +96,38 @@
                 <div class="css-v6puf8">
                     <label>Stop Loss:</label>
                     <div class="amountbox_wrapper">
-                        <InputNumber @bind-Value="tradeModel.StopLoss" class="no-zoom-14px" placeholder="-1.500" />
+                        <InputNumber @bind-Value="tradeModel.StopLoss"
+                                     @oninput="(e) => HandleStopLossChange(e)"
+                                     class="no-zoom-14px"
+                                     placeholder="-1.500" />
                         <div class="amount_select">
                             <p>@selectedAsset</p>
                         </div>
                     </div>
+                    @if (tradeModel.StopLoss != 0)
+                    {
+                        <div class="estimated-text">
+                            <span>Estimated Loss: @(FormatCurrencyWithMinus(CalculateEstimatedLoss(tradeModel.StopLoss))) @tradeModel.Symbol2</span>
+                        </div>
+                    }
                 </div>
                 <div class="css-v6puf8">
                     <label>Take Profit:</label>
                     <div class="amountbox_wrapper">
-                        <InputNumber @bind-Value="tradeModel.TakeProfit" class="no-zoom-14px" placeholder="1.500" />
+                        <InputNumber @bind-Value="tradeModel.TakeProfit"
+                                     @oninput="(e) => HandleTakeProfitChange(e)"
+                                     class="no-zoom-14px"
+                                     placeholder="1.500" />
                         <div class="amount_select">
                             <p>@selectedAsset</p>
                         </div>
                     </div>
+                    @if (tradeModel.TakeProfit != 0)
+                    {
+                        <div class="estimated-text">
+                            <span> Estimated profit: @(FormatCurrencyWithMinus(CalculateEstimatedProfit(tradeModel.TakeProfit))) @tradeModel.Symbol2</span>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="css-86fwon">
@@ -116,7 +141,7 @@
                     <button type="button" class="css-40mlel" @onclick="@(() => leverage = 50)">50x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 250)">250x</button><button type="button" class="css-40mlel" @onclick="@(() => leverage = 500)">500x</button>
                     <ValidationMessage For="@(() => tradeModel.Leverage)" class="text-danger small fw-light" />
                 </div>
-                <RangeInput TValue="int" Step="5" @bind-Value="leverage" Min="0" Max="500" class="custom-range" />
+                <RangeInput TValue="int" Step="5" @bind-Value="leverage" Min="5" Max="500" class="custom-range" />
             </div>
             <div class="css-1azirga">
                 <label>Duration:</label>
@@ -207,6 +232,10 @@
     private ToastComponent? toastComponent;
 
     private IDisposable _subscription;
+
+    private (decimal ProfitLossDollar, decimal ProfitLossPercent) EstLoss;
+
+    private (decimal ProfitLossDollar, decimal ProfitLossPercent) EstProfit;
 
 
     private void HandleTypeChange(ChangeEventArgs e)
@@ -381,4 +410,53 @@
         }
         return true; // Sufficient balance
     }
+
+    private void HandleStopLossChange(ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value?.ToString(), out decimal value))
+        {
+            tradeModel.StopLoss = value;
+            StateHasChanged();
+        }
+    }
+
+    private void HandleTakeProfitChange(ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value?.ToString(), out decimal value))
+        {
+            tradeModel.TakeProfit = value;
+            StateHasChanged();
+        }
+    }
+
+    private decimal CalculateEstimatedLoss(decimal stopLossValue)
+    {
+        // Implement your actual calculation logic here
+        EstLoss = SingleTradeInfo.CalculateProfitLoss(
+            selectPrice,
+            stopLossValue,
+            tradeModel.Quantity,
+            Convert.ToDecimal(tradeModel.Leverage)
+        );
+        return EstLoss.ProfitLossDollar;
+    }
+
+    private decimal CalculateEstimatedProfit(decimal takeProfitValue)
+    {
+        // Implement your actual calculation logic here
+        EstProfit = SingleTradeInfo.CalculateProfitLoss(
+            selectPrice,
+            takeProfitValue,
+            tradeModel.Quantity,
+            Convert.ToDecimal(tradeModel.Leverage)
+        );
+        return EstProfit.ProfitLossDollar;
+    }
+
+        string FormatCurrencyWithMinus(decimal amount)
+        {
+            if (amount < 0)
+                return "-" + amount.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "");
+            return "+"+amount.ToString("N2");
+        }
 }

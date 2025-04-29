@@ -52,14 +52,14 @@
             </div>
             <div class="detail-row">
                 <span class="label">Leverage</span>
-                <span class="value">@trade.Leverage</span>
+                <span class="value">@(trade.Leverage)x</span>
             </div>
             <div class="detail-row pnl">
                 <span class="label">P/L</span>
                 <span class="value @(ProfitLoss.ProfitLossDollar < 0 ? "pnl-negative" : "pnl-positive")">
                     @(ProfitLoss.ProfitLossDollar < 0
-                        ? "-" + ProfitLoss.ProfitLossDollar.ToString("C").Replace("-", "").Replace("(", "").Replace(")", "")
-                        : "+"+ProfitLoss.ProfitLossDollar.ToString("C"))
+                        ? "-" + ProfitLoss.ProfitLossDollar.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "")
+                        : "+" + ProfitLoss.ProfitLossDollar.ToString("N2")) @trade.Symbol2
                     (@ProfitLoss.ProfitLossPercent.ToString("N2")%)
                 </span>
 
@@ -163,7 +163,7 @@
     decimal leverage)
     {
         if (entryPrice <= 0 || exitPrice <= 0 || margin <= 0 || leverage <= 0)
-            throw new ArgumentException("All values must be positive and non-zero.");
+            return (0, 0);
 
         decimal positionSize = margin * leverage;
         decimal priceChangePercent = (exitPrice - entryPrice) / entryPrice;
