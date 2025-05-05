@@ -2323,7 +2323,7 @@ h2.react-datepicker__current-month {
 .css-1i1ptr {
     grid-area: table;
     width: 100%;
-    min-height: 470px;
+    min-height: 500px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.024);
 }
@@ -2337,7 +2337,7 @@ h2.react-datepicker__current-month {
 
 .css-1tr1jbf {
     border-radius: 12px;
-    max-height: 47.7vh;
+    max-height: 500px;
     height: 100%;
     overflow: hidden;
     box-sizing: border-box;

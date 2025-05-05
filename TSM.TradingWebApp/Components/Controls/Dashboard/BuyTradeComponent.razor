@@ -68,8 +68,8 @@
                     <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("buydd")" />
                     <div class="captions">
                         <span class="caption">
-                            <p>Current USD balance:</p>
-                            <p class="value">@mainBalance.ToString("C") USD</p>
+                            <p>Current @tradeModel.Symbol2 balance:</p>
+                            <p class="value">@FormatValues.FormatCurrencyWithMinusForBal(mainBalance) USD</p>
                         </span>
                         <span class="caption">
                             <p>Current @selectedAsset price</p>
@@ -99,7 +99,7 @@
                         <InputNumber @bind-Value="tradeModel.StopLoss"
                                      @oninput="(e) => HandleStopLossChange(e)"
                                      class="no-zoom-14px"
-                                     placeholder="-1.500" />
+                                     placeholder="1.500" />
                         <div class="amount_select">
                             <p>@selectedAsset</p>
                         </div>
@@ -107,7 +107,7 @@
                     @if (tradeModel.StopLoss != 0)
                     {
                         <div class="estimated-text">
-                            <span>Estimated Loss: @(FormatCurrencyWithMinus(CalculateEstimatedLoss(tradeModel.StopLoss))) @tradeModel.Symbol2</span>
+                            <span>Estimated Loss: @(FormatValues.FormatCurrencyWithMinus(CalculateEstimatedLoss(tradeModel.StopLoss))) @tradeModel.Symbol2</span>
                         </div>
                     }
                 </div>
@@ -125,7 +125,7 @@
                     @if (tradeModel.TakeProfit != 0)
                     {
                         <div class="estimated-text">
-                            <span> Estimated profit: @(FormatCurrencyWithMinus(CalculateEstimatedProfit(tradeModel.TakeProfit))) @tradeModel.Symbol2</span>
+                            <span> Estimated profit: @(FormatValues.FormatCurrencyWithMinus(CalculateEstimatedProfit(tradeModel.TakeProfit))) @tradeModel.Symbol2</span>
                         </div>
                     }
                 </div>
@@ -286,7 +286,7 @@
             {
                 user = Cuser;
                 mainBalance = user?.Balances
-                    .FirstOrDefault(b => b.Asset.AssetSymbol == "USD")?.Available ?? 0.0m;
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == tradeModel.Symbol2)?.Available ?? 0.0m;
                 StateHasChanged();
             });
     }
@@ -432,11 +432,12 @@
     private decimal CalculateEstimatedLoss(decimal stopLossValue)
     {
         // Implement your actual calculation logic here
-        EstLoss = SingleTradeInfo.CalculateProfitLoss(
+        EstLoss = FormatValues.CalculateProfitLoss(
             selectPrice,
             stopLossValue,
             tradeModel.Quantity,
-            Convert.ToDecimal(tradeModel.Leverage)
+            Convert.ToDecimal(tradeModel.Leverage),
+            tradeModel.Side == "Buy" ? true : false
         );
         return EstLoss.ProfitLossDollar;
     }
@@ -444,19 +445,13 @@
     private decimal CalculateEstimatedProfit(decimal takeProfitValue)
     {
         // Implement your actual calculation logic here
-        EstProfit = SingleTradeInfo.CalculateProfitLoss(
+        EstProfit = FormatValues.CalculateProfitLoss(
             selectPrice,
             takeProfitValue,
             tradeModel.Quantity,
-            Convert.ToDecimal(tradeModel.Leverage)
+            Convert.ToDecimal(tradeModel.Leverage),
+            tradeModel.Side == "Buy" ? true : false
         );
         return EstProfit.ProfitLossDollar;
     }
-
-        string FormatCurrencyWithMinus(decimal amount)
-        {
-            if (amount < 0)
-                return "-" + amount.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "");
-            return "+"+amount.ToString("N2");
-        }
 }

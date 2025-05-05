@@ -540,6 +540,16 @@
     font-size: 13px;
     font-weight: 600;
 }
+.css-1g7kala span {
+    text-transform: capitalize;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    max-width: max-content;
+    border-radius: 4px;
+    color: rgb(13 110 253);
+    background: rgb(13 110 253 / 11%);
+}
 
 .css-1g7kala span.pending {
     text-transform: capitalize;
@@ -551,6 +561,26 @@
     color: rgb(49, 172, 238);
     background: rgba(49, 172, 238, 0.1);
 }
+    .css-1g7kala span.approved {
+        text-transform: capitalize;
+        border: none;
+        cursor: pointer;
+        padding: 6px 12px;
+        max-width: max-content;
+        border-radius: 4px;
+        color: #4CAF50;
+        background: rgb(76 175 80 / 17%);
+    }
+    .css-1g7kala span.declined {
+        text-transform: capitalize;
+        border: none;
+        cursor: pointer;
+        padding: 6px 12px;
+        max-width: max-content;
+        border-radius: 4px;
+        color: #f31100;
+        background: rgb(244 67 54 / 17%);
+    }
 
 @media screen and (max-width: 768px) {
     .css-1g7kala table thead tr, .css-1g7kala table tbody tr {
@@ -586,4 +616,8 @@
         min-width: 150px;
         max-width: 190px;
     }
+}
+td {
+    color: #fff;
+    text-wrap-mode: nowrap !important;
 }

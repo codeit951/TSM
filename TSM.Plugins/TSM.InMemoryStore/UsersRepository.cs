@@ -40,6 +40,11 @@ namespace TSM.InMemoryStore
         };
         }
 
+        public Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task AddTrade(Guid userID, Trade trade)
         {
             var user = _users.FirstOrDefault(u => u.UserID == userID);
@@ -52,6 +57,12 @@ namespace TSM.InMemoryStore
                 user.Trades.Add(trade);
             }
             return Task.CompletedTask;
+        }
+
+        
+        public Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)

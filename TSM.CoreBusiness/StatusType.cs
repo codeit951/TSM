@@ -4,7 +4,9 @@
     {
         InActive,
         Active,
+        Approved,
         Pending,
-        Blocked
+        Blocked,
+        Declined
     }
 }

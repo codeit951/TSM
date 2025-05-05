@@ -1,0 +1,31 @@
+﻿@inject LoadingService LoadingService
+@rendermode InteractiveServer
+@if (isVisible)
+{
+    <div class="loading-overlay">
+        <div class="spinner-border text-light" role="status"></div>
+        <div class="mt-2 text-light">Loading...</div>
+    </div>
+}
+
+@code {
+    private bool isVisible;
+
+    protected override void OnInitialized()
+    {
+        LoadingService.OnShow += Show;
+        LoadingService.OnHide += Hide;
+    }
+
+    private void Show()
+    {
+        isVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void Hide()
+    {
+        isVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+}

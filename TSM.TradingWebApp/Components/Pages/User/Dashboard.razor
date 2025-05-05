@@ -25,7 +25,7 @@
 @code {
     private User? user;
 
-
+    private bool isLoading = true;
     protected override async Task OnInitializedAsync()
     {
         PageState.IsPricePageActive = true;
@@ -38,6 +38,7 @@
             State.SetCurrentUser(user);
         }
     }
+
 
     public void Dispose()
     {

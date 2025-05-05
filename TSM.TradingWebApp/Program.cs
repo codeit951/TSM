@@ -12,6 +12,7 @@ using TSM.TradingWebApp.Components;
 using TSM.TradingWebApp.Components.Controls.Common;
 using TSM.TradingWebApp.Data;
 using TSM.TradingWebApp.Prices;
+using TSM.TradingWebApp.Services;
 using TSM.UseCase.Assets;
 using TSM.UseCase.PluginInterfaces;
 using TSM.UseCase.Users;
@@ -75,6 +76,8 @@ builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>()
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();
 builder.Services.AddTransient<IUpdateUserBalanceUseCase, UpdateUserBalanceUseCase>();
 builder.Services.AddTransient<IAddTradeUseCase, AddTradeUseCase>();
+builder.Services.AddTransient<ICloseTradeUseCase, CloseTradeUseCase>();
+builder.Services.AddTransient<ISwapTransactionUseCase, SwapTransactionUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();
@@ -90,6 +93,8 @@ builder.Services.AddSingleton<PricePageState>();
 builder.Services.AddScoped<DynamicStateContainer>();
 builder.Services.AddScoped(typeof(IAsyncDisposable), typeof(TradingViewComponent));
 builder.Services.AddScoped<UserState>();
+
+builder.Services.AddSingleton<LoadingService>();
 
 var app = builder.Build();
 

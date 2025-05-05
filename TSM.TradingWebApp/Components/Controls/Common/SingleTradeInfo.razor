@@ -2,14 +2,17 @@
 @implements IAsyncDisposable
 @inject CryptoPriceService PriceService
 @inject IViewAssetsByTypeUseCase ViewAssetsByType
+@inject ICloseTradeUseCase CloseTradeUseCase
+@inject UserManager<User> UserManager
 
+<ToastComponent @ref="toastComponent" Timeout="3000" />
 <div class="trade-info-card">
     @if (trade is not null)
     {
         <div class="card-header">
             <div class="symbol-container">
                 <img src="AssetIcons/@(trade.Symbol1).png" alt="Crypto" class="crypto-icon" />
-            <span class="pair">@(trade.Symbol1+"/"+trade.Symbol2)</span>
+                <span class="pair">@(trade.Symbol1+"/"+trade.Symbol2)</span>
             </div>
             <span class="status @(trade.Status=="Closed"?"closed":"open")">@(trade.Status == "Closed" ? "Closed" : "Open")</span>
         </div>
@@ -26,10 +29,33 @@
                 <span class="label">Entry Price</span>
                 <span class="value">@trade.Price.ToString("C")</span>
             </div>
-            <div class="detail-row">
-                <span class="label">Current Price</span>
+            @if (trade.Status != "Closed")
+            {
+                <div class="detail-row">
+                    <span class="label">Current Price</span>
                 <span class="value">@price.ToString("C")</span>
             </div>
+            }
+            @if (trade.Status == "Closed")
+            {
+                <div class="detail-row pnl">
+                    <span class="label">P/L</span>
+                    <span class="value @(trade.Profit > 0 ? "pnl-positive" : "pnl-negative")">
+                        @(trade.Profit > 0 ?
+                            "+" + trade.Profit.ToString("N2")
+                            : "-" + trade.Loss.ToString("N2")) @trade.Symbol2
+                        (@FormatValues.CalculateProfitLoss(trade.Price, trade.ClosePrice, trade.Quantity, Convert.ToDecimal(trade.Leverage), trade.Side == "Buy" ? true : false).ProfitLossPercent.ToString("N2")%)
+                    </span>
+
+
+                </div>
+                
+                <div class="detail-row">
+                    <span class="label">Close Price</span>
+                    <span class="value">@trade.ClosePrice</span>
+                </div>
+            }
+
             <div class="detail-row">
                 <span class="label">Size</span>
                 <span class="value">@trade.Quantity</span>
@@ -38,6 +64,13 @@
                 <span class="label">Entry Time</span>
                 <span class="value">@trade.Time UTC</span>
             </div>
+            @if (trade.Status == "Closed")
+            {
+            <div class="detail-row">
+                    <span class="label">Close Time</span>
+                    <span class="value">@trade.CloseTime</span>
+                </div>
+            }
             <div class="detail-row">
                 <span class="label">Take Profit</span>
                 <span class="value">@trade.TakeProfit</span>
@@ -48,43 +81,38 @@
             </div>
             <div class="detail-row">
                 <span class="label">Duration</span>
-                <span class="value">@trade.Duration</span>
+                <span class="value">@FormatValues.ConvertMinutesToDetailedTime(Convert.ToInt32((trade.Duration)))</span>
             </div>
             <div class="detail-row">
                 <span class="label">Leverage</span>
                 <span class="value">@(trade.Leverage)x</span>
             </div>
+            @if (trade.Status != "Closed")
+            {
             <div class="detail-row pnl">
                 <span class="label">P/L</span>
                 <span class="value @(ProfitLoss.ProfitLossDollar < 0 ? "pnl-negative" : "pnl-positive")">
                     @(ProfitLoss.ProfitLossDollar < 0
-                        ? "-" + ProfitLoss.ProfitLossDollar.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "")
-                        : "+" + ProfitLoss.ProfitLossDollar.ToString("N2")) @trade.Symbol2
+                                    ? "-" + ProfitLoss.ProfitLossDollar.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "")
+                                    : "+" + ProfitLoss.ProfitLossDollar.ToString("N2")) @trade.Symbol2
                     (@ProfitLoss.ProfitLossPercent.ToString("N2")%)
                 </span>
 
 
             </div>
-            @if (trade.Status=="Closed")
-            {
-                <div class="detail-row">
-                    <span class="label">Close Time</span>
-                    <span class="value">@trade.CloseTime</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Close Price</span>
-                    <span class="value">@trade.ClosePrice</span>
-                </div>
             }
-        </div>
+                    </div>
         <div class="card-footer">
-            <button class="btn btn-danger">Close Trade</button>
+            <button class="btn btn-danger" @onclick="CloseTrade">Close Trade</button>
         </div>
     }
 </div>
+<Preload LoadingText="Loading..." />
 @code {
     [Parameter]
     public int TradeId { get; set; }
+
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
 
     private User? user;
 
@@ -101,6 +129,10 @@
 
     private (decimal ProfitLossDollar, decimal ProfitLossPercent) ProfitLoss;
 
+    private string AlertMessage = string.Empty;
+
+    private ToastComponent? toastComponent;
+
     protected override async Task OnParametersSetAsync()
     {
         // Fetch trade data based on TradeId
@@ -108,33 +140,32 @@
         if (user is not null)
         {
             trade = user.Trades.FirstOrDefault(t => t.OrderID == TradeId);
-
             if (trade is not null)
             {
-                symbol = trade.Side == "Buy" ? trade.Symbol1 : trade.Symbol2;
+                symbol =  trade.Symbol1;
 
                 if (trade.OrderType=="Crypto")
                 {
                     price = PriceService.Prices[symbol];
                     PriceService.OnPriceUpdated += HandlePriceUpdate;
-                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                    ProfitLoss = FormatValues.CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage),trade.Side=="Buy"?true:false);
                 }
                 else if (trade.OrderType=="Forex")
                 {
                     forexPrice = new ForexPrice(ViewAssetsByType);
                     await forexPrice.FetchPricesAsync();
                     price = forexPrice.Prices[symbol];
-                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                    ProfitLoss = FormatValues.CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage), trade.Side == "Buy" ? true : false);
                 }
                 else if (trade.OrderType == "Stocks")
                 {
                     stockPrice = new StockPrice(ViewAssetsByType);
                     await stockPrice.GetStockPrice();
                     price = stockPrice.Prices[symbol];
-                    ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+                    ProfitLoss = FormatValues.CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage), trade.Side == "Buy" ? true : false);
                 }
             }
-            
+
         }
     }
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
@@ -142,7 +173,7 @@
         if (trade.OrderType=="Crypto")
         {
             price = newPrice[symbol];
-            ProfitLoss = CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage));
+            ProfitLoss = FormatValues.CalculateProfitLoss(trade.Price, price, trade.Quantity, Convert.ToDecimal(trade.Leverage), trade.Side == "Buy" ? true : false);
             InvokeAsync(StateHasChanged);
         }
     }
@@ -152,27 +183,10 @@
         _subscription = userState.CurrentUserObservable.Subscribe(user =>
         {
             this.user = user;
+            trade = user.Trades.FirstOrDefault(t => t.OrderID == TradeId);
             StateHasChanged();
         });
     }
-
-    public static (decimal ProfitLossDollar, decimal ProfitLossPercent) CalculateProfitLoss(
-    decimal entryPrice,
-    decimal exitPrice,
-    decimal margin,
-    decimal leverage)
-    {
-        if (entryPrice <= 0 || exitPrice <= 0 || margin <= 0 || leverage <= 0)
-            return (0, 0);
-
-        decimal positionSize = margin * leverage;
-        decimal priceChangePercent = (exitPrice - entryPrice) / entryPrice;
-        decimal profitLossDollar = positionSize * priceChangePercent;
-        decimal profitLossPercent = (profitLossDollar / margin) * 100;
-
-        return (profitLossDollar, profitLossPercent);
-    }
-
 
     public async ValueTask DisposeAsync()
     {
@@ -180,4 +194,27 @@
         _subscription?.Dispose();
     }
 
+    private async Task CloseTrade()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Closing Trade...");
+        if (trade is not null)
+        {
+            decimal profit = 0.0m;
+            decimal loss = 0.0m;
+            if (ProfitLoss.ProfitLossDollar > 0)
+            {
+                profit = ProfitLoss.ProfitLossDollar;
+            }
+            else if (ProfitLoss.ProfitLossDollar < 0)
+            {
+                loss = -(ProfitLoss.ProfitLossDollar);
+            }
+            await CloseTradeUseCase.ExecuteAsync(trade, price, profit, loss);
+            AlertMessage = "Trade Closed Successfully!";
+            toastComponent?.ShowToast(MyToastType.Success, "Trade", AlertMessage);
+            user = await UserManager.FindByNameAsync(user.Email);
+            userState.SetCurrentUser(user);
+        }
+        PreloadService.Hide();
+    }
 }

@@ -1,13 +1,15 @@
-﻿@inject UserManager<User> UserManager
+﻿
+@inject UserManager<User> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inherits LayoutComponentBase
+
 
 <link href="static/css/dashboard.css" rel="stylesheet" />
 <link href="static/css/index-CukNxZR_.css" rel="stylesheet"/>
 
 <div id="root">
     <div class="css-10q2b6j">
-
+       
         <div class="css-6ymeda"></div>
         @* Everything goies here *@
         <GenerateQueryCodeTab />
@@ -34,6 +36,8 @@
     private string settingsTransform = "100%";
 
     private User? user;
+
+    
 
     protected override async Task OnInitializedAsync()
     {

@@ -19,6 +19,57 @@ namespace TSM.EFCoreSqlServer
             this.contextFactory = contextFactory;
         }
 
+        public async Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo)
+        {
+
+            if (transaction == null)
+                throw new ArgumentNullException(nameof(transaction));
+            const string STATUS_SUCCESS = "1";
+            const string STATUS_INSUFFICIENT_BALANCE = "0";
+            const string STATUS_FIRST_ASSET_NOT_FOUND = "2";
+            const string STATUS_SECOND_ASSET_NOT_FOUND = "3";
+            const string STATUS_USER_NOT_FOUND = "4";
+            const string STATUS_ERROR = "5";
+            await using var db = contextFactory.CreateDbContext();
+            var strategy = db.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transactionDb = await db.Database.BeginTransactionAsync();
+                try
+                {
+                    var user = await db.Users
+                        .Include(u => u.Transactions)
+                        .Include(u => u.Balances)
+                        .FirstOrDefaultAsync(u => u.UserID == userID);
+                    if (user == null)
+                        return STATUS_USER_NOT_FOUND;
+                    
+                    var balanceFrom = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == coinFrom);
+                    if (balanceFrom == null)
+                        return STATUS_FIRST_ASSET_NOT_FOUND;
+                    if (amountFrom > balanceFrom.Available)
+                        return STATUS_INSUFFICIENT_BALANCE;
+                    balanceFrom.Available -= amountFrom;
+                    var balanceTo = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == coinTo);
+                    if (balanceTo == null)
+                        return STATUS_SECOND_ASSET_NOT_FOUND;
+                    balanceTo.Available += amountTo;
+                    user.Transactions ??= new List<Transaction>();
+                    user.Transactions.Add(transaction);
+                    await db.SaveChangesAsync();
+                    await transactionDb.CommitAsync();
+                    return STATUS_SUCCESS;
+                }
+                catch
+                {
+                    await transactionDb.RollbackAsync();
+                    return STATUS_ERROR;
+                }
+            });
+        }
+
         public async Task<string> AddTrade(Guid userID, Trade trade)
         {
             if (trade == null)
@@ -49,10 +100,9 @@ namespace TSM.EFCoreSqlServer
                     user.Trades ??= new List<Trade>();
                     user.Trades.Add(trade);
 
-                    var assetSymbol = trade.Side == "Buy" ? trade.Symbol2 : trade.Symbol1;
 
                     var balance = await db.Balances
-                        .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == assetSymbol);
+                        .FirstOrDefaultAsync(b => b.UserId == userID && b.Asset.AssetSymbol == trade.Symbol2);
 
                     if (balance == null)
                         return STATUS_ASSET_NOT_FOUND;
@@ -76,6 +126,46 @@ namespace TSM.EFCoreSqlServer
             });
         }
 
+        
+
+        public async Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss)
+        {
+            if (trade == null)
+                throw new ArgumentNullException(nameof(trade));
+            await using var db = this.contextFactory.CreateDbContext();
+            var existingTrade = await db.Trades
+                .FirstOrDefaultAsync(t => t.OrderID == trade.OrderID && t.UserID == trade.UserID);
+            if (existingTrade != null)
+            {
+                existingTrade.ClosePrice = closePrice;
+                existingTrade.CloseTime = DateTime.UtcNow;
+                existingTrade.Profit = profit;
+                existingTrade.Loss = loss;
+                existingTrade.Status = "Closed";
+                db.Trades.Update(existingTrade);
+
+                var balance = await db.Balances
+                    .FirstOrDefaultAsync(b => b.UserId == trade.UserID && b.Asset.AssetSymbol == trade.Symbol2);
+                if (balance != null)
+                {
+                    balance.Available += trade.Quantity;
+                    balance.Locked -= trade.Quantity;
+
+                    if (profit>0)
+                    {
+                        balance.Available += profit;
+                    }
+                    else if (loss > 0)
+                    {
+                        balance.Available -= loss;
+                    }
+
+                    db.Balances.Update(balance);
+                }
+
+                await db.SaveChangesAsync();
+            }
+        }
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
@@ -115,6 +205,7 @@ namespace TSM.EFCoreSqlServer
             await using var db = contextFactory.CreateDbContext();
             return await db.Users
                 .Include(u => u.Trades)
+                .Include(u => u.Transactions)
                 .Include(u => u.Balances)
                 .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.Email == normalizedUserName,

@@ -17,7 +17,20 @@
     .modal-body {
         padding: 0 !important;
     }
+
+    th {
+        background: #0d6efd !important;
+        border-style: none !important;
+        box-shadow: none !important;
+    }
+
+    .table-responsive {
+        height: 400px !important;
+        scrollbar-width: none !important;
+    }
 </style>
+<div>
+    <div style="max-height: 500px; overflow-y: auto;">
 <Grid @ref="grid"
       TItem="Trade"
       AllowRowClick="true"
@@ -26,6 +39,7 @@
       Data="trades"
       HeaderRowCssClass="bg-primary text-white border-bottom-0"
       OnRowClick="OnRowClick"
+      FixedHeader="true"
       Responsive="true">
 
     <GridColumns>
@@ -111,6 +125,8 @@
         </GridEmptyDataTemplate>
     </GridTemplates>
 </Grid>
+</div>
+</div>
 <Modal @ref="modal" />
 @code {
     Modal modal { get; set; } = default!;
@@ -122,16 +138,6 @@
     private IDisposable _subscription;
 
     private List<Trade>? trades;
-
-
-    private async Task<GridDataProviderResult<Trade>> TradeDataProvider(GridDataProviderRequest<Trade> request)
-    {
-        if (trades is null) // pull employees only one time for client-side filtering, sorting, and paging
-            trades = GetTrades(); // call a service or an API to pull the employees
-
-        return await Task.FromResult(request.ApplyTo(trades));
-    }
-
 
     protected override async Task OnInitializedAsync()
     {

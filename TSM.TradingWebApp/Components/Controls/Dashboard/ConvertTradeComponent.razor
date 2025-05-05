@@ -4,128 +4,139 @@
 @inject IJSRuntime JS
 @inject UserState userState
 @implements IAsyncDisposable
-<div class="form">
+@inject ISwapTransactionUseCase SwapTransactionUseCase
+@inject UserManager<User> UserManager
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+<EditForm Model="convertModel" OnValidSubmit="SwapAsset">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
     <div class="form">
-        <div class="amount_with_dropdown">
-            <div class=" css-v6puf8">
-                <label>From:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.03" value="@FromAmount" @oninput="HandleFromAmountChange" class="no-zoom-14px">
-                    <div class="amount_select from" @onclick="ToggleCoinsAndBalanceDropdown">
-                        <span class="icon_divider">
-                            <img src="./asseticons/@(selectedAssetFrom).png" alt="">
-                            <p>@selectedAssetFrom</p>
-                        </span>
-                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                            <g fill="none" fill-rule="evenodd">
-                                <g transform="translate(-1391 -130)" fill="currentColor">
-                                    <g transform="translate(1250 116)">
-                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+        <div class="form">
+            <div class="amount_with_dropdown">
+                <div class=" css-v6puf8">
+                    <label>From:</label>
+                    <div class="amountbox_wrapper">
+                        <input type="number" placeholder="0.03" value="@convertModel.amountFrom" @oninput="HandleFromAmountChange" class="no-zoom-14px">
+                        <div class="amount_select from" @onclick="ToggleCoinsAndBalanceDropdown">
+                            <span class="icon_divider">
+                                <img src="./asseticons/@(convertModel.assetFrom).png" alt="">
+                                <p>@convertModel.assetFrom</p>
+                            </span>
+                            <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-1391 -130)" fill="currentColor">
+                                        <g transform="translate(1250 116)">
+                                            <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                        </g>
                                     </g>
                                 </g>
-                            </g>
-                        </svg>
+                            </svg>
+                        </div>
+                    </div>
+                    <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("convertddfrom")" />
+                    <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;">
+                        <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(10))">10%</button>
+                        <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(25))">25%</button>
+                        <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(50))">50%</button>
+                        <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(75))">75%</button>
+                        <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(100))">MAX</button>
+                    </div>
+                    <div class="captions">
+                        <span class="caption">
+                            <p>Current @convertModel.assetFrom balance:</p>
+                            <p class="value">@FromBalance @convertModel.assetFrom</p>
+                        </span>
+                        <span class="caption">
+                            <p>Current @convertModel.assetFrom price</p>
+                            @if (price is not null && price.ContainsKey(convertModel.assetFrom))
+                            {
+                                FromPrice = price[convertModel.assetFrom];
+                                UpdateToAmount();
+                                <p class="value" style="color: rgb(91, 222, 76);">@price[convertModel.assetFrom].ToString("C")</p>
+                            }
+                            else if (stockprices is not null && stockprices.ContainsKey(convertModel.assetFrom))
+                            {
+                                FromPrice = stockprices[convertModel.assetFrom];
+                                UpdateToAmount();
+                                <p class="value" style="color: rgb(91, 222, 76);">@stockprices[convertModel.assetFrom].ToString("C")</p>
+                            }
+                            else if (otherprices is not null && otherprices.ContainsKey(convertModel.assetFrom))
+                            {
+                                FromPrice = otherprices[convertModel.assetFrom];
+                                UpdateToAmount();
+                                <p class="value" style="color: rgb(91, 222, 76);">@otherprices[convertModel.assetFrom].ToString("C")</p>
+                            }
+                        </span>
                     </div>
                 </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection" @rendermode="InteractiveServer" elementId="@("convertddfrom")" />
-                <div class="buttons" style="display: flex; gap: 4px; justify-content: space-between; width: 100%; height: 34px; margin: 8px 0px 16px;">
-                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(10))">10%</button>
-                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(25))">25%</button>
-                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(50))">50%</button>
-                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(75))">75%</button>
-                    <button class=" css-40mlel" type="button" @onclick="@(()=>CalculatePercentage(100))">MAX</button>
-                </div>
-                <div class="captions">
-                    <span class="caption">
-                        <p>Current @selectedAssetFrom balance:</p>
-                        <p class="value">@FromBalance @selectedAssetFrom</p>
-                    </span>
-                    <span class="caption">
-                        <p>Current @selectedAssetFrom price</p>
-                        @if (price is not null && price.ContainsKey(selectedAssetFrom))
-                        {
-                            FromPrice = price[selectedAssetFrom];
-                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAssetFrom].ToString("C")</p>
-                        }
-                        else if (stockprices is not null && stockprices.ContainsKey(selectedAssetFrom))
-                        {
-                            FromPrice = stockprices[selectedAssetFrom];
-                            <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAssetFrom].ToString("C")</p>
-                        }
-                        else if (otherprices is not null && otherprices.ContainsKey(selectedAssetFrom))
-                        {
-                            FromPrice = otherprices[selectedAssetFrom];
-                            <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAssetFrom].ToString("C")</p>
-                        }
-                    </span>
+            </div>
+            <div class="amount_with_dropdown">
+                <div class=" css-v6puf8">
+                    <label>To:</label>
+                    <div class="amountbox_wrapper">
+                        <input type="number" placeholder="0.0000" disabled="" class="no-zoom-14px" @bind-value="convertModel.amountTo">
+                        <div class="amount_select to" @onclick="ToggleCoinsAndBalanceDropdown2">
+                            <span class="icon_divider">
+                                <img src="./asseticons/@(convertModel.assetTo).png" alt="">
+                                <p>@convertModel.assetTo</p>
+                            </span>
+                            <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(-1391 -130)" fill="currentColor">
+                                        <g transform="translate(1250 116)">
+                                            <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" @rendermode="InteractiveServer" elementId="@("convertddto")" />
+                    <div class="captions">
+                        <span class="caption">
+                            <p>Current @convertModel.assetTo balance:</p>
+                            <p class="value">@ToBalance @convertModel.assetTo</p>
+                        </span>
+                        <span class="caption">
+                            <p>Current @convertModel.assetTo price</p>
+                            @if (price is not null && price.ContainsKey(convertModel.assetTo))
+                            {
+                                ToPrice = price[convertModel.assetTo];
+                                <p class="value" style="color: rgb(91, 222, 76);">@price[convertModel.assetTo].ToString("C")</p>
+                            }
+                            else if (stockprices is not null && stockprices.ContainsKey(convertModel.assetTo))
+                            {
+                                ToPrice = stockprices[convertModel.assetTo];
+                                <p class="value" style="color: rgb(91, 222, 76);">@stockprices[convertModel.assetTo].ToString("C")</p>
+                            }
+                            else if (otherprices is not null && otherprices.ContainsKey(convertModel.assetTo))
+                            {
+                                ToPrice = otherprices[convertModel.assetTo];
+                                <p class="value" style="color: rgb(91, 222, 76);">@otherprices[convertModel.assetTo].ToString("C")</p>
+                            }
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="amount_with_dropdown">
-            <div class=" css-v6puf8">
-                <label>To:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.0000" disabled="" class="no-zoom-14px" @bind-value="ToAmount">
-                    <div class="amount_select to" @onclick="ToggleCoinsAndBalanceDropdown2">
-                        <span class="icon_divider">
-                            <img src="./asseticons/@(selectedAssetTo).png" alt="">
-                            <p>@selectedAssetTo</p>
-                        </span>
-                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                            <g fill="none" fill-rule="evenodd">
-                                <g transform="translate(-1391 -130)" fill="currentColor">
-                                    <g transform="translate(1250 116)">
-                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)" d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-                <CoinsAndBalanceDropdownComponent @bind-IsOpen="isCoinsAndBalanceDropdownOpen2" @bind-SelectedType="selectedType" OnSelect="HandleAssetSelection2" @rendermode="InteractiveServer" elementId="@("convertddto")" />
-                <div class="captions">
-                    <span class="caption">
-                        <p>Current @selectedAssetTo balance:</p>
-                        <p class="value">@ToBalance @selectedAssetTo</p>
-                    </span>
-                    <span class="caption">
-                        <p>Current @selectedAssetTo price</p>
-                        @if (price is not null && price.ContainsKey(selectedAssetTo))
-                        {
-                            ToPrice = price[selectedAssetTo];
-                            <p class="value" style="color: rgb(91, 222, 76);">@price[selectedAssetTo].ToString("C")</p>
-                        }
-                        else if (stockprices is not null && stockprices.ContainsKey(selectedAssetTo))
-                        {
-                            ToPrice = stockprices[selectedAssetTo];
-                            <p class="value" style="color: rgb(91, 222, 76);">@stockprices[selectedAssetTo].ToString("C")</p>
-                        }
-                        else if (otherprices is not null && otherprices.ContainsKey(selectedAssetTo))
-                        {
-                            ToPrice = otherprices[selectedAssetTo];
-                            <p class="value" style="color: rgb(91, 222, 76);">@otherprices[selectedAssetTo].ToString("C")</p>
-                        }
-                    </span>
-                </div>
-            </div>
-        </div>
+        <div class="divider_24px" aria-hidden="true"></div>
+        <button class="css-nncgg">
+            <p> Convert</p>
+        </button>
     </div>
-    <div class="divider_24px" aria-hidden="true"></div>
-    <button class="disabled css-nncgg" disabled="">
-        <p> Convert</p>
-    </button>
-</div>
-@code{
-    
+</EditForm>
+<Preload LoadingText="Loading..." />
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
     public User? user { get; set; }
 
-    private string selectedAssetFrom = "USD";
+    private ConvertModel convertModel = new ConvertModel();
+
     private decimal FromBalance = 0.0m;
-    private decimal FromAmount = 0.0m;
     private decimal FromPrice = 0.0m;
-    private string selectedAssetTo = "BTC";
     private decimal ToBalance = 0.0m;
-    private decimal ToAmount = 0.0m;
     private decimal ToPrice = 0.0m;
 
     private string selectedType = "All";
@@ -141,22 +152,38 @@
     private StockPrice stockPrice;
     private Dictionary<string, decimal>? stockprices;
 
+    private string AlertMessage = string.Empty;
+
+    private ToastComponent? toastComponent;
+
     private IDisposable _subscription;
 
     private void CalculatePercentage(int percentage){
-        FromAmount = FromBalance * percentage / 100;
-        decimal convertedUSD = FromAmount * FromPrice;
-        ToAmount = convertedUSD / ToPrice;
+        convertModel.amountFrom = FromBalance * percentage / 100;
+        UpdateToAmount();
     }
 
     private void HandleFromAmountChange(ChangeEventArgs e)
     {
         if (decimal.TryParse(e.Value.ToString(), out decimal value))
         {
-            FromAmount = value;
-            decimal convertedUSD = FromAmount * FromPrice;
-            ToAmount = convertedUSD / ToPrice;
+            convertModel.amountFrom = value;
+            UpdateToAmount();
         }
+    }
+
+    private void UpdateToAmount()
+    {
+        try
+        {
+            decimal convertedUSD = convertModel.amountFrom * FromPrice;
+            convertModel.amountTo = convertedUSD / ToPrice;
+        }
+        catch (Exception)
+        {
+            convertModel.amountTo = 0.0m;
+        }
+
     }
 
     protected override async Task OnInitializedAsync()
@@ -176,12 +203,12 @@
         _subscription = userState.CurrentUserObservable
             .Subscribe(Cuser =>
             {
-            user = Cuser;
+                user = Cuser;
                 FromBalance = user?.Balances
-                    .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == convertModel.assetFrom)?.Available ?? 0.0m;
                 ToBalance = user?.Balances
-                    .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
-            StateHasChanged();
+                    .FirstOrDefault(b => b.Asset.AssetSymbol == convertModel.assetTo)?.Available ?? 0.0m;
+                StateHasChanged();
             });
     }
 
@@ -193,6 +220,7 @@
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
     {
         price = newPrice;
+        UpdateToAmount();
         InvokeAsync(StateHasChanged);
     }
 
@@ -204,17 +232,98 @@
     private void HandleAssetSelection(string symbol)
     {
         // Handle selected asset symbol
-        selectedAssetFrom = symbol;
+        convertModel.assetFrom = symbol;
         FromBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetFrom)?.Available ?? 0.0m;
+            .FirstOrDefault(b => b.Asset.AssetSymbol == convertModel.assetFrom)?.Available ?? 0.0m;
     }
 
     private void HandleAssetSelection2(string symbol)
     {
         // Handle selected asset symbol
-        selectedAssetTo = symbol;
+        convertModel.assetTo = symbol;
         ToBalance = user?.Balances
-            .FirstOrDefault(b => b.Asset.AssetSymbol == selectedAssetTo)?.Available ?? 0.0m;
+            .FirstOrDefault(b => b.Asset.AssetSymbol == convertModel.assetTo)?.Available ?? 0.0m;
+    }
+
+    private async Task SwapAsset()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Converting...");
+        if (CheckBalance())
+        {
+            Transaction transaction = new Transaction
+                {
+                    UserID = user.UserID,
+                    TransactionType = convertModel.OrderType,
+                    Asset = convertModel.assetFrom,
+                    Amount = convertModel.amountFrom,
+                    Method = "Convert",
+                    Status = StatusType.Approved,
+                    Reference = ReferenceGenerator.GenerateReference(),
+                    Details = $"Converting {convertModel.assetFrom} to {convertModel.assetTo}"
+                };
+            var result = await SwapTransactionUseCase.Execute(user.UserID, transaction, convertModel.assetFrom, convertModel.assetTo, convertModel.amountFrom, convertModel.amountTo);
+            if (result == null)
+            {
+                AlertMessage = "Converting Failed!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+                return;
+            }
+            else if (result == "0")
+            {
+                AlertMessage = $"Insufficient {convertModel.assetFrom} balance!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+            }
+            else if (result == "1")
+            {
+                convertModel = new ConvertModel();
+                AlertMessage = "Convert Successful!";
+                toastComponent?.ShowToast(MyToastType.Success, "Convert", AlertMessage);
+                user = await UserManager.FindByNameAsync(user.Email);
+                userState.SetCurrentUser(user);
+            }
+            else if (result == "2")
+            {
+                AlertMessage = $"{convertModel.assetFrom} balance not found!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+            }
+            else if (result == "3")
+            {
+                AlertMessage = $"{convertModel.assetTo} balance not found!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+            }
+            else if (result == "4")
+            {
+                AlertMessage = "User not found!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+            }
+            else if (result == "5")
+            {
+                AlertMessage = "Convert Failed!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+            }
+        }
+        else
+        {
+            AlertMessage = $"Insufficient {convertModel.assetFrom} balance!";
+            toastComponent?.ShowToast(MyToastType.Danger, "Convert", AlertMessage);
+        }
+        PreloadService.Hide();
+    }
+
+
+    private bool CheckBalance()
+    {
+        var userBalance = user?.Balances?.FirstOrDefault(b => b.Asset.AssetSymbol == convertModel.assetFrom);
+
+        if (userBalance == null)
+        {
+            return false; // User balance not found
+        }
+        else if (convertModel.amountFrom > userBalance.Available)
+        {
+            return false; // Insufficient balance
+        }
+        return true; // Sufficient balance
     }
 
     private void ToggleCoinsAndBalanceDropdown()
