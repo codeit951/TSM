@@ -2,7 +2,7 @@
 
 @layout Layout.UserLayout
 @attribute [Authorize]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject IJSRuntime JS
 
 

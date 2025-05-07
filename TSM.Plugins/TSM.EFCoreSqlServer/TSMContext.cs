@@ -19,6 +19,7 @@ namespace TSM.EFCoreSqlServer
         public DbSet<Balance>? Balances { get; set; }
         public DbSet<Asset>? Assets { get; set; }
         public DbSet<Transaction>? Transactions { get; set; }
+        public DbSet<WalletAddress>? WalletAddresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +28,9 @@ namespace TSM.EFCoreSqlServer
 
             modelBuilder.Entity<Transaction>()
                 .HasKey(t => new { t.TransactionID, t.UserID });
+
+            modelBuilder.Entity<WalletAddress>()
+                .HasKey(t => new { t.WalletID });
 
             //modelBuilder.Entity<Balance>()
             //    .HasKey(b => new { b.BalanceId, b.UserId,b.AssetId });
@@ -112,6 +116,25 @@ namespace TSM.EFCoreSqlServer
                     IsStar = true,
                 }
                 );
+
+            modelBuilder.Entity<WalletAddress>().HasData(
+                new WalletAddress
+                {
+                    WalletID = 1,
+                    CoinName = "Bitcoin",
+                    CoinType = "BTC",
+                    Address = "0x1234567890abcdef1234567890abcdef12345678",
+                    Network = "Blockchain"
+                },
+                new WalletAddress
+                {
+                    WalletID = 2,
+                    CoinName = "Etherum",
+                    CoinType = "ETH",
+                    Address = "0xabcdef1234567890abcdef1234567890abcdef12",
+                    Network = "Blockchain"
+                }
+            );
         }
     }
 }

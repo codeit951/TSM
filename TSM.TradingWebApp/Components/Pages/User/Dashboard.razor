@@ -3,7 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PricePageState PageState
 @inject UserState State
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @layout Layout.UserLayout
 @attribute [Authorize]
 

@@ -3,8 +3,9 @@
 @inject UserManager<User> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject UserState State
+@implements IAsyncDisposable
 
 <style>
     td {
@@ -50,11 +51,9 @@
                         </div>
                         <div class="table_utils">
                             <div class="css-frtgch">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <path d="m21 21-4.3-4.3"></path>
-                                </svg>
-                                <input placeholder="Search for deposits" class="no-zoom-14px">
+                                <Icon Name="IconName.Search" />
+                                <input placeholder="Search for deposits" id="searchTxt" 
+                                       @oninput="HandleSearch" class="no-zoom-14px">
                             </div>
                             <div class="select_dropdown css-1azirga">
                                 <div class="select_wrapper">
@@ -178,8 +177,10 @@
 @code{
     private List<Transaction> transactions = new List<Transaction>();
     private User? user;
-
+    private string searchQuery = string.Empty;
     private bool IsActive = false;
+
+    private IDisposable _subscription;
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,9 +190,18 @@
         if (!string.IsNullOrEmpty(username))
         {
             user = await UserManager.FindByNameAsync(username);
-            transactions = GetTransactions();
             State.SetCurrentUser(user);
         }
+
+        _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+       {
+           user = Cuser;
+           transactions = GetTransactions();
+           StateHasChanged();
+       });
+
+        
     }
 
     private List<Transaction> GetTransactions()
@@ -208,11 +218,27 @@
         if (selectedValue != "all")
         {
             transactions = transactions.Where(t => t.Status.ToString().ToLower() == selectedValue).ToList();
+            transactions = transactions.Where(t => t.Reference.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+
+    private void HandleSearch(ChangeEventArgs e)
+    {
+        searchQuery = e.Value.ToString();
+        transactions = GetTransactions();
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            transactions = transactions.Where(t => t.Reference.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
     
     private void OpenModal()
     {
         IsActive = true;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/user/copy-experts"
 @layout Layout.UserLayout
 @attribute [Authorize]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <link href="pages/copy-experts.css" rel="stylesheet" />
 

@@ -2,7 +2,7 @@
 
 @layout Layout.UserLayout
 @attribute [Authorize]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <div class="scrollbar-hide css-66hwna">
     <div class="css-93wr2k">

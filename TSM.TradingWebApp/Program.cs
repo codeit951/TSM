@@ -16,6 +16,7 @@ using TSM.TradingWebApp.Services;
 using TSM.UseCase.Assets;
 using TSM.UseCase.PluginInterfaces;
 using TSM.UseCase.Users;
+using TSM.UseCase.WalletAddreses;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,8 @@ builder.Services.Configure<CircuitOptions>(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
+
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddUserStore<UsersRepositoryEF>()
@@ -71,6 +74,7 @@ builder.Services.AddDbContextFactory<TSMContext>((services, options) =>
 
 builder.Services.AddScoped<IAssetsRepository, AssetsRepositoryEF>();
 builder.Services.AddScoped<IUserRepository, UsersRepositoryEF>();
+builder.Services.AddScoped<IWalletRepository, WalletRepositoryEF>();
 
 builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>();
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();
@@ -78,6 +82,7 @@ builder.Services.AddTransient<IUpdateUserBalanceUseCase, UpdateUserBalanceUseCas
 builder.Services.AddTransient<IAddTradeUseCase, AddTradeUseCase>();
 builder.Services.AddTransient<ICloseTradeUseCase, CloseTradeUseCase>();
 builder.Services.AddTransient<ISwapTransactionUseCase, SwapTransactionUseCase>();
+builder.Services.AddTransient<IAddTransactionUseCase, AddTransactionUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();
@@ -85,6 +90,12 @@ builder.Services.AddTransient<IViewAssetByIdUseCase, ViewAssetByIdUseCase>();
 builder.Services.AddTransient<IDeleteAssetUseCase, DeleteAssetUseCase>();
 builder.Services.AddTransient<IUpdateAssetUseCase, UpdateAssetUseCase>();
 builder.Services.AddTransient<IViewAssetsByTypeUseCase, ViewAssetsByTypeUseCase>();
+
+builder.Services.AddTransient<IViewWalletByNameUseCase, ViewWalletByNameUseCase>();
+builder.Services.AddTransient<IAddWalletUseCase, AddWalletUseCase>();
+builder.Services.AddTransient<IDeleteWalletByIdUseCase, DeleteWalletByIdUseCase>();
+builder.Services.AddTransient<IUpdateWalletUseCase, UpdateWalletUseCase>();
+builder.Services.AddTransient<IViewWalletByTypeUseCase, ViewWalletByTypeUseCase>();
 
 builder.Services.AddSingleton<CryptoPriceService>();
 builder.Services.AddHostedService<CryptoPriceWorker>();

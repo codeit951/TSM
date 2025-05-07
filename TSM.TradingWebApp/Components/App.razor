@@ -49,6 +49,17 @@
     <script src="site.js"></script>
     <script src="static/js/counter.js"></script>
     <script src="swipehelper.js"></script>
+    <script>
+        window.triggerInputClick = (element) => {
+            element.click();
+        };
+            window.copyToClipboard = function (text) {
+            navigator.clipboard.writeText(text)
+                .then(() => console.log("Copied to clipboard"))
+                .catch(err => console.error("Copy failed", err));
+        };
+    </script>
+
 </body>
 
 </html>

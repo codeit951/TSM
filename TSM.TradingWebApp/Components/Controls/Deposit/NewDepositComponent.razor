@@ -1,4 +1,14 @@
-﻿<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl @(IsActive?"":"hidden")">
+﻿@inject IViewWalletByNameUseCase ViewWalletByNameUseCase
+@inject IAddTransactionUseCase AddTransactionUseCase
+@inject UserState userState
+@implements IAsyncDisposable
+@inject UserManager<User> UserManager
+@inject IJSRuntime JS
+@using QRCoder;
+
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl @(IsActive?"":"hidden")">
     <div aria-hidden="true" class="MuiBackdrop-root MuiModal-backdrop css-919eu4" style="opacity: 1; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);"></div>
     <div tabindex="0" data-testid="sentinelStart"></div>
     <div tabindex="-1" class="css-13lqfnw" style="scrollbar-width: none;">
@@ -7,84 +17,247 @@
             <button type="button" @onclick="CloseModal"><Icon Name="IconName.X" /></button>
         </div>
         <div class="modal_content">
-            <p class="modal_description">To make a deposit, choose your preferred method, enter an amount and upload a corresponding payment proof.</p>
-            <div class="css-1azirga">
-                <label>Type:</label>
-                <div class="select_wrapper">
-                    <select name="type" id="type">
-                        <option value="crypto">Crypto</option>
-                    </select>
-                </div>
-            </div>
-            <div class="css-184mof1">
-                <label>Method:</label>
-                <div class="select_wrapper">
-                    <img src="/asseticons/SOL.svg" alt="SOL" />
-                    <select name="asset" id="asset">
-                        <option value="SOL">Solana</option>
-                        <option value="ADA">Cardano</option>
-                        <option value="XRP">Ripple</option>
-                        <option value="LTC">Litecoin</option>
-                        <option value="ETH">Ethereum</option>
-                        <option value="BTC">Bitcoin</option>
-                        <option value="USDC">USD Coin</option>
-                    </select>
-                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" fill-rule="evenodd">
-                            <g transform="translate(-1391 -130)" fill="#ffffff">
-                                <g transform="translate(1250 116)">
-                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
-                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-            <div class="css-v6puf8">
-                <label class="divide"><p>Address :</p></label>
-                <div class="amountbox_wrapper">
-                    <input type="text" placeholder="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" value="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" /><button class="amount_select"><p>Copy</p></button>
-                </div>
-            </div>
-            <div class="css-v6puf8">
-                <label>Amount:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.00000000" />
-                    <div class="amount_select">
-                        <img src="/asseticons/SOL.svg" alt="icon" />
-                        <p>SOL</p>
-                    </div>
-                </div>
-            </div>
-            <button class="css-1ky7uhq">
-                <label>Payment proof:</label>
-                <div class="file_upload_wrapper">
-                    <div class="upload_wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-up icon">
-                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
-                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-                            <path d="M12 12v6"></path>
-                            <path d="m15 15-3-3-3 3"></path>
-                        </svg>
-                        <p><strong>Click here to upload payment proof</strong></p>
-                        <input type="file" accept="image/png, image/gif, image/jpeg, image/svg" style="opacity: 0; position: absolute; pointer-events: none;" />
-                    </div>
-                </div>
-            </button>
-            <div class="modal_footer"><button disabled="" class="disabled css-nncgg">Deposit</button></div>
+            <Tabs Class="w-100" EnableFadeEffect="true" NavStyle="NavStyle.Pills">
+                <Tab Title="Fund Crypto" Active="true" Style="color: #fff;">
+                    <Content>
+                        <br />
+                        <p class="modal_description">To make a deposit, choose your preferred method, enter an amount and upload a corresponding payment proof.</p>
+                        <EditForm Model="depositModel" OnValidSubmit="HandleDeposit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="css-1azirga">
+                                <label>Type:</label>
+                                <div class="select_wrapper">
+                                    <select name="type" id="type">
+                                        <option value="crypto">Crypto</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="css-184mof1">
+                                <label>Method:</label>
+                                <div class="select_wrapper">
+                                    <img src="/asseticons/@(depositModel.Method).png" alt="@depositModel.Method" />
+                                    <select name="asset" id="asset" @onchange="ChangeMethod">
+
+                                        @if (walletAddresses != null && walletAddresses.Count > 0)
+                                        {
+                                            foreach (var walletAddress in walletAddresses)
+                                            {
+                                                <option value="@walletAddress.CoinType">@walletAddress.CoinName</option>
+                                            }
+                                        }
+                                    </select>
+                                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <g transform="translate(-1391 -130)" fill="#ffffff">
+                                                <g transform="translate(1250 116)">
+                                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
+                                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="css-v6puf8">
+                                <label class="divide"><p>Address :</p></label>
+                                <div class="amountbox_wrapper">
+                                    <input type="text" placeholder="" value="@address" /><button type="button" class="amount_select" @onclick="CopyAddress"><p>Copy</p></button>
+                                </div>
+                                @if (!string.IsNullOrEmpty(qrBase64))
+                                {
+                                    <div class="qrcode_wrapper" style="margin: 10px auto;
+                                        width: fit-content;">
+                                        <img src="data:image/png;base64,@qrBase64" alt="QR Code with Icon" style="width: 150px; height: 150px;" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="css-v6puf8">
+                                <label>Amount:</label>
+                                <div class="amountbox_wrapper">
+                                    <InputNumber @bind-Value="depositModel.Amount" placeholder="0.000000001" />
+                                    <div class="amount_select">
+                                        <img src="/asseticons/@(depositModel.Method).png" alt="icon" />
+                                        <p>@depositModel.Method</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="css-1ky7uhq" @onclick="TriggerFileDialog">
+                                <label>Payment proof:</label>
+                                <div class="file_upload_wrapper">
+                                    <div class="upload_wrapper">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" ...></svg>
+                                        <p><strong>@fileName</strong></p>
+
+
+                                    </div>
+                                </div>
+                            </button>
+                            <InputFile @ref="hiddenFileInput" OnChange="HandleFileSelected"
+                                       accept="image/png, image/gif, image/jpeg, image/svg+xml"
+                                       style="display:none;" />
+                            <div class="modal_footer"><button type="submit" class="css-nncgg">Deposit</button></div>
+                        </EditForm>
+                    </Content>
+                </Tab>
+                <Tab Title="Fund Fiat" Style="color: #fff;">
+                    <Content>
+                        <br />
+                        <SecondDepositComponent />
+                    </Content>
+                </Tab>
+            </Tabs>
+            
         </div>
     </div>
     <div tabindex="0" data-testid="sentinelEnd"></div>
 </div>
+<Preload LoadingText="Loading..." />
 @code{
     [Parameter] public bool IsActive { get; set; } = false;
 
     [Parameter] public EventCallback<bool> IsActiveChanged { get; set; }
 
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
+    private User? user;
+
+    private IDisposable _subscription;
+
+    private List<WalletAddress> walletAddresses = new List<WalletAddress>();
+
+    private DepositModel depositModel = new DepositModel();
+    private string selectedMethod;
+
+    private ToastComponent? toastComponent;
+
+    private string address;
+    private string? qrBase64;
+
+    private IBrowserFile? uploadedFile;
+    private byte[]? fileBytes;
+    private string? fileName = "Click here to upload payment proof";
+
+    private InputFile? hiddenFileInput;
+
+    private async Task TriggerFileDialog()
+    {
+        if (hiddenFileInput != null)
+        {
+            // Programmatically click the hidden input using JS
+            await JS.InvokeVoidAsync("triggerInputClick", hiddenFileInput.Element);
+        }
+    }
+
+    private async Task CopyAddress()
+    {
+        if (!string.IsNullOrWhiteSpace(address))
+        {
+            await JS.InvokeVoidAsync("copyToClipboard", address);
+            toastComponent?.ShowToast(MyToastType.Success, "Address Copied", "Wallet address copied to clipboard.");
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        uploadedFile = e.File;
+
+        if (uploadedFile != null)
+        {
+            fileName = uploadedFile.Name;
+            using var stream = uploadedFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // max 5MB
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            fileBytes = ms.ToArray();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        walletAddresses = await ViewWalletByNameUseCase.ExecuteAsync();
+
+        if (walletAddresses.Any())
+        {
+            depositModel.Method = walletAddresses[0].CoinType;
+            address = walletAddresses[0].Address;
+            selectedMethod = depositModel.Method;
+            GenerateSimpleQrCode();
+        }
+
+        _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                StateHasChanged();
+            });
+
+        StateHasChanged();
+    }
+
+    private async Task ChangeMethod(ChangeEventArgs e)
+    {
+        selectedMethod = e.Value.ToString();
+        depositModel.Method = selectedMethod;
+
+        var selectedWallet = walletAddresses.FirstOrDefault(w => w.CoinType == selectedMethod);
+        if (selectedWallet != null)
+        {
+            address = selectedWallet.Address;
+            GenerateSimpleQrCode(); // regenerate QR code with new address and icon
+        }
+
+        StateHasChanged(); // Ensure the UI re-renders
+    }
+
+    private async Task HandleDeposit()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Submitting Deposit...");
+        Transaction transaction = new Transaction
+            {
+                UserID = user.UserID,
+                TransactionType = depositModel.OrderType,
+                Amount = depositModel.Amount,
+                Method = depositModel.Method,
+                Asset = depositModel.Method,
+                Reference = ReferenceGenerator.GenerateReference(),
+                Details = $"Depositing {depositModel.Amount} to {depositModel.Method}"
+            };
+        await AddTransactionUseCase.ExecuteAsync(transaction);
+        user = await UserManager.FindByIdAsync(user.Email);
+        depositModel = new DepositModel();
+        userState.SetCurrentUser(user);
+        PreloadService.Hide();
+        toastComponent?.ShowToast(MyToastType.Success, "Deposit", "Deposit Submitted!");
+        CloseModal();
+    }
+
+    private void GenerateSimpleQrCode()
+    {
+        if (string.IsNullOrWhiteSpace(address))
+            return;
+
+        using var qrGenerator = new QRCodeGenerator();
+        using var qrCodeData = qrGenerator.CreateQrCode(address, QRCodeGenerator.ECCLevel.Q);
+        using var pngQrCode = new PngByteQRCode(qrCodeData);
+
+        // Generate QR code as PNG bytes
+        byte[] qrCodeBytes = pngQrCode.GetGraphic(20); // 20 is pixels per module
+
+        // Convert to base64 to display in an <img src="data:image/png;base64,...">
+        qrBase64 = Convert.ToBase64String(qrCodeBytes);
+    }
+
+
+
+
     private void CloseModal()
     {
         IsActive = false;
         IsActiveChanged.InvokeAsync(IsActive);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

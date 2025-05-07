@@ -126,7 +126,20 @@ namespace TSM.EFCoreSqlServer
             });
         }
 
-        
+        public async Task AddTransactionAsync(Transaction transaction)
+        {
+            if (transaction == null)
+                throw new ArgumentNullException(nameof(transaction));
+            await using var db = contextFactory.CreateDbContext();
+            var user = await db.Users
+                .Include(u => u.Transactions)
+                .FirstOrDefaultAsync(u => u.UserID == transaction.UserID);
+            if (user == null)
+                throw new InvalidOperationException("User not found");
+            user.Transactions ??= new List<Transaction>();
+            user.Transactions.Add(transaction);
+            await db.SaveChangesAsync();
+        }
 
         public async Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss)
         {
@@ -195,6 +208,7 @@ namespace TSM.EFCoreSqlServer
             await using var db = contextFactory.CreateDbContext();
             return await db.Users
                 .Include(u => u.Trades)
+                .Include(u => u.Transactions)
                 .Include(u => u.Balances)
                 .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.UserID == guidUserId, cancellationToken);

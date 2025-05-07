@@ -1,0 +1,281 @@
+@using System.Text
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+@inject IConfiguration Configuration
+@inject IJSRuntime JS
+@inject UserState State
+@implements IAsyncDisposable
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+<p class="modal_description">To make a deposit, choose your preferred method, enter an amount in @SelectedFiat and click "I've Paid" after sending the exact amount.</p>
+<br/>
+
+@if (string.IsNullOrEmpty(WalletAddress))
+{
+    <div class="css-1azirga">
+        <label>Select Funding Account:</label>
+        <div class="select_wrapper">
+
+            <select @bind="SelectedFiat">
+                @if(Fiats is not null&& Fiats.Count > 0)
+                {
+                    @foreach (var fiat in Fiats)
+                    {
+                        <option value="@fiat">@fiat.ToUpper()</option>
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+
+    <div class="css-1azirga">
+        <label>Select Method:</label>
+        <div class="select_wrapper">
+            <select @bind="SelectedCoin">
+                @foreach (var coin in SupportedCoins)
+                {
+                    <option value="@coin">@coin.ToUpper()</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="css-v6puf8">
+        <label>Amount (USD):</label>
+        <div class="amountbox_wrapper">
+            <input type="number" @bind="UsdAmount" min="1" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" @onclick="GenerateWallet" disabled="@IsButtonDisabled">Generate Wallet</button>
+}
+
+@if (!string.IsNullOrEmpty(WalletAddress))
+{
+    <div class="css-v6puf8">
+        <label class="divide"><p>Address :</p></label>
+        <div class="amountbox_wrapper">
+            <input type="text" placeholder="" value="@WalletAddress" /><button type="button" class="amount_select" @onclick="CopyAddress"><p>Copy</p></button>
+        </div>
+        @if (!string.IsNullOrEmpty(QrCodeImage))
+        {
+            <div class="qrcode_wrapper" style="margin: 10px auto;
+                width: fit-content;">
+                <img src="@QrCodeImage" alt="QR Code with Icon" style="width: 150px; height: 150px;" />
+            </div>
+        }
+    </div>
+
+    <div class="css-v6puf8">
+        <label>Amount to pay (@SelectedCoin.ToUpper()):</label>
+        <div class="amountbox_wrapper">
+            <input type="number" @bind="SelectAmount" readonly/>
+        </div>
+    </div>
+    <button class="btn btn-success" @onclick="CheckPaymentStatus" disabled="@string.IsNullOrEmpty(PaymentId)">I've Paid</button>
+}
+
+<p class="mt-3">@StatusMessage</p>
+<Preload LoadingText="Loading..." />
+@code {
+
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
+    private User? user;
+
+
+    private string SelectedCoin = "btc";
+    private string SelectedFiat = "usd";
+    private decimal UsdAmount = 10;
+    private decimal SelectAmount = 0;
+    private List<string> SupportedCoins = new() { "btc", "eth", "ltc", "usdt" }; // You can customize this list
+    private List<string> Fiats = new List<string>();
+    private string WalletAddress;
+    private string QrCodeImage;
+    private string PaymentId;
+    private string StatusMessage;
+    private bool IsButtonDisabled = false;
+    private DateTime LastGenerated = DateTime.MinValue;
+
+    private bool CanGenerate => UsdAmount >= 1;
+
+    private ToastComponent? toastComponent;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _subscription = State.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                Fiats = user?.Balances
+                .Where(b => b.Asset.AssetType == "Fiat")
+                .Select(b => b.Asset.AssetSymbol)
+                .ToList();
+                StateHasChanged();
+            });
+
+
+    }
+
+
+    private async Task GenerateWallet()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Generating Wallet...");
+        if ((DateTime.Now - LastGenerated).TotalSeconds < 60)
+        {
+            StatusMessage = "Please wait before generating another wallet.";
+            return;
+        }
+
+        IsButtonDisabled = true;
+        StatusMessage = "Generating wallet...";
+
+        try
+        {
+            using var client = new HttpClient();
+            var apiKey = Configuration["NowPayments:ApiKey"]; // Make sure this is set in appsettings.json or secrets
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.nowpayments.io/v1/payment");
+            request.Headers.Add("x-api-key", apiKey);
+
+            var payload = new
+            {
+                price_amount = UsdAmount,
+                price_currency = SelectedFiat,
+                pay_currency = SelectedCoin,
+                ipn_callback_url = "https://yourdomain.com/api/ipn", // Replace with your IPN listener if needed
+                order_id = Guid.NewGuid().ToString(),
+                order_description = $"Payment of ${UsdAmount} in {SelectedCoin}"
+            };
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            request.Content = content;
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<NowPaymentResponse>(responseBody);
+
+            WalletAddress = result?.pay_address;
+            PaymentId = result?.payment_id;
+            SelectAmount = result?.pay_amount ?? 0;
+            QrCodeImage = GenerateQrImage(WalletAddress);
+            StatusMessage = "Wallet generated.";
+            LastGenerated = DateTime.Now;
+
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(60000); // 60 seconds cooldown
+                IsButtonDisabled = false;
+                StateHasChanged();
+            });
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = "Error: " + ex.Message;
+            IsButtonDisabled = false;
+        }
+        PreloadService.Hide();
+    }
+
+
+    private async Task CheckPaymentStatus()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Checking Payment Status...");
+        if (string.IsNullOrEmpty(PaymentId))
+        {
+            StatusMessage = "No payment to check.";
+            return;
+        }
+        var result = new NowPaymentResponse();
+        int attempts = 0;
+        do
+        {
+            try
+            {
+                using var client = new HttpClient();
+                var apiKey = Configuration["NowPayments:ApiKey"];
+
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.nowpayments.io/v1/payment/{PaymentId}");
+                request.Headers.Add("x-api-key", apiKey);
+
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                result = Newtonsoft.Json.JsonConvert.DeserializeObject<NowPaymentResponse>(responseBody);
+
+                StatusMessage = "Status: " + result.payment_status;
+                status = result.payment_status;
+                if (result.payment_status == "finished")
+                {
+                    WalletAddress = "";
+                    QrCodeImage = "";
+                    PaymentId = "";
+                    IsButtonDisabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = "Error checking status: " + ex.Message;
+            }
+
+            attempts++;
+            if (attempts >= 5)
+            {
+                StatusMessage = "Payment status check timed out.";
+                break;
+            }
+            await Task.Delay(5000); // Check every 10 seconds
+        } while (result.payment_status! = "finished");
+
+        if (result.payment_status == "finished")
+        {
+            StatusMessage = "Payment completed successfully!";
+            toastComponent?.ShowToast(MyToastType.Success, "Payment", "Payment completed successfully!");
+        }
+        else
+        {
+            StatusMessage = "Payment not completed.";
+            toastComponent?.ShowToast(MyToastType.Error, "Payment", "Payment not completed.");
+        }
+        CloseModal();
+        PreloadService.Hide();
+    }
+
+
+    private string GenerateQrImage(string address)
+    {
+        using var qrGenerator = new QRCoder.QRCodeGenerator();
+        var qrData = qrGenerator.CreateQrCode(address, QRCoder.QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new QRCoder.Base64QRCode(qrData);
+        return $"data:image/png;base64,{qrCode.GetGraphic(20)}";
+    }
+
+    private async Task CopyAddress()
+    {
+        if (!string.IsNullOrWhiteSpace(WalletAddress))
+        {
+            await JS.InvokeVoidAsync("copyToClipboard", WalletAddress);
+            toastComponent?.ShowToast(MyToastType.Success, "Address Copied", "Wallet address copied to clipboard.");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
+    }
+
+    public class NowPaymentResponse
+    {
+        public string payment_id { get; set; }
+        public string pay_address { get; set; }
+        public string payment_status { get; set; } = string.Empty;
+        public decimal pay_amount { get; set; }
+    }
+}

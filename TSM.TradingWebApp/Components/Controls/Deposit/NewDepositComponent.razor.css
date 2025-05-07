@@ -171,7 +171,7 @@
 
 .css-8ndowl {
     position: fixed;
-    z-index: 1300;
+    z-index: 100;
     inset: 0px;
 }
 
@@ -193,8 +193,9 @@
     width: 59%;
     padding: 16px;
     min-height: 300px;
+    max-height: 95%;
     border-radius: 12px;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -45%);
     top: 50%;
     left: 50%;
     max-width: 430px;
@@ -326,7 +327,7 @@
         border: none;
         outline: none;
         color: white;
-        background: transparent;
+        background: #22282e63;
         font-size: 14px;
         line-height: 18px;
         font-weight: 600;

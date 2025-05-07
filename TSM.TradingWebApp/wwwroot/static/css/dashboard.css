@@ -3006,3 +3006,7 @@ ul {
     align-items: center;
     justify-content: center;
 }
+li.validation-message {
+    color: red;
+    font-size: small;
+}

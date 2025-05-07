@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TSM.EFCoreSqlServer;
 
@@ -11,9 +12,11 @@ using TSM.EFCoreSqlServer;
 namespace TSM.EFCoreSqlServer.Migrations
 {
     [DbContext(typeof(TSMContext))]
-    partial class TSMContextModelSnapshot : ModelSnapshot
+    [Migration("20250505094801_Wallet")]
+    partial class Wallet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

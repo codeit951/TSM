@@ -33,8 +33,8 @@
             {
                 <div class="detail-row">
                     <span class="label">Current Price</span>
-                <span class="value">@price.ToString("C")</span>
-            </div>
+                    <span class="value">@price.ToString("C")</span>
+                </div>
             }
             @if (trade.Status == "Closed")
             {
@@ -42,14 +42,14 @@
                     <span class="label">P/L</span>
                     <span class="value @(trade.Profit > 0 ? "pnl-positive" : "pnl-negative")">
                         @(trade.Profit > 0 ?
-                            "+" + trade.Profit.ToString("N2")
-                            : "-" + trade.Loss.ToString("N2")) @trade.Symbol2
+                                "+" + trade.Profit.ToString("N2")
+                                : "-" + trade.Loss.ToString("N2")) @trade.Symbol2
                         (@FormatValues.CalculateProfitLoss(trade.Price, trade.ClosePrice, trade.Quantity, Convert.ToDecimal(trade.Leverage), trade.Side == "Buy" ? true : false).ProfitLossPercent.ToString("N2")%)
                     </span>
 
 
                 </div>
-                
+
                 <div class="detail-row">
                     <span class="label">Close Price</span>
                     <span class="value">@trade.ClosePrice</span>
@@ -66,7 +66,7 @@
             </div>
             @if (trade.Status == "Closed")
             {
-            <div class="detail-row">
+                <div class="detail-row">
                     <span class="label">Close Time</span>
                     <span class="value">@trade.CloseTime</span>
                 </div>
@@ -89,21 +89,24 @@
             </div>
             @if (trade.Status != "Closed")
             {
-            <div class="detail-row pnl">
-                <span class="label">P/L</span>
-                <span class="value @(ProfitLoss.ProfitLossDollar < 0 ? "pnl-negative" : "pnl-positive")">
-                    @(ProfitLoss.ProfitLossDollar < 0
-                                    ? "-" + ProfitLoss.ProfitLossDollar.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "")
-                                    : "+" + ProfitLoss.ProfitLossDollar.ToString("N2")) @trade.Symbol2
-                    (@ProfitLoss.ProfitLossPercent.ToString("N2")%)
-                </span>
+                <div class="detail-row pnl">
+                    <span class="label">P/L</span>
+                    <span class="value @(ProfitLoss.ProfitLossDollar < 0 ? "pnl-negative" : "pnl-positive")">
+                        @(ProfitLoss.ProfitLossDollar < 0
+                                            ? "-" + ProfitLoss.ProfitLossDollar.ToString("N2").Replace("-", "").Replace("(", "").Replace(")", "")
+                                            : "+" + ProfitLoss.ProfitLossDollar.ToString("N2")) @trade.Symbol2
+                        (@ProfitLoss.ProfitLossPercent.ToString("N2")%)
+                    </span>
 
 
-            </div>
+                </div>
             }
-                    </div>
+        </div>
         <div class="card-footer">
-            <button class="btn btn-danger" @onclick="CloseTrade">Close Trade</button>
+            @if (trade.Status != "Closed")
+            {
+                <button class="btn btn-danger" @onclick="CloseTrade">Close Trade</button>
+            }
         </div>
     }
 </div>

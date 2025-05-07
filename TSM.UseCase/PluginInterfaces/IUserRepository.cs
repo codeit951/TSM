@@ -11,6 +11,7 @@ namespace TSM.UseCase.PluginInterfaces
     {
         Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo);
         Task<string> AddTrade(Guid userID, Trade trade);
+        Task AddTransactionAsync(Transaction transaction);
         Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss);
         Task<List<User>> GetUsersByName(string name);
         Task UpdateTrade(Guid userID, Trade trade);

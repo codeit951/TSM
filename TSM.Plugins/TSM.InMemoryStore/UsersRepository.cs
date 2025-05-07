@@ -59,7 +59,11 @@ namespace TSM.InMemoryStore
             return Task.CompletedTask;
         }
 
-        
+        public Task AddTransactionAsync(Transaction transaction)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss)
         {
             throw new NotImplementedException();
