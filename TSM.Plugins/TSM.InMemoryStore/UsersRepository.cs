@@ -215,6 +215,11 @@ namespace TSM.InMemoryStore
             return Task.CompletedTask;
         }
 
+        public Task UseNowPayAsync(Transaction transaction)
+        {
+            throw new NotImplementedException();
+        }
+
         Task<string> IUserRepository.AddTrade(Guid userID, Trade trade)
         {
             throw new NotImplementedException();

@@ -16,5 +16,6 @@ namespace TSM.UseCase.PluginInterfaces
         Task<List<User>> GetUsersByName(string name);
         Task UpdateTrade(Guid userID, Trade trade);
         Task UpdateUserBalance(Guid userID, List<Balance> balances);
+        Task UseNowPayAsync(Transaction transaction);
     }
 }

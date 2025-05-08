@@ -333,5 +333,30 @@ namespace TSM.EFCoreSqlServer
                 await db.SaveChangesAsync();
             }
         }
+
+        public async Task UseNowPayAsync(Transaction transaction)
+        {
+            if (transaction == null)
+                throw new ArgumentNullException(nameof(transaction));
+            await using var db = contextFactory.CreateDbContext();
+            var user = await db.Users
+                .Include(u => u.Transactions)
+                .FirstOrDefaultAsync(u => u.UserID == transaction.UserID);
+            if (user == null)
+                throw new InvalidOperationException("User not found");
+            user.Transactions ??= new List<Transaction>();
+            user.Transactions.Add(transaction);
+            if(transaction.Status == StatusType.Approved)
+            {
+                var balance = await db.Balances
+                    .FirstOrDefaultAsync(b => b.UserId == transaction.UserID && b.Asset.AssetSymbol == transaction.Asset);
+                if (balance != null)
+                {
+                    balance.Available += transaction.Amount;
+                    db.Balances.Update(balance);
+                }
+            }
+            await db.SaveChangesAsync();
+        }
     }
 }

@@ -83,6 +83,7 @@ builder.Services.AddTransient<IAddTradeUseCase, AddTradeUseCase>();
 builder.Services.AddTransient<ICloseTradeUseCase, CloseTradeUseCase>();
 builder.Services.AddTransient<ISwapTransactionUseCase, SwapTransactionUseCase>();
 builder.Services.AddTransient<IAddTransactionUseCase, AddTransactionUseCase>();
+builder.Services.AddTransient<IUseNowPayUseCase, UseNowPayUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();

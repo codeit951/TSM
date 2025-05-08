@@ -223,7 +223,7 @@
                 Details = $"Depositing {depositModel.Amount} to {depositModel.Method}"
             };
         await AddTransactionUseCase.ExecuteAsync(transaction);
-        user = await UserManager.FindByIdAsync(user.Email);
+        user = await UserManager.FindByNameAsync(user.Email);
         depositModel = new DepositModel();
         userState.SetCurrentUser(user);
         PreloadService.Hide();

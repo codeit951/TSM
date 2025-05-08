@@ -4,7 +4,9 @@
 @inject IConfiguration Configuration
 @inject IJSRuntime JS
 @inject UserState State
+@inject UserManager<User> UserManager
 @implements IAsyncDisposable
+@inject IUseNowPayUseCase UseNowPayUseCase
 
 <ToastComponent @ref="toastComponent" Timeout="3000" />
 <p class="modal_description">To make a deposit, choose your preferred method, enter an amount in @SelectedFiat and click "I've Paid" after sending the exact amount.</p>
@@ -211,14 +213,7 @@
                 result = Newtonsoft.Json.JsonConvert.DeserializeObject<NowPaymentResponse>(responseBody);
 
                 StatusMessage = "Status: " + result.payment_status;
-                status = result.payment_status;
-                if (result.payment_status == "finished")
-                {
-                    WalletAddress = "";
-                    QrCodeImage = "";
-                    PaymentId = "";
-                    IsButtonDisabled = false;
-                }
+                
             }
             catch (Exception ex)
             {
@@ -232,19 +227,52 @@
                 break;
             }
             await Task.Delay(5000); // Check every 10 seconds
-        } while (result.payment_status! = "finished");
+        } while (result.payment_status != "finished");
 
         if (result.payment_status == "finished")
         {
+            Transaction transaction = new Transaction
+                {
+                    UserID = user.UserID,
+                    TransactionType = "Deposit",
+                    Amount = result.pay_amount,
+                    Method = "NowPayments",
+                    Asset = SelectedFiat.ToUpper(),
+                    Reference = "#"+result.payment_id,
+                    Details = $"Depositing {result.pay_amount} to {SelectedFiat.ToUpper()} via NowPay",
+                    Status = StatusType.Approved
+                };
+            await UseNowPayUseCase.ExecuteAsync(transaction);
+            user = await UserManager.FindByNameAsync(user.Email);
+            State.SetCurrentUser(user);
+            WalletAddress = "";
+            QrCodeImage = "";
+            PaymentId = "";
+            IsButtonDisabled = false;
+            //CloseModal();
             StatusMessage = "Payment completed successfully!";
             toastComponent?.ShowToast(MyToastType.Success, "Payment", "Payment completed successfully!");
         }
         else
         {
-            StatusMessage = "Payment not completed.";
-            toastComponent?.ShowToast(MyToastType.Error, "Payment", "Payment not completed.");
+            Transaction transaction = new Transaction
+                {
+                    UserID = user.UserID,
+                    TransactionType = "Deposit",
+                    Amount = result.pay_amount,
+                    Method = "NowPayments",
+                    Asset = SelectedFiat.ToUpper(),
+                    Reference = "#" + result.payment_id,
+                    Details = $"Depositing {result.pay_amount} to {SelectedFiat.ToUpper()} via NowPay",
+                        Status = StatusType.Pending
+                };
+            await UseNowPayUseCase.ExecuteAsync(transaction);
+            user = await UserManager.FindByNameAsync(user.Email);
+            State.SetCurrentUser(user);
+            StatusMessage = "Payment not completed. If you have not sent the funds to the designated wallet, please do so. This transaction will remain pending and will be approved once transaction has been confirmed.";
+            toastComponent?.ShowToast(MyToastType.Danger, "Payment", StatusMessage, 10000);
         }
-        CloseModal();
+        
         PreloadService.Hide();
     }
 

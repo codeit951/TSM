@@ -1,12 +1,29 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TSM.CoreBusiness;
+using TSM.UseCase.PluginInterfaces;
 
 namespace TSM.UseCase.Users
 {
-    class UseNowPayUseCase
+    public class UseNowPayUseCase : IUseNowPayUseCase
     {
+        private readonly IUserRepository userRepository;
+        public UseNowPayUseCase(IUserRepository userRepository)
+        {
+            this.userRepository = userRepository;
+        }
+        public async Task ExecuteAsync(Transaction transaction)
+        {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException(nameof(transaction));
+            }
+
+            await userRepository.UseNowPayAsync(transaction);
+        }
     }
 }

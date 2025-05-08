@@ -1,4 +1,13 @@
-﻿<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl @(IsActive?"":"hidden")">
+﻿
+@inject IAddTransactionUseCase AddTransactionUseCase
+@inject UserState userState
+@implements IAsyncDisposable
+@inject UserManager<User> UserManager
+
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+
+<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl @(IsActive?"":"hidden")">
     <div aria-hidden="true" class="MuiBackdrop-root MuiModal-backdrop css-919eu4" style="opacity: 1; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);"></div>
     <div tabindex="0" data-testid="sentinelStart"></div>
     <div tabindex="-1" class="css-13lqfnw" style="scrollbar-width: none;">
@@ -8,69 +17,153 @@
         </div>
         <div class="modal_content">
             <p class="modal_description">To make a withdraw, choose your preferred method, enter an amount and payment details.</p>
-            <div class="css-1azirga">
-                <label>Type:</label>
-                <div class="select_wrapper">
-                    <select name="type" id="type">
-                        <option value="crypto">Crypto</option>
-                    </select>
-                </div>
-            </div>
-            <div class="css-184mof1">
-                <label>Method:</label>
-                <div class="select_wrapper">
-                    <img src="/asseticons/SOL.svg" alt="SOL" />
-                    <select name="asset" id="asset">
-                        <option value="SOL">Solana</option>
-                        <option value="ADA">Cardano</option>
-                        <option value="XRP">Ripple</option>
-                        <option value="LTC">Litecoin</option>
-                        <option value="ETH">Ethereum</option>
-                        <option value="BTC">Bitcoin</option>
-                        <option value="USDC">USD Coin</option>
-                    </select>
-                    <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" fill-rule="evenodd">
-                            <g transform="translate(-1391 -130)" fill="#ffffff">
-                                <g transform="translate(1250 116)">
-                                    <path transform="translate(145 17) rotate(180) translate(-145 -17)"
-                                          d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
-            </div>
-            <div class="css-v6puf8">
-                <label>Amount:</label>
-                <div class="amountbox_wrapper">
-                    <input type="number" placeholder="0.00000000" />
-                    <div class="amount_select">
-                        <img src="/asseticons/SOL.svg" alt="icon" />
-                        <p>SOL</p>
+            <EditForm Model="withdrawModel" OnValidSubmit="HandleWithdraw">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="css-1azirga">
+                    <label>Method:</label>
+                    <div class="select_wrapper">
+                        <select name="type" id="type">
+                            <option value="crypto">Crypto</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-            <div class="css-v6puf8">
-                <label class="divide"><p>Address :</p></label>
-                <div class="amountbox_wrapper">
-                    <input type="text" placeholder="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" value="AtnhENGMuK7jDhkLRzTS8xyDasxMrpyj1QH31byYkvch" /><button class="amount_select"><p>Copy</p></button>
+                <div class="css-184mof1">
+                    <label>Assets:</label>
+                    <div class="select_wrapper">
+                        <img src="/asseticons/@(withdrawModel.Method).png" alt="@withdrawModel.Method" />
+                        <select name="asset" id="asset" @onchange="ChangeMethod">
+
+                            @if (userAssets != null && userAssets.Count > 0)
+                            {
+                                foreach (var asset in userAssets)
+                                {
+                                    <option value="@asset.Asset.AssetSymbol">@asset.Asset.AssetName (@asset.Asset.AssetSymbol)</option>
+                                }
+                            }
+                        </select>
+                        <svg class="svg_icon" viewBox="0 0 8 6" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" fill-rule="evenodd">
+                                <g transform="translate(-1391 -130)" fill="#ffffff">
+                                    <g transform="translate(1250 116)">
+                                        <path transform="translate(145 17) rotate(180) translate(-145 -17)"
+                                        d="m145.77 14.922 2.865 3.438c0.35356 0.42428 0.29624 1.0548-0.12804 1.4084-0.17972 0.14976-0.40625 0.23178-0.64018 0.23178h-5.7299c-0.55228 0-1-0.44772-1-1 0-0.23394 0.082016-0.46047 0.23178-0.64018l2.865-3.438c0.35356-0.42428 0.98413-0.4816 1.4084-0.12804 0.046463 0.038719 0.089318 0.081574 0.12804 0.12804z"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="text-[#AEAFB2] text-sm">Available Balance: @selectedBal</p>
                 </div>
-            </div>
-            
-            <div class="modal_footer"><button disabled="" class="disabled css-nncgg">Withdraw</button></div>
+                <div class="css-v6puf8">
+                    <label>Amount:</label>
+                    <div class="amountbox_wrapper">
+                        <InputNumber @bind-Value="withdrawModel.Amount" placeholder="0.000000001" />
+                        <div class="amount_select">
+                            <img src="/asseticons/@(withdrawModel.Method).png" alt="icon" />
+                            <p>@withdrawModel.Method</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="css-v6puf8">
+                    <label class="divide"><p>Address :</p></label>
+                    <div class="amountbox_wrapper">
+                        <InputText @bind-Value="withdrawModel.Address" />
+                    </div>
+                </div>
+
+                <div class="modal_footer"><button type="submit" class="css-nncgg">Withdraw</button></div>
+            </EditForm>
         </div>
     </div>
     <div tabindex="0" data-testid="sentinelEnd"></div>
 </div>
+<Preload LoadingText="Loading..." />
 @code{
     [Parameter] public bool IsActive { get; set; } = false;
 
     [Parameter] public EventCallback<bool> IsActiveChanged { get; set; }
 
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
+    private User? user;
+
+    private IDisposable _subscription;
+    private List<Balance>? userAssets = new List<Balance>();
+
+    private WithdrawModel withdrawModel = new WithdrawModel();
+    private string selectedBal = "0.00";
+    private string selectedMethod;
+
+    private ToastComponent? toastComponent;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _subscription = userState.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                userAssets = user.Balances.Where(b => b.Asset.Status == StatusType.Active && b.Asset.AssetType == "Crypto").ToList();
+                if (userAssets.Any())
+                {
+                    withdrawModel.Method = userAssets[0].Asset.AssetSymbol;
+                    selectedBal = userAssets[0].Available.ToString("N8");
+                    selectedMethod = withdrawModel.Method;
+                }
+                StateHasChanged();
+            });
+        }
+        
+    }
+
+    private async Task ChangeMethod(ChangeEventArgs e)
+    {
+        selectedMethod = e.Value.ToString();
+        withdrawModel.Method = selectedMethod;
+        selectedBal = userAssets.FirstOrDefault(b => b.Asset.AssetSymbol == selectedMethod)?.Available.ToString("N8") ?? "0.00";
+        StateHasChanged(); // Ensure the UI re-renders
+    }
+
+    private async Task HandleWithdraw()
+    {
+        PreloadService.Show(SpinnerColor.Light, "Submitting Withdrawal...");
+        Transaction transaction = new Transaction
+            {
+                UserID = user.UserID,
+                TransactionType = withdrawModel.OrderType,
+                Amount = withdrawModel.Amount,
+                Method = withdrawModel.Type,
+                Asset = withdrawModel.Method,
+                Reference = ReferenceGenerator.GenerateReference(),
+                Details = $"Withdrawing {withdrawModel.Amount} to {withdrawModel.Method}"
+            };
+        //await AddTransactionUseCase.ExecuteAsync(transaction);
+        user = await UserManager.FindByNameAsync(user.Email);
+        withdrawModel = new WithdrawModel();
+        userState.SetCurrentUser(user);
+        PreloadService.Hide();
+        toastComponent?.ShowToast(MyToastType.Success, "Withdraw", "Withdrawal Submitted!");
+        CloseModal();
+    }
+
     private void CloseModal()
     {
         IsActive = false;
         IsActiveChanged.InvokeAsync(IsActive);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

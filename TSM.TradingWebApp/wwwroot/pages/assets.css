@@ -28,7 +28,7 @@
     border: none;
     outline: none;
     color: white;
-    background: transparent;
+    background: #111417;
     font-size: 14px;
     line-height: 18px;
     font-weight: 600;
@@ -364,6 +364,7 @@
             height: 97%;
             width: 100%;
             overflow: scroll;
+            scrollbar-width: none;
             padding-top: 12px;
             mask: linear-gradient(0deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 3px, rgb(0, 0, 0) calc(100% - 18px), rgba(0, 0, 0, 0));
         }
@@ -381,7 +382,7 @@
                 border-radius: 8px;
                 cursor: pointer;
                 transition: 0.1s ease-in-out;
-                height: 52px;
+                height: 100%;
             }
 
                 .css-pe4x9p table tbody tr:hover {
