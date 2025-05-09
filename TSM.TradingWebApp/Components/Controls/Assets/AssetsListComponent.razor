@@ -2,11 +2,24 @@
 @inject UserState State
 @implements IAsyncDisposable
 @inject NavigationManager NavigationManager
+@inject CryptoPriceService PriceService
+@inject IViewAssetsByTypeUseCase ViewAssetsByType
 
 <style>
     th{
     background: transparent!important;
     display: flex !important;
+    }
+
+    .modal-header {
+        display: none !important;
+    }
+
+    .modal-body {
+        padding: 0 !important;
+    }
+    .table-responsive{
+        height: 420px!important;
     }
 </style>
 <div class="css-1n03u6g">
@@ -14,12 +27,17 @@
     <div class="assets_table">
         <div class="scrollbar-hide css-pe4x9p">
             <div class="asset_table_top">
-                <span><p class="asset_table_top_title">All your assets</p></span>
+                <div style="display:flex">
+                    <span><p class="asset_table_top_title">All your assets</p></span>
+                    <button @onclick="OpenImport" style="margin-left:5px;">
+                        <Icon Name="IconName.PlusCircle" />
+                    </button>
+                </div>
                 <div class="assets_section_utils">
                     <div class="css-frtgch">
                         <Icon Name="IconName.Search" />
                         <input placeholder="Search for assets" id="searchTxt"
-                               @oninput="HandleSearch" class="no-zoom-14px" />
+                        @oninput="HandleSearch" class="no-zoom-14px" />
                     </div>
                     <div class="css-1azirga">
                         <div class="select_wrapper" style="margin: 0px;">
@@ -44,7 +62,7 @@
                 </div>
             </div>
             <div class="assets_table_wrapper scrollbar-hide">
-                
+
                 <Grid TItem="Balance"
                 Data="balances"
                 AllowSorting="true"
@@ -58,15 +76,27 @@
                             <p class="asset_name">@context.Asset.AssetSymbol</p>
                             <p class="asset_symbol">@context.Asset.AssetSymbol</p>
                         </GridColumn>
-                        <GridColumn TItem="Balance" Class="symbol text-white" HeaderText="table.symbol" SortKeySelector="item => item.Asset.AssetType">
+                        @* <GridColumn TItem="Balance" Class="symbol text-white" HeaderText="table.symbol" SortKeySelector="item => item.Asset.AssetType">
                             <p>@context.Asset.AssetSymbol</p>
-                        </GridColumn>
+                        </GridColumn> *@
                         <GridColumn TItem="Balance" Class="type text-white" HeaderText="Type" SortKeySelector="item => item.Asset.AssetType">
                             <p>@context.Asset.AssetType</p>
                         </GridColumn>
                         <GridColumn TItem="Balance" Class="value text-white" HeaderText="In your wallet" SortKeySelector="item => item.Available">
                             <p class="value_amount" style="text-align: center; align-items: center; gap: 4px; white-space: nowrap;">
-                                <span>@context.Available @context.Asset.AssetSymbol</span><strong style="color: rgba(255, 255, 255, 0.5); font-weight: 600;"><p>$0.00</p></strong>
+                                <span>@context.Available @context.Asset.AssetSymbol</span>
+                                @if (price is not null && price.ContainsKey(context.Asset.AssetSymbol))
+                                {
+                                    <strong style="color: rgba(255, 255, 255, 0.5); font-weight: 600;"><p>$@FormatValues.FormatCurrencyWithMinusForBal(price[context.Asset.AssetSymbol] * context.Available)</p></strong>
+                                }
+                                else if (otherprices is not null && otherprices.ContainsKey(context.Asset.AssetSymbol))
+                                {
+                                    <strong style="color: rgba(255, 255, 255, 0.5); font-weight: 600;"><p>$@FormatValues.FormatCurrencyWithMinusForBal(otherprices[context.Asset.AssetSymbol] * context.Available)</p></strong>
+                                }
+                                else if (stockprices is not null && stockprices.ContainsKey(context.Asset.AssetSymbol))
+                                {
+                                    <strong style="color: rgba(255, 255, 255, 0.5); font-weight: 600;"><p>$@FormatValues.FormatCurrencyWithMinusForBal(stockprices[context.Asset.AssetSymbol] * context.Available)</p></strong>
+                                }
                             </p>
                             <span class="action">
                                 <button @onclick="GotoDeposit"><p>Deposit</p></button>
@@ -135,12 +165,16 @@
                         </GridEmptyDataTemplate>
                     </GridTemplates>
                 </Grid>
+                <br /><br />
             </div>
         </div>
     </div>
 </div>
 
-@code{
+<Modal @ref="modal" />
+@code {
+    Modal modal { get; set; } = default!;
+
     private User? user { get; set; }
 
     private IDisposable _subscription;
@@ -149,11 +183,30 @@
 
     private string searchQuery = string.Empty;
 
+    private Dictionary<string, decimal>? price;
+
+    private ForexPrice forexPrice;
+    private Dictionary<string, decimal>? otherprices;
+
+    private StockPrice stockPrice;
+    private Dictionary<string, decimal>? stockprices;
+
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            price = PriceService.Prices;
+            PriceService.OnPriceUpdated += HandlePriceUpdate;
+
+            forexPrice = new ForexPrice(ViewAssetsByType);
+            await forexPrice.FetchPricesAsync();
+            otherprices = forexPrice.Prices;
+
+            stockPrice = new StockPrice(ViewAssetsByType);
+            await stockPrice.GetStockPrice();
+            stockprices = stockPrice.Prices;
+
             _subscription = State.CurrentUserObservable
             .Subscribe(Cuser =>
             {
@@ -163,6 +216,12 @@
             });
         }
         
+    }
+
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        price = newPrice;
+        InvokeAsync(StateHasChanged);
     }
 
     private List<Balance> GetBalances()
@@ -189,6 +248,13 @@
         {
             balances = balances.Where(b => b.Asset.AssetName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || b.Asset.AssetSymbol.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
         }
+    }
+
+    private async Task OpenImport()
+    {
+        await modal.ShowAsync<ImportAssets>(
+           title: "Import Assets"
+       );
     }
 
     private void GotoDeposit()

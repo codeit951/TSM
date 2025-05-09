@@ -1,32 +1,59 @@
-﻿<div class="balance_card css-176modi">
+﻿@rendermode InteractiveServer
+@inject CryptoPriceService PriceService
+@inject IViewAssetsByTypeUseCase ViewAssetsByType
+@inject UserState State
+@implements IAsyncDisposable
+
+<div class="balance_card css-176modi">
     <div class="balance_card_top">
         <div class="balance_card_top_wrapper">
             <div class="balance">
                 <span class="balance_wrapper">
                     <span class="label">Total Balance</span>
-                    <button class="eyes_button">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="14"
-                             height="14"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.5"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="lucide lucide-eye-off eye">
-                            <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
-                            <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
-                            <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
-                            <path d="m2 2 20 20"></path>
-                        </svg>
+                    <button class="eyes_button" @onclick="ToggleBalance">
+                        @if (IsBalShow)
+                        {
+                            <Icon Name="IconName.Eye"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.EyeSlash"></Icon>
+                        }
                     </button>
                 </span>
-                <span class="user_balance" style="display: block;">$0.00</span>
-                <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                @if (IsLoaded)
+                {
+                    <span class="user_balance" style="@(IsBalShow?"display: block;":"display: none;")">$@FormatValues.FormatCurrencyWithMinusForBal(TotalBal)</span>
+                    <h3 class="user_balance hidden" style="@(IsBalShow?"display: none;":"display: block!important;")"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                }
+                else
+                {
+                    <Spinner Color="SpinnerColor.Light" />
+                }
             </div>
         </div>
     </div>
+    @if (user is not null)
+    {
+        TotalBal = 0.0m;
+        foreach (var balance in user.Balances)
+        {
+            if (price is not null && price.ContainsKey(balance.Asset.AssetSymbol))
+            {
+                TotalBal += (price[balance.Asset.AssetSymbol] * balance.Available);
+            }
+            else if (otherprices is not null && otherprices.ContainsKey(balance.Asset.AssetSymbol))
+            {
+                TotalBal += (otherprices[balance.Asset.AssetSymbol] * balance.Available);
+            }
+            else if (stockprices is not null && stockprices.ContainsKey(balance.Asset.AssetSymbol))
+            {
+                TotalBal += (stockprices[balance.Asset.AssetSymbol] * balance.Available);
+            }
+
+        }
+
+    }
     <div class="balance_card_bottom scrollbar-hide">
         <div class="css-15whyo0">
             <div class="bars"></div>
@@ -34,3 +61,65 @@
         </div>
     </div>
 </div>
+
+@code{
+    public User? user { get; set; }
+
+    private decimal TotalBal = 0.0m;
+    private bool IsBalShow = true;
+    private bool IsLoaded = false;
+
+    private Dictionary<string, decimal>? price;
+
+    private ForexPrice forexPrice;
+    private Dictionary<string, decimal>? otherprices;
+
+    private StockPrice stockPrice;
+    private Dictionary<string, decimal>? stockprices;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        price = PriceService.Prices;
+        PriceService.OnPriceUpdated += HandlePriceUpdate;
+
+        forexPrice = new ForexPrice(ViewAssetsByType);
+        await forexPrice.FetchPricesAsync();
+        otherprices = forexPrice.Prices;
+
+        stockPrice = new StockPrice(ViewAssetsByType);
+        await stockPrice.GetStockPrice();
+        stockprices = stockPrice.Prices;
+
+        _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+       {
+           user = Cuser;
+           StateHasChanged();
+       });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
+    }
+
+    private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)
+    {
+        price = newPrice;
+        IsLoaded = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PriceService.OnPriceUpdated -= HandlePriceUpdate;
+    }
+
+    private void ToggleBalance()
+    {
+        IsBalShow = !IsBalShow;
+        StateHasChanged();
+    }
+}

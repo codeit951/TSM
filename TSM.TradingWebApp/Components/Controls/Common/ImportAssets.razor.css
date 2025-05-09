@@ -1,0 +1,188 @@
+﻿
+.dialog-overlay {
+    /* This could be used for a modal effect, but for simplicity,
+       we're directly styling the dialog on a dark page.
+       If it were a true modal, it might have:
+       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+       background: rgba(0,0,0,0.5);
+       display: flex; justify-content: center; align-items: center;
+    */
+}
+
+.dialog {
+    background-color: #1E1E1E; /* Darker dialog background */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #333333; /* Subtle separator */
+}
+
+    .dialog-header h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #FFFFFF;
+        text-align: center;
+    }
+
+.dialog-body {
+    padding: 0px 24px 16px;
+    flex-grow: 1;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #2C2C2C; /* Input background */
+    border-radius: 8px;
+    padding: 0 12px;
+    margin: 16px 0;
+    border: 1px solid #333333;
+}
+
+    .search-bar-container:focus-within {
+        border-color: #007AFF;
+    }
+
+.search-icon-img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    opacity: 0.6;
+}
+
+#assetSearchInput {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #E0E0E0;
+    padding: 12px 0;
+    font-size: 16px;
+    outline: none;
+}
+
+    #assetSearchInput::placeholder {
+        color: #757575; /* Lighter placeholder text */
+    }
+
+.asset-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px; /* Or adjust as needed */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4F4F4F #2C2C2C;
+}
+
+    /* For Webkit browsers like Chrome, Safari */
+    .asset-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .asset-list::-webkit-scrollbar-track {
+        background: #2C2C2C;
+        border-radius: 4px;
+    }
+
+    .asset-list::-webkit-scrollbar-thumb {
+        background-color: #4F4F4F;
+        border-radius: 4px;
+        border: 2px solid #2C2C2C;
+    }
+
+
+.asset-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #2A2A2A; /* Subtle separator for items */
+}
+
+    .asset-item:last-child {
+        border-bottom: none;
+    }
+
+.asset-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    border-radius: 50%; /* Circular icons */
+}
+
+.asset-details {
+    flex-grow: 1;
+}
+
+.asset-name {
+    display: block;
+    font-size: 16px;
+    color: #F0F0F0;
+}
+
+.asset-symbol {
+    display: block;
+    font-size: 13px;
+    color: #888888; /* Muted color for symbol */
+}
+
+.button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .button:active {
+        transform: scale(0.98);
+    }
+
+.asset-action-button {
+    background-color: #2C2C2C;
+    color: #007AFF; /* Accent color for add text/icon */
+    border: 1px solid #007AFF;
+    min-width: 70px; /* Ensure buttons have a decent width */
+    text-align: center;
+}
+
+    .asset-action-button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .asset-action-button.added {
+        background-color: #007AFF; /* Green for added state */
+        color: #FFFFFF;
+        border-color: #007AFF;
+    }
+
+
+.dialog-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #333333; /* Subtle separator */
+    display: flex;
+    justify-content: flex-end; /* Align button to the right */
+}
+
+.button.primary {
+    background-color: #007AFF; /* Primary action blue */
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+}
+
+    .button.primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }

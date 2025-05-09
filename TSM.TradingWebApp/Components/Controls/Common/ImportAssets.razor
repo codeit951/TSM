@@ -1,0 +1,148 @@
+﻿@rendermode InteractiveServer
+@inject UserState State
+@implements IAsyncDisposable
+@inject UserManager<User> UserManager
+@inject IViewAssetsByNameUseCase ViewAssetsByName
+@inject IUpdateUserBalanceUseCase UpdateUserBalanceUseCase
+
+<ToastComponent @ref="toastComponent" Timeout="3000" />
+<div class="dialog-overlay">
+    <div class="dialog">
+        <header class="dialog-header">
+            <h2>Import Assets</h2>
+        </header>
+        <div class="dialog-body">
+            <div class="search-bar-container">
+                <Icon Name="IconName.Search" Class="search-icon-img" />
+                <input type="text" id="assetSearchInput" @oninput="HandleSearch" placeholder="Search by name or symbol">
+            </div>
+            <ul id="assetList" class="asset-list" w-tid="33">
+                @if (assets is not null && assets.Count > 0)
+                {
+                    foreach (var asset in assets)
+                    {
+                        <li class="asset-item">
+                            <img src="/AssetIcons/@(asset.AssetSymbol).png" alt="@asset.AssetSymbol" class="asset-icon" />
+                            <div class="asset-details"><span class="asset-name">@asset.AssetName</span><span class="asset-symbol">@asset.AssetSymbol</span></div>
+                            @if (selectedAssets.Contains(asset))
+                            {
+                                <button class="button asset-action-button added" @onclick="()=>DeselectAsset(asset.AssetId)"><img src="/img/added-icon.png" alt="Remove" /></button>
+                            }
+                            else
+                            {
+                                <button class="button asset-action-button" @onclick="()=>SelectAsset(asset.AssetId)"><img src="/img/add-icon.png" alt="Add" /></button>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+
+        </div>
+        <footer class="dialog-footer">
+            <button class="button primary @(selectedAssets.Count == 0 ? "disabled" : "")"
+                    @onclick="ImportSubmit"
+                    disabled="@(selectedAssets.Count == 0)">
+                Import Selected
+            </button>
+        </footer>
+    </div>
+</div>
+<Preload LoadingText="Loading..." />
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+
+    private List<Asset> assets = new List<Asset>();
+
+    private List<Asset> selectedAssets = new List<Asset>();
+
+    private List<Asset> filteredAssets = new List<Asset>();
+
+    private string searchQuery = string.Empty;
+
+    private ToastComponent? toastComponent;
+
+    private User? user;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        filteredAssets = await ViewAssetsByName.Execute();
+
+        _subscription = State.CurrentUserObservable
+            .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                // Assuming: user.Balances is a collection where each Balance has a property Asset
+                var usedAssets = user.Balances.Select(b => b.Asset.AssetId).ToHashSet();
+
+                assets = filteredAssets = filteredAssets
+                .Where(a =>
+                    a.Status == StatusType.Active &&
+                    !usedAssets.Contains(a.AssetId))
+                .ToList();
+                StateHasChanged();
+            });
+    }
+
+    private void HandleSearch(ChangeEventArgs e)
+    {
+        searchQuery = e.Value.ToString();
+        assets = filteredAssets;
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            assets = filteredAssets.Where(a => a.AssetName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || a.AssetSymbol.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+    }
+
+    private void SelectAsset(int assetId)
+    {
+        var asset = assets.FirstOrDefault(a => a.AssetId == assetId);
+        if (asset != null && !selectedAssets.Contains(asset))
+        {
+            selectedAssets.Add(asset);
+        }
+    }
+
+    private void DeselectAsset(int assetId)
+    {
+        var asset = selectedAssets.FirstOrDefault(a => a.AssetId == assetId);
+        if (asset != null)
+        {
+            selectedAssets.Remove(asset);
+        }
+    }
+
+    private async Task ImportSubmit()
+    {
+        if (selectedAssets.Count > 0)
+        {
+            PreloadService.Show(SpinnerColor.Light, "Importing Assets...");
+            List<Balance> balances = new List<Balance>();
+            foreach (var asset in selectedAssets)
+            {
+                balances.Add(
+                new Balance
+                    {
+                        AssetId = asset.AssetId,
+                        UserId = user.UserID,
+                        Available = 0,
+                        Locked = 0
+                    }
+                );
+            }
+            await UpdateUserBalanceUseCase.ExecuteAsync(user.UserID, balances);
+            user = await UserManager.FindByNameAsync(user.Email);
+            State.SetCurrentUser(user);
+            PreloadService.Hide();
+            toastComponent?.ShowToast(MyToastType.Success, "Assets", "Assets Imported Successfully!");
+            selectedAssets.Clear();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
+    }
+}
