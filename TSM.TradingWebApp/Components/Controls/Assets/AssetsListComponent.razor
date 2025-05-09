@@ -73,7 +73,7 @@
                         <GridColumn TItem="Balance" Class="asset text-white" HeaderText="Asset" SortKeySelector="item => item.Asset.AssetSymbol">
 
                             <img src="/AssetIcons/@(context.Asset.AssetSymbol).png" alt="@context.Asset.AssetSymbol icon" class="asset_icon" />
-                            <p class="asset_name">@context.Asset.AssetSymbol</p>
+                            <p class="asset_name">@context.Asset.AssetName</p>
                             <p class="asset_symbol">@context.Asset.AssetSymbol</p>
                         </GridColumn>
                         @* <GridColumn TItem="Balance" Class="symbol text-white" HeaderText="table.symbol" SortKeySelector="item => item.Asset.AssetType">
@@ -99,13 +99,13 @@
                                 }
                             </p>
                             <span class="action">
-                                <button @onclick="GotoDeposit"><p>Deposit</p></button>
-                                <button @onclick="GotoWithdraw"><p>Withdraw</p></button>
+                                <button @onclick='()=> NavigationManager.NavigateTo("/user/deposit")'><p>Deposit</p></button>
+                                <button @onclick='()=> NavigationManager.NavigateTo("/user/withdraw")'><p>Withdraw</p></button>
                             </span>
                         </GridColumn>
                         <GridColumn TItem="Balance" Class="action" HeaderText="Actions">
-                            <button @onclick="GotoDeposit"><p>Deposit</p></button>
-                            <button @onclick="GotoWithdraw"><p>Withdraw</p></button>
+                            <button @onclick='()=> NavigationManager.NavigateTo("/user/deposit")'><p>Deposit</p></button>
+                            <button @onclick='()=> NavigationManager.NavigateTo("/user/withdraw")'><p>Withdraw</p></button>
                         </GridColumn>
                     </GridColumns>
                     <GridTemplates>
@@ -165,7 +165,7 @@
                         </GridEmptyDataTemplate>
                     </GridTemplates>
                 </Grid>
-                <br /><br />
+                
             </div>
         </div>
     </div>
@@ -255,16 +255,6 @@
         await modal.ShowAsync<ImportAssets>(
            title: "Import Assets"
        );
-    }
-
-    private void GotoDeposit()
-    {
-        NavigationManager.NavigateTo("/user/deposit");
-    }
-
-    private void GotoWithdraw()
-    {
-        NavigationManager.NavigateTo("/user/withdraw");
     }
 
     public async ValueTask DisposeAsync()

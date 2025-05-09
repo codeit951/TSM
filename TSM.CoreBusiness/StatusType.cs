@@ -7,6 +7,7 @@
         Approved,
         Pending,
         Blocked,
-        Declined
+        Declined,
+        Completed,
     }
 }

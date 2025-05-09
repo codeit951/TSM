@@ -38,7 +38,7 @@
     <span>
         <p class="balance_card_bottom_title">
             <p>Top Assets</p>
-        </p><button class="assets_button" @onclick="GotoAssets">View all assets</button>
+        </p><button class="assets_button" @onclick='()=> NavigationManager.NavigateTo("/user/assets")'>View all assets</button>
         <button @onclick="OpenImport" style="margin-left:5px;" class="assets_button">
             Import Assets
         </button>
@@ -188,11 +188,6 @@
         await modal.ShowAsync<ImportAssets>(
            title: "Import Assets"
        );
-    }
-
-    private void GotoAssets()
-    {
-        NavigationManager.NavigateTo("/user/assets");
     }
 
     private void HandlePriceUpdate(Dictionary<string, decimal> newPrice)

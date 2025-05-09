@@ -9,6 +9,8 @@ namespace TSM.UseCase.PluginInterfaces
 {
     public interface IUserRepository
     {
+        Task<string> AddSignalAsync(Signal signal);
+        Task<string> AddSMSAsync(SMS sms);
         Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo);
         Task<string> AddTrade(Guid userID, Trade trade);
         Task AddTransactionAsync(Transaction transaction);

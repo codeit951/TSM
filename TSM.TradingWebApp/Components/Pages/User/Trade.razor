@@ -2,7 +2,10 @@
 @layout Layout.UserLayout
 @attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-
+@inject PricePageState PageState
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserState State
 
 <div class="scrollbar-hide css-66hwna">
     <div class="css-1mq6rco">
@@ -10,3 +13,25 @@
         <TradeHistoryComponent @rendermode="InteractiveServer" />
     </div>
 </div>
+@code {
+    private User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PageState.IsPricePageActive = true;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+            State.SetCurrentUser(user);
+        }
+    }
+
+
+    public void Dispose()
+    {
+        PageState.IsPricePageActive = false;
+    }
+}

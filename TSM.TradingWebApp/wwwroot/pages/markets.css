@@ -28,7 +28,7 @@
     border: none;
     outline: none;
     color: white;
-    background: transparent;
+    background: #111417;
     font-size: 14px;
     line-height: 18px;
     font-weight: 600;
@@ -212,6 +212,7 @@
             height: 97%;
             width: 100%;
             overflow: scroll;
+            scrollbar-width: none;
             padding-top: 12px;
             mask: linear-gradient(0deg, rgba(0, 0, 0, 0), rgb(0, 0, 0) 3px, rgb(0, 0, 0) calc(100% - 18px), rgba(0, 0, 0, 0));
         }
@@ -299,7 +300,7 @@
     }
 
     .css-12rkt7z .price_mobile {
-        display: none;
+        display: none !important;
     }
 
     .css-12rkt7z .fiat_price {
@@ -362,13 +363,13 @@
 
 @media screen and (max-width: 1200px) {
     .css-12rkt7z .type {
-        display: none;
+        display: none !important;
     }
 }
 
 @media screen and (max-width: 1010px) {
     .css-12rkt7z .price {
-        display: none;
+        display: none !important;
     }
 
     .css-12rkt7z .price_mobile {
@@ -383,15 +384,15 @@
     }
 
     .css-12rkt7z .action {
-        display: none;
+        display: none !important;
     }
 
     .css-12rkt7z table tbody tr:hover .value .action {
-        display: flex;
+        display: flex !important;
     }
 
     .css-12rkt7z table tbody tr:hover .value .value_amount {
-        display: none;
+        display: none !important;
     }
 }
 

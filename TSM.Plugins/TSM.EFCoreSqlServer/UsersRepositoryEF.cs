@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,116 @@ namespace TSM.EFCoreSqlServer
         public UsersRepositoryEF(IDbContextFactory<TSMContext> contextFactory)
         {
             this.contextFactory = contextFactory;
+        }
+
+        public async Task<string> AddSignalAsync(Signal signal)
+        {
+            if (signal == null)
+                throw new ArgumentNullException(nameof(signal));
+
+            const string STATUS_SUCCESS = "1";
+            const string STATUS_INSUFFICIENT_BALANCE = "0";
+            const string STATUS_USD_NOT_FOUND = "2";
+            const string STATUS_USER_NOT_FOUND = "3";
+
+            await using var db = contextFactory.CreateDbContext();
+
+            var strategy = db.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await db.Database.BeginTransactionAsync();
+
+                try
+                {
+                    var user = await db.Users
+                        .Include(u => u.Signals)
+                        .FirstOrDefaultAsync(u => u.UserID == signal.UserID);
+
+                    if (user == null)
+                        return STATUS_USER_NOT_FOUND;
+
+                    user.Signals ??= new List<Signal>();
+                    user.Signals.Add(signal);
+
+
+                    var balance = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == signal.UserID && b.Asset.AssetSymbol == "USD");
+
+                    if (balance == null)
+                        return STATUS_USD_NOT_FOUND;
+
+                    if (signal.Price > balance.Available)
+                        return STATUS_INSUFFICIENT_BALANCE;
+
+                    balance.Available -= signal.Price;
+
+                    await db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return STATUS_SUCCESS;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
+        }
+
+        public async Task<string> AddSMSAsync(SMS sms)
+        {
+            if (sms == null)
+                throw new ArgumentNullException(nameof(sms));
+
+            const string STATUS_SUCCESS = "1";
+            const string STATUS_INSUFFICIENT_BALANCE = "0";
+            const string STATUS_USD_NOT_FOUND = "2";
+            const string STATUS_USER_NOT_FOUND = "3";
+
+            await using var db = contextFactory.CreateDbContext();
+
+            var strategy = db.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await db.Database.BeginTransactionAsync();
+
+                try
+                {
+                    var user = await db.Users
+                        .Include(u => u.SMSs)
+                        .FirstOrDefaultAsync(u => u.UserID == sms.UserID);
+
+                    if (user == null)
+                        return STATUS_USER_NOT_FOUND;
+
+                    user.SMSs ??= new List<SMS>();
+                    user.SMSs.Add(sms);
+
+
+                    var balance = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == sms.UserID && b.Asset.AssetSymbol == "USD");
+
+                    if (balance == null)
+                        return STATUS_USD_NOT_FOUND;
+
+                    if (sms.Amount > balance.Available)
+                        return STATUS_INSUFFICIENT_BALANCE;
+
+                    balance.Available -= sms.Amount;
+
+                    await db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return STATUS_SUCCESS;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
 
         public async Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo)
@@ -209,6 +320,8 @@ namespace TSM.EFCoreSqlServer
             return await db.Users
                 .Include(u => u.Trades)
                 .Include(u => u.Transactions)
+                .Include(u =>u.SMSs)
+                .Include(u =>u.Signals)
                 .Include(u => u.Balances)
                 .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.UserID == guidUserId, cancellationToken);
@@ -220,6 +333,8 @@ namespace TSM.EFCoreSqlServer
             return await db.Users
                 .Include(u => u.Trades)
                 .Include(u => u.Transactions)
+                .Include(u => u.SMSs)
+                .Include(u => u.Signals)
                 .Include(u => u.Balances)
                 .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.Email == normalizedUserName,
@@ -231,6 +346,9 @@ namespace TSM.EFCoreSqlServer
             await using var db = this.contextFactory.CreateDbContext();
             return await db.Users
                 .Include(u => u.Trades)
+                .Include(u => u.Transactions)
+                .Include(u => u.SMSs)
+                .Include(u => u.Signals)
                 .Include(u => u.Balances)
                 .ThenInclude(b => b.Asset)
                 .FirstOrDefaultAsync(u => u.Email == email);

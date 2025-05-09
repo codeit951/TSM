@@ -29,5 +29,7 @@ namespace TSM.CoreBusiness
         public List<Balance>? Balances { get; set; }
         public List<Trade>? Trades { get; set; }
         public List<Transaction>? Transactions { get; set; }
+        public List<SMS>? SMSs { get; set; }
+        public List<Signal>? Signals { get; set; }
     }
 }

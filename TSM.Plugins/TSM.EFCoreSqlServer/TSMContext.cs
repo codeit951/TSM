@@ -20,6 +20,11 @@ namespace TSM.EFCoreSqlServer
         public DbSet<Asset>? Assets { get; set; }
         public DbSet<Transaction>? Transactions { get; set; }
         public DbSet<WalletAddress>? WalletAddresses { get; set; }
+        public DbSet<Signal>? Signals { get; set; }
+        public DbSet<SMS>? SMSs { get; set; }
+        public DbSet<SMSPlan>? SMSPlans { get; set; }
+        public DbSet<SignalPlan>? SignalPlans { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +36,18 @@ namespace TSM.EFCoreSqlServer
 
             modelBuilder.Entity<WalletAddress>()
                 .HasKey(t => new { t.WalletID });
+
+            modelBuilder.Entity<Signal>()
+                .HasKey(t => new { t.SignalID, t.UserID });
+
+            modelBuilder.Entity<SMS>()
+                .HasKey(t => new { t.PlanID, t.UserID });
+
+            modelBuilder.Entity<SMSPlan>()
+                .HasKey(t => new { t.PlanID });
+
+            modelBuilder.Entity<SignalPlan>()
+                .HasKey(t => new { t.PlanID });
 
             //modelBuilder.Entity<Balance>()
             //    .HasKey(b => new { b.BalanceId, b.UserId,b.AssetId });
@@ -56,7 +73,12 @@ namespace TSM.EFCoreSqlServer
                 entity.Property(t => t.Amount).HasPrecision(18, 8);
             });
 
-                modelBuilder.Entity<User>().HasData(
+            modelBuilder.Entity<SMS>(entity =>
+            {
+                entity.Property(t => t.Balance).HasPrecision(18, 8);
+            });
+
+            modelBuilder.Entity<User>().HasData(
                  new User
                  {
                      FirstName = "Test",
@@ -133,6 +155,48 @@ namespace TSM.EFCoreSqlServer
                     CoinType = "ETH",
                     Address = "0xabcdef1234567890abcdef1234567890abcdef12",
                     Network = "Blockchain"
+                }
+            );
+
+            modelBuilder.Entity<SignalPlan>().HasData(
+                new SignalPlan
+                {
+                    PlanID = 1,
+                    PlanName = "Starter",
+                    Price = 100,
+                    Strength = 10
+                },
+                new SignalPlan
+                {
+                    PlanID = 2,
+                    PlanName = "Pro",
+                    Price = 200,
+                    Strength = 25
+                }
+            );
+
+            modelBuilder.Entity<SMSPlan>().HasData(
+                new SMSPlan
+                {
+                    PlanID = 1,
+                    PlanName = "BitcoinPool12",
+                    PlanSymbol = "BTC",
+                    PlanType = SMSTypes.Staking,
+                    MinimumAmount = 100,
+                    MaximumAmount = 1000,
+                    Cycle = 1,
+                    ROI = 10,
+                },
+                new SMSPlan
+                {
+                    PlanID = 2,
+                    PlanName = "Dogecoin",
+                    PlanSymbol = "DOGE",
+                    PlanType = SMSTypes.Mining,
+                    MinimumAmount = 100,
+                    MaximumAmount = 1000,
+                    Cycle = 1,
+                    ROI = 15,
                 }
             );
         }

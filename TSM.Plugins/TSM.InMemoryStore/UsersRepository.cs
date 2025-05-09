@@ -40,6 +40,16 @@ namespace TSM.InMemoryStore
         };
         }
 
+        public Task<string> AddSignalAsync(Signal signal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> AddSMSAsync(SMS sms)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo)
         {
             throw new NotImplementedException();
