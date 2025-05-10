@@ -15,6 +15,8 @@ using TSM.TradingWebApp.Prices;
 using TSM.TradingWebApp.Services;
 using TSM.UseCase.Assets;
 using TSM.UseCase.PluginInterfaces;
+using TSM.UseCase.SignalPlans;
+using TSM.UseCase.SMSPlans;
 using TSM.UseCase.Users;
 using TSM.UseCase.WalletAddreses;
 
@@ -75,6 +77,8 @@ builder.Services.AddDbContextFactory<TSMContext>((services, options) =>
 builder.Services.AddScoped<IAssetsRepository, AssetsRepositoryEF>();
 builder.Services.AddScoped<IUserRepository, UsersRepositoryEF>();
 builder.Services.AddScoped<IWalletRepository, WalletRepositoryEF>();
+builder.Services.AddScoped<ISignalPlanRepository, SignalPlanRepositoryEF>();
+builder.Services.AddScoped<ISMSPlanRepository, SMSPlanRepositoryEF>();
 
 builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>();
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();
@@ -84,6 +88,8 @@ builder.Services.AddTransient<ICloseTradeUseCase, CloseTradeUseCase>();
 builder.Services.AddTransient<ISwapTransactionUseCase, SwapTransactionUseCase>();
 builder.Services.AddTransient<IAddTransactionUseCase, AddTransactionUseCase>();
 builder.Services.AddTransient<IUseNowPayUseCase, UseNowPayUseCase>();
+builder.Services.AddTransient<IAddSignalUseCase, AddSignalUseCase>();
+builder.Services.AddTransient<IAddSMSUseCase, AddSMSUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();
@@ -97,6 +103,17 @@ builder.Services.AddTransient<IAddWalletUseCase, AddWalletUseCase>();
 builder.Services.AddTransient<IDeleteWalletByIdUseCase, DeleteWalletByIdUseCase>();
 builder.Services.AddTransient<IUpdateWalletUseCase, UpdateWalletUseCase>();
 builder.Services.AddTransient<IViewWalletByTypeUseCase, ViewWalletByTypeUseCase>();
+
+builder.Services.AddTransient<IViewSignalsByNameUseCase, ViewSignalsByNameUseCase>();
+builder.Services.AddTransient<IAddSignalPlanUseCase, AddSignalPlanUseCase>();
+builder.Services.AddTransient<IDeleteSignalPlanByIdUseCase, DeleteSignalPlanByIdUseCase>();
+builder.Services.AddTransient<IUpdateSignalPlanUseCase, UpdateSignalPlanUseCase>();
+
+builder.Services.AddTransient<IViewSMSPlansByNameUseCase, ViewSMSPlansByNameUseCase>();
+builder.Services.AddTransient<IAddSMSPlanUseCase, AddSMSPlanUseCase>();
+builder.Services.AddTransient<IDeleteSMSPlanByIdUseCase, DeleteSMSPlanByIdUseCase>();
+builder.Services.AddTransient<IUpdateSMSPlanUseCase, UpdateSMSPlanUseCase>();
+builder.Services.AddTransient<IViewSMSPlansByTypeUseCase, ViewSMSPlansByTypeUseCase>();
 
 builder.Services.AddSingleton<CryptoPriceService>();
 builder.Services.AddHostedService<CryptoPriceWorker>();

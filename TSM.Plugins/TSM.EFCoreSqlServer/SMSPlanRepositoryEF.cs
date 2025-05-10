@@ -9,21 +9,21 @@ using TSM.UseCase.PluginInterfaces;
 
 namespace TSM.EFCoreSqlServer
 {
-    public class SignalPlanRepository : ISignalPlanRepository
+    public class SMSPlanRepositoryEF : ISMSPlanRepository
     {
         private readonly IDbContextFactory<TSMContext> contextFactory;
 
-        public SignalPlanRepository(IDbContextFactory<TSMContext> contextFactory)
+        public SMSPlanRepositoryEF(IDbContextFactory<TSMContext> contextFactory)
         {
             this.contextFactory = contextFactory;
         }
 
-        public async Task<bool> AddSignalPlanAsync(SignalPlan newPlan)
+        public async Task<bool> AddSMSPlanAsync(SMSPlan newPlan)
         {
             try
             {
                 await using var context = contextFactory.CreateDbContext();
-                context.SignalPlans?.Add(newPlan);
+                context.SMSPlans?.Add(newPlan);
                 await context.SaveChangesAsync();
                 return true;
             }
@@ -33,17 +33,17 @@ namespace TSM.EFCoreSqlServer
             }
         }
 
-        public async Task<bool> DeleteSignalPlanByIdAsync(int id)
+        public async Task<bool> DeleteSMSPlanByIdAsync(int id)
         {
             try
             {
                 await using var context = contextFactory.CreateDbContext();
-                var plan = await context.SignalPlans.FindAsync(id);
+                var plan = await context.SMSPlans.FindAsync(id);
                 if (plan == null)
                 {
                     return false; // Plan not found
                 }
-                context.SignalPlans.Remove(plan);
+                context.SMSPlans.Remove(plan);
                 await context.SaveChangesAsync();
                 return true;
             }
@@ -53,21 +53,32 @@ namespace TSM.EFCoreSqlServer
             }
         }
 
-        public async Task<List<SignalPlan>> GetSignalPlansByNameAsync(string planName)
+        public async Task<List<SMSPlan>> GetSMSPlansByNameAsync(string planName)
         {
             await using var db = this.contextFactory.CreateDbContext();
-            return await db.SignalPlans.Where(a => a.PlanName.ToLower().IndexOf(planName.ToLower()) >= 0).ToListAsync();
+            return await db.SMSPlans.Where(a => a.PlanName.ToLower().IndexOf(planName.ToLower()) >= 0).ToListAsync();
         }
 
-        public async Task<bool> UpdateSignalPlanAsync(SignalPlan updatedPlan)
+        public async Task<List<SMSPlan>> GetSMSPlansByTypeAsync(SMSTypes type)
         {
             await using var db = this.contextFactory.CreateDbContext();
-            var existingPlan = await db.SignalPlans.FindAsync(updatedPlan.PlanID);
+            return await db.SMSPlans.Where(a => a.PlanType == type).ToListAsync();
+        }
+
+        public async Task<bool> UpdateSMSPlanAsync(SMSPlan updatedPlan)
+        {
+            await using var db = this.contextFactory.CreateDbContext();
+            var existingPlan = await db.SMSPlans.FindAsync(updatedPlan.PlanID);
             if (existingPlan != null)
             {
                 existingPlan.PlanName = updatedPlan.PlanName;
-                existingPlan.Price = updatedPlan.Price;
-                existingPlan.Strength = updatedPlan.Strength;
+                existingPlan.PlanType = updatedPlan.PlanType;
+                existingPlan.PlanSymbol = updatedPlan.PlanSymbol;
+                existingPlan.MinimumAmount = updatedPlan.MinimumAmount;
+                existingPlan.MaximumAmount = updatedPlan.MaximumAmount;
+                existingPlan.Cycle = updatedPlan.Cycle;
+                existingPlan.ROI = updatedPlan.ROI;
+
                 await db.SaveChangesAsync();
                 return true;
             }

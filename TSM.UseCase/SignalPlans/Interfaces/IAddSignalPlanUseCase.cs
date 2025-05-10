@@ -2,7 +2,7 @@
 
 namespace TSM.UseCase.SignalPlans
 {
-    public interface IAddSignalUseCase
+    public interface IAddSignalPlanUseCase
     {
         Task<bool> Execute(SignalPlan newPlan);
     }

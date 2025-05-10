@@ -8,11 +8,11 @@ using TSM.UseCase.PluginInterfaces;
 
 namespace TSM.UseCase.SignalPlans
 {
-    public class AddSignalUseCase : IAddSignalUseCase
+    public class AddSignalPlanUseCase : IAddSignalPlanUseCase
     {
         private readonly ISignalPlanRepository planRepository;
 
-        public AddSignalUseCase(ISignalPlanRepository planRepository)
+        public AddSignalPlanUseCase(ISignalPlanRepository planRepository)
         {
             this.planRepository = planRepository;
         }
