@@ -1,0 +1,142 @@
+﻿
+.mining-list-container {
+    background-color: #1e1e1e; /* Dark grey for component background */
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 360px; /* Max width constraint */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Deeper shadow for depth */
+}
+
+    .mining-list-container h2 {
+        color: #ffffff;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-size: 1.6em;
+        border-bottom: 1px solid #333; /* Subtle separator */
+        padding-bottom: 10px;
+    }
+
+.mining-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mining-item {
+    background-color: #2a2a2a; /* Medium-dark grey for list items */
+    border: 1px solid #383838; /* Slightly lighter border for definition */
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 18px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .mining-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    .mining-item:last-child {
+        margin-bottom: 0;
+    }
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.plan-name {
+    font-size: 1.2em;
+    font-weight: 600; /* Semibold */
+    color: white;
+}
+
+.status {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    border-radius: 15px; /* Pill shape */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+    .status.Pending {
+        background-color: #cfb600; /* Teal accent - Material Design dark theme */
+        color: #121212; /* Dark text for contrast on light bg */
+    }
+
+    .status.Active {
+        background-color: #03dac6; /* Teal accent - Material Design dark theme */
+        color: #121212; /* Dark text for contrast on light bg */
+    }
+
+    .status.Completed {
+        background-color: #cf6679; /* Reddish/pink accent - Material Design dark theme */
+        color: #121212;
+    }
+
+    .status.Closed { /* Added a distinct 'closed' status style */
+        background-color: #4f4f4f; /* Grey for closed/disabled state */
+        color: #ababab;
+    }
+
+.item-details {
+    font-size: 0.95em;
+    color: #b0b0b0; /* Slightly lighter grey for details */
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #3f3f3f; /* Dashed separator for rows */
+}
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-row .label {
+        color: #888888; /* Dimmer grey for labels */
+        margin-right: 10px;
+    }
+
+    .detail-row .value {
+        font-weight: 500;
+        color: #d0d0d0;
+        text-align: right;
+    }
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #f44336; /* Red button color */
+    color: #ffffff; /* White text for contrast on red */
+    border: none;
+    border-radius: 6px;
+    font-size: 1.05em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+    .action-btn:hover:not(:disabled) {
+        background-color: #d32f2f; /* Darker red on hover */
+        transform: translateY(-1px);
+    }
+
+    .action-btn:active:not(:disabled) {
+        transform: translateY(0px);
+    }
+
+    .action-btn:disabled {
+        background-color: #4a4a4a; /* Dark grey for disabled button */
+        color: #757575; /* Lighter grey for disabled text */
+        cursor: not-allowed;
+    }

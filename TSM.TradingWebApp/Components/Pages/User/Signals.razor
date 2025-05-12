@@ -4,9 +4,15 @@
 @attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject IJSRuntime JS
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IViewSignalsByNameUseCase ViewSignalPlansByNameUseCase
+@inject IAddSignalUseCase AddSignalUseCase
+@inject UserState State
+@implements IAsyncDisposable
 
 <link href="pages/signals.css" rel="stylesheet" />
-
+<ToastComponent @ref="toastComponent" Timeout="3000" />
 <div class="scrollbar-hide css-66hwna">
     <SignalsHistoryComponent @bind-Transform="historyTransform" @rendermode="InteractiveServer" />
     <div class="css-6ymeda"></div>
@@ -14,28 +20,7 @@
         <div class="top">
             <div class="css-1vdt97u">
                 <span class="balance">
-                    <span class="eyes_wrapper">
-                        <p>Signal Balance</p>
-                        <button class="eyes_button">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="14"
-                                 height="14"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.5"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-eye-off eye">
-                                <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
-                                <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
-                                <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
-                                <path d="m2 2 20 20"></path>
-                            </svg>
-                        </button>
-                    </span>
-                    <span class="user_balance" style="display: block;">$0.00</span>
-                    <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+
                 </span>
                 <button class="signal_balance_button" @onclick="OpenModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
@@ -47,32 +32,52 @@
             </div>
             <div class="css-sqwiyb">
                 <span class="signal_info_card_top">
-                    <p>No active signal</p>
+                    @if (user is not null)
+                    {
+                        if (user.Signals.Where(s => s.Status == StatusType.Active).Count() > 0)
+                        {
+                            <p>@user.Signals.Where(s => s.Status == StatusType.Active).Count() active signal(s)</p>
+                        }
+                        else
+                        {
+                            <p>No active signal</p>
+                        }
+
+                    }
                     <p class="text-btn view_history" @onclick="ShowHistory">View history</p>
                 </span>
                 <div class="signal_info_card_bottom">
                     <div class="signal_strength_wrapper">
-                        <span>
-                            <p class="account_section_title signal_strength">Signal strength</p>
-                            <p class="red" style="font-size: 14px; font-weight: 600;">0%</p>
-                        </span>
-                        <div class="signal_wrapper">
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                            <div class="signal_bar" style="background-color: rgba(255, 51, 68, 0.5);"></div>
-                        </div>
+                        @if (user is not null)
+                        {
+                            var totalStrength = user.Signals.Sum(s => s.strength);
+                            <span>
+                                <p class="account_section_title signal_strength">Signal strength</p>
+                                <p class="@(totalStrength==0?"red":"")" style="font-size: 14px; font-weight: 600;">@(totalStrength)%</p>
+                            </span>
+                            <div class="signal_wrapper">
+                                <div class="signal_bar @(totalStrength>=5?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=10?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=15?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=20?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=25?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=30?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=35?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=40?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=45?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=50?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=55?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=60?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=65?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=70?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=75?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=80?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=85?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=90?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=95?"green-bar":"red-bar")"></div>
+                                <div class="signal_bar @(totalStrength>=100?"green-bar":"red-bar")"></div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -81,126 +86,57 @@
             <div class="mid_section_top"><p>Signals</p></div>
             <div class="signal_cards_wrapper">
                 <div class="grids css-113fuih">
-                    <div class="signal_card css-k9n2yz">
-                        <div class="signal_card_top"><p class="signal_title">AD V5</p></div>
-                        <div class="signal_card_details">
-                            <span class="signal_card_detail">
-                                <p>Signal price</p>
-                                <p>$2,000.00</p>
-                            </span>
-                            <span class="signal_card_detail">
-                                <p>Signal strength</p>
-                                <p class="signal_strength">10%</p>
-                            </span>
-                        </div>
-                        <div class="signal_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="2000.000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
+
+                    @if (plans is not null && plans.Count > 0)
+                    {
+                        foreach (var plan in plans)
+                        {
+                            <div class="signal_card css-k9n2yz">
+                                <div class="signal_card_top"><p class="signal_title">@plan.PlanName</p></div>
+                                <div class="signal_card_details">
+                                    <span class="signal_card_detail">
+                                        <p>Signal price</p>
+                                        <p>$@FormatValues.FormatCurrencyWithMinusForBal(plan.Price)</p>
+                                    </span>
+                                    <span class="signal_card_detail">
+                                        <p>Signal strength</p>
+                                        <p class="signal_strength">@(plan.Strength)%</p>
                                     </span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="signal_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
-                        </div>
-                    </div>
-                    <div class="signal_card css-k9n2yz">
-                        <div class="signal_card_top"><p class="signal_title">R25-M</p></div>
-                        <div class="signal_card_details">
-                            <span class="signal_card_detail">
-                                <p>Signal price</p>
-                                <p>$5,000.00</p>
-                            </span>
-                            <span class="signal_card_detail">
-                                <p>Signal strength</p>
-                                <p class="signal_strength">25%</p>
-                            </span>
-                        </div>
-                        <div class="signal_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="5000.000" /><span class="amount_select"><p>USD</p></span>
+                                <div class="signal_card_amount">
+                                    <div class="css-v6puf8">
+                                        <label>Amount</label>
+                                        <div class="amountbox_wrapper">
+                                            <input type="number" placeholder="2000.000" value="@plan.Price" readonly="" /><span class="amount_select"><p>USD</p></span>
+                                        </div>
+                                        @if(user is not null)
+                                        {
+                                            <div class="captions">
+                                                <span class="caption">
+                                                    <p>Current balance</p>
+                                                    <p>$@FormatValues.FormatCurrencyWithMinusForBal(user.Balances.FirstOrDefault(b=>b.Asset.AssetSymbol=="USD").Available)</p>
+                                                </span>
+                                            </div>
+                                        }
+
+                                    </div>
                                 </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
+                                <div class="signal_card_footer">
+                                    <button class="css-nncgg" @onclick="()=>BuySignal(plan)"><p>Purchase</p></button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="signal_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
-                        </div>
-                    </div>
-                    <div class="signal_card css-k9n2yz">
-                        <div class="signal_card_top"><p class="signal_title">BC-IRC LEVEL2 Pro</p></div>
-                        <div class="signal_card_details">
-                            <span class="signal_card_detail">
-                                <p>Signal price</p>
-                                <p>$10,000.00</p>
-                            </span>
-                            <span class="signal_card_detail">
-                                <p>Signal strength</p>
-                                <p class="signal_strength">50%</p>
-                            </span>
-                        </div>
-                        <div class="signal_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="10000.000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="signal_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
-                        </div>
-                    </div>
-                    <div class="signal_card css-k9n2yz">
-                        <div class="signal_card_top"><p class="signal_title">RBF V6 25000</p></div>
-                        <div class="signal_card_details">
-                            <span class="signal_card_detail">
-                                <p>Signal price</p>
-                                <p>$25,000.00</p>
-                            </span>
-                            <span class="signal_card_detail">
-                                <p>Signal strength</p>
-                                <p class="signal_strength">100%</p>
-                            </span>
-                        </div>
-                        <div class="signal_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="25000.000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="signal_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Purchase</p></button>
-                        </div>
-                    </div>
+                        }
+
+                    }
+                    else
+                    {
+                        <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+                            <Placeholder Width="PlaceholderWidth.Col12" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+                        </PlaceholderContainer>
+                    }
                 </div>
             </div>
         </div>
@@ -208,11 +144,87 @@
     </div>
 </div>
 <NewDepositComponent @bind-IsActive="IsDepositActive" @rendermode="InteractiveServer" />
+<Preload LoadingText="Loading..." />
 @code {
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
 
     private string historyTransform = "100%";
 
     private bool IsDepositActive = false;
+
+    private User? user;
+
+    private List<SignalPlan> plans = new List<SignalPlan>();
+
+    private IDisposable _subscription;
+
+    private string AlertMessage = string.Empty;
+
+    private ToastComponent? toastComponent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        plans = await ViewSignalPlansByNameUseCase.Execute();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+            State.SetCurrentUser(user);
+
+            _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+           {
+               user = Cuser;
+               StateHasChanged();
+           });
+        }
+    }
+
+    private async Task BuySignal(SignalPlan plan)
+    {
+        if (user != null)
+        {
+            PreloadService.Show(SpinnerColor.Light, $"Buying Signal...");
+            var signal = new Signal
+            {
+                UserID = user.UserID,
+                    PlanID = plan.PlanID,
+                    PlanName = plan.PlanName,
+                    Price = plan.Price,
+                    Status = StatusType.Active,
+                    strength = plan.Strength,
+            };
+            var status = await AddSignalUseCase.Execute(signal);
+            if (status == "0")
+            {
+                AlertMessage = $"Insufficient USD balance!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Signal Error", AlertMessage);
+            }
+            else if (status == "1")
+            {
+                // Reset the form after placing the trade
+                AlertMessage = $"{plan.PlanName} Bought Successfully!";
+                toastComponent?.ShowToast(MyToastType.Success, "Signal", AlertMessage);
+                user = await UserManager.FindByNameAsync(user.Email);
+                State.SetCurrentUser(user);
+            }
+            else if (status == "2")
+            {
+                AlertMessage = "ASSET NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Signal Error", AlertMessage);
+            }
+            else if (status == "3")
+            {
+                AlertMessage = "USER NOT FOUND!";
+                toastComponent?.ShowToast(MyToastType.Danger, "Signal Error", AlertMessage);
+            }
+
+            PreloadService.Hide();
+        }
+    }
 
     private void OpenModal()
     {
@@ -230,5 +242,10 @@
     {
         historyTransform = "100%";
         StateHasChanged(); // Ensure UI updates
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

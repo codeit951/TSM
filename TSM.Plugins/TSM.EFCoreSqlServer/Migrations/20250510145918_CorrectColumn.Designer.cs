@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TSM.EFCoreSqlServer;
 
@@ -11,9 +12,11 @@ using TSM.EFCoreSqlServer;
 namespace TSM.EFCoreSqlServer.Migrations
 {
     [DbContext(typeof(TSMContext))]
-    partial class TSMContextModelSnapshot : ModelSnapshot
+    [Migration("20250510145918_CorrectColumn")]
+    partial class CorrectColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,11 +162,8 @@ namespace TSM.EFCoreSqlServer.Migrations
 
             modelBuilder.Entity("TSM.CoreBusiness.SMS", b =>
                 {
-                    b.Property<int>("SMSID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PlanID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SMSID"));
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
@@ -175,17 +175,11 @@ namespace TSM.EFCoreSqlServer.Migrations
                         .HasPrecision(18, 8)
                         .HasColumnType("decimal(18,8)");
 
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
                     b.Property<int>("Interval")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("PlanID")
-                        .HasColumnType("int");
 
                     b.Property<string>("PlanName")
                         .IsRequired()
@@ -201,6 +195,12 @@ namespace TSM.EFCoreSqlServer.Migrations
                     b.Property<decimal>("ROI")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("SMSID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SMSID"));
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -211,7 +211,7 @@ namespace TSM.EFCoreSqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SMSID", "UserID");
+                    b.HasKey("PlanID", "UserID");
 
                     b.HasIndex("UserID");
 
@@ -294,10 +294,6 @@ namespace TSM.EFCoreSqlServer.Migrations
 
                     b.Property<int>("PlanID")
                         .HasColumnType("int");
-
-                    b.Property<string>("PlanName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");

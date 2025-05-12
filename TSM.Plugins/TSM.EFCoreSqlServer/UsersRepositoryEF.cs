@@ -82,7 +82,7 @@ namespace TSM.EFCoreSqlServer
 
             const string STATUS_SUCCESS = "1";
             const string STATUS_INSUFFICIENT_BALANCE = "0";
-            const string STATUS_USD_NOT_FOUND = "2";
+            const string STATUS_ASSET_NOT_FOUND = "2";
             const string STATUS_USER_NOT_FOUND = "3";
 
             await using var db = contextFactory.CreateDbContext();
@@ -107,10 +107,10 @@ namespace TSM.EFCoreSqlServer
 
 
                     var balance = await db.Balances
-                        .FirstOrDefaultAsync(b => b.UserId == sms.UserID && b.Asset.AssetSymbol == "USD");
+                        .FirstOrDefaultAsync(b => b.UserId == sms.UserID && b.Asset.AssetSymbol == sms.PlanSymbol);
 
                     if (balance == null)
-                        return STATUS_USD_NOT_FOUND;
+                        return STATUS_ASSET_NOT_FOUND;
 
                     if (sms.Amount > balance.Available)
                         return STATUS_INSUFFICIENT_BALANCE;
@@ -250,6 +250,35 @@ namespace TSM.EFCoreSqlServer
             user.Transactions ??= new List<Transaction>();
             user.Transactions.Add(transaction);
             await db.SaveChangesAsync();
+        }
+
+        public async Task<bool> CloseSMSAsync(SMS sms)
+        {
+            try
+            {
+                await using var db = contextFactory.CreateDbContext();
+                var existingSMS = await db.SMSs
+                    .FirstOrDefaultAsync(s => s.SMSID == sms.SMSID);
+                if (existingSMS != null)
+                {
+                    existingSMS.Status = StatusType.Completed;
+                    existingSMS.LastUpdate = DateTime.UtcNow;
+
+                    var balance = await db.Balances
+                        .FirstOrDefaultAsync(b => b.UserId == sms.UserID && b.Asset.AssetSymbol == sms.PlanSymbol);
+                    if (balance != null)
+                    {
+                        balance.Available += sms.Balance;
+                    }
+                    await db.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss)

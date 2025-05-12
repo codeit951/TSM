@@ -4,7 +4,11 @@
 @attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject IJSRuntime JS
-
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IViewSMSPlansByTypeUseCase ViewSMSPlansByTypeUseCase
+@inject UserState State
+@implements IAsyncDisposable
 
 <link href="pages/subscribe.css" rel="stylesheet" />
 
@@ -16,28 +20,7 @@
             <div class="css-y0p2sv">
                 <div class="top_wrapper">
                     <span class="balance">
-                        <span class="eyes_wrapper">
-                            <p>Subscription Balance</p>
-                            <button class="eyes_button">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     width="14"
-                                     height="14"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.5"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     class="lucide lucide-eye-off eye">
-                                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
-                                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
-                                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
-                                    <path d="m2 2 20 20"></path>
-                                </svg>
-                            </button>
-                        </span>
-                        <span class="user_balance" style="display: block;">$0.00</span>
-                        <h3 class="user_balance hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                       
                     </span>
                     <button class="subscribe_balance_button" @onclick="OpenModal">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
@@ -48,7 +31,18 @@
                     </button>
                 </div>
                 <span class="subscribe_info_card_top">
-                    <p>No active subscription</p>
+                    @if (user is not null)
+                {
+                        if (user.SMSs.Where(s => s.Status == StatusType.Active && s.PlanType == SMSTypes.Subscription).Count()>0)
+                        {
+                            <p>@user.SMSs.Where(s => s.Status == StatusType.Active && s.PlanType == SMSTypes.Subscription).Count() active subscription(s)</p>
+                        }
+                        else
+                        {
+                            <p>No active subscription</p>
+                        }
+                   
+                }
                     <p class="text-btn view_history" @onclick="ShowHistory">View history</p>
                 </span>
             </div>
@@ -57,169 +51,97 @@
             <div class="mid_section_top"><p>Plans</p></div>
             <div class="subscribe_cards_wrapper">
                 <div class="grids css-113fuih">
-                    <div class="subscribe_card css-1e50szj">
-                        <div class="subscribe_card_top"><p class="subscribe_title">Starter plan</p></div>
-                        <div class="subscribe_card_details">
-                            <span class="subscribe_card_detail">
-                                <p>Minumum</p>
-                                <p>$5,000.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Maximum</p>
-                                <p>$19,999.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Plan duration</p>
-                                <p>10 days</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>ROI</p>
-                                <p class="roi">200%</p>
-                            </span>
-                        </div>
-                        <div class="subscribe_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="5000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
+                    @if (plans is not null && plans.Count > 0)
+                    {
+                        foreach (var plan in plans)
+                        {
+                            <div class="subscribe_card css-1e50szj">
+                                <div class="subscribe_card_top"><p class="subscribe_title">@plan.PlanName</p></div>
+                                <div class="subscribe_card_details">
+                                    <span class="subscribe_card_detail">
+                                        <p>Minumum</p>
+                                        <p>@plan.MinimumAmount @plan.PlanSymbol</p>
+                                    </span>
+                                    <span class="subscribe_card_detail">
+                                        <p>Maximum</p>
+                                        <p>@plan.MaximumAmount @plan.PlanSymbol</p>
+                                    </span>
+                                    <span class="subscribe_card_detail">
+                                        <p>Plan duration</p>
+                                        <p>@plan.Cycle days</p>
+                                    </span>
+                                    <span class="subscribe_card_detail">
+                                        <p>ROI</p>
+                                        <p class="roi">@(plan.ROI)%</p>
                                     </span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="subscribe_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
-                        </div>
-                    </div>
-                    <div class="subscribe_card css-1e50szj">
-                        <div class="subscribe_card_top"><p class="subscribe_title">Lite plan</p></div>
-                        <div class="subscribe_card_details">
-                            <span class="subscribe_card_detail">
-                                <p>Minumum</p>
-                                <p>$20,000.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Maximum</p>
-                                <p>$49,500.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Plan duration</p>
-                                <p>3 days</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>ROI</p>
-                                <p class="roi">250%</p>
-                            </span>
-                        </div>
-                        <div class="subscribe_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="20000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
+                                
+                                <div class="subscribe_card_footer">
+                                    <button class="css-nncgg" @onclick="()=>ShowStake(plan)"><p>Subscribe</p></button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="subscribe_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
-                        </div>
-                    </div>
-                    <div class="subscribe_card css-1e50szj">
-                        <div class="subscribe_card_top"><p class="subscribe_title">Classic plan</p></div>
-                        <div class="subscribe_card_details">
-                            <span class="subscribe_card_detail">
-                                <p>Minumum</p>
-                                <p>$50,000.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Maximum</p>
-                                <p>$99,500.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Plan duration</p>
-                                <p>14 days</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>ROI</p>
-                                <p class="roi">350%</p>
-                            </span>
-                        </div>
-                        <div class="subscribe_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="50000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="subscribe_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
-                        </div>
-                    </div>
-                    <div class="subscribe_card css-1e50szj">
-                        <div class="subscribe_card_top"><p class="subscribe_title">Pro plan</p></div>
-                        <div class="subscribe_card_details">
-                            <span class="subscribe_card_detail">
-                                <p>Minumum</p>
-                                <p>$100,000.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Maximum</p>
-                                <p>$1,000,000.00</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>Plan duration</p>
-                                <p>20 days</p>
-                            </span>
-                            <span class="subscribe_card_detail">
-                                <p>ROI</p>
-                                <p class="roi">500%</p>
-                            </span>
-                        </div>
-                        <div class="subscribe_card_amount">
-                            <div class="css-v6puf8">
-                                <label>Amount</label>
-                                <div class="amountbox_wrapper">
-                                    <input type="number" placeholder="100000" /><span class="amount_select"><p>USD</p></span>
-                                </div>
-                                <div class="captions">
-                                    <span class="caption">
-                                        <p>Current balance</p>
-                                        <p>$0.00</p>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="subscribe_card_footer">
-                            <button disabled="" class="disabled css-nncgg"><p>Subscribe</p></button>
-                        </div>
-                    </div>
+                        }
+                    }
+                    else
+                    {
+                        <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+                            <Placeholder Width="PlaceholderWidth.Col12" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+                        </PlaceholderContainer>
+                    }
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 <NewDepositComponent @bind-IsActive="IsDepositActive" @rendermode="InteractiveServer" />
+<MineAndStakeModelComponent @ref="smsModel" @bind-IsActive="showStake" @rendermode="InteractiveServer" />
 @code {
 
     private string historyTransform = "100%";
 
     private bool IsDepositActive = false;
+
+    private bool showStake = false;
+
+    private User? user;
+
+    private List<SMSPlan> plans = new List<SMSPlan>();
+
+    private MineAndStakeModelComponent smsModel;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        plans = await ViewSMSPlansByTypeUseCase.Execute(SMSTypes.Subscription);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+            State.SetCurrentUser(user);
+
+            _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+           {
+               user = Cuser;
+               StateHasChanged();
+           });
+        }
+    }
+
+    private async Task ShowStake(SMSPlan plan)
+    {
+        smsModel.plan = plan;
+        smsModel.user = user;
+        showStake = true;
+    }
 
     private void OpenModal()
     {
@@ -237,5 +159,10 @@
     {
         historyTransform = "100%";
         StateHasChanged(); // Ensure UI updates
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

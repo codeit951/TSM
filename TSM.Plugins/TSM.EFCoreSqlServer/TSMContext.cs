@@ -41,7 +41,7 @@ namespace TSM.EFCoreSqlServer
                 .HasKey(t => new { t.SignalID, t.UserID });
 
             modelBuilder.Entity<SMS>()
-                .HasKey(t => new { t.PlanID, t.UserID });
+                .HasKey(t => new { t.SMSID, t.UserID });
 
             modelBuilder.Entity<SMSPlan>()
                 .HasKey(t => new { t.PlanID });

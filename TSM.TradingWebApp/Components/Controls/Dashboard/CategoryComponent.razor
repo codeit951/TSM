@@ -1,4 +1,7 @@
-﻿<div class="css-1d4c5kz">
+﻿@inject UserState State
+@implements IAsyncDisposable
+
+<div class="css-1d4c5kz">
     <div class="categories_wrapper">
         <p class="account_section_title categories">Categories</p>
         <div class="categories_section">
@@ -17,27 +20,60 @@
             </div>
         </div>
         <div class="signal_strength_wrapper">
-            <span>
-                <p class="account_section_title signal_strength">Signal strength</p>
-                <p class="red">0%</p>
-            </span>
-            <div class="signal_wrapper">
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-                <div class="signal_bar "></div>
-            </div>
+            @if (user is not null)
+            {
+                var totalStrength = user.Signals.Sum(s => s.strength);
+                <span>
+                    <p class="account_section_title signal_strength">Signal strength</p>
+                    <p class="@(totalStrength==0?"red":"")" style="font-size: 14px; font-weight: 600;">@(totalStrength)%</p>
+                </span>
+                <div class="signal_wrapper">
+                    <div class="signal_bar @(totalStrength>=5?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=10?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=15?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=20?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=25?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=30?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=35?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=40?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=45?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=50?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=55?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=60?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=65?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=70?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=75?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=80?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=85?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=90?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=95?"green-bar":"red-bar")"></div>
+                    <div class="signal_bar @(totalStrength>=100?"green-bar":"red-bar")"></div>
+                </div>
+            }
+
         </div>
     </div>
 </div>
+
+@code{
+    private User? user;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+        _subscription = State.CurrentUserObservable
+        .Subscribe(Cuser =>
+            {
+                user = Cuser;
+                StateHasChanged();
+            });
+        
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
+    }
+}

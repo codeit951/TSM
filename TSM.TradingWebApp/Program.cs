@@ -7,7 +7,6 @@ using System.Data.Common;
 using System.Net.NetworkInformation;
 using TSM.CoreBusiness;
 using TSM.EFCoreSqlServer;
-using TSM.InMemoryStore;
 using TSM.TradingWebApp.Components;
 using TSM.TradingWebApp.Components.Controls.Common;
 using TSM.TradingWebApp.Data;
@@ -90,6 +89,7 @@ builder.Services.AddTransient<IAddTransactionUseCase, AddTransactionUseCase>();
 builder.Services.AddTransient<IUseNowPayUseCase, UseNowPayUseCase>();
 builder.Services.AddTransient<IAddSignalUseCase, AddSignalUseCase>();
 builder.Services.AddTransient<IAddSMSUseCase, AddSMSUseCase>();
+builder.Services.AddTransient<ICloseSMSUseCase, CloseSMSUseCase>();
 
 builder.Services.AddTransient<IViewAssetsByNameUseCase, ViewAssetsByNameUseCase>();
 builder.Services.AddTransient<IAddAssetsUseCase, AddAssetsUseCase>();

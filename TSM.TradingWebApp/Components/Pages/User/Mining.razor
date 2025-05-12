@@ -4,6 +4,11 @@
 @attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject IJSRuntime JS
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IViewSMSPlansByTypeUseCase ViewSMSPlansByTypeUseCase
+@inject UserState State
+@implements IAsyncDisposable
 
 <link href="pages/mining.css" rel="stylesheet" />
 
@@ -13,40 +18,19 @@
     <div class="css-1euahi7">
         <div class="top">
             <div class="css-14iwxg8">
-                <div class="card_balances">
-                    <div class="card_balance">
-                        <span class="title wrapper">
-                            Total minings
-                            <button class="eyes_button">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     width="14"
-                                     height="14"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.5"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     class="lucide lucide-eye-off eye">
-                                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
-                                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
-                                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
-                                    <path d="m2 2 20 20"></path>
-                                </svg>
-                            </button>
-                        </span>
-                        <span class="value" style="display: block;">$ 0.00</span>
-                        <h3 class="value hidden" style="display: none;"><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i><i>*</i></h3>
+                @if (user is not null)
+                {
+                    <div class="card_balances">
+                        <div class="card_balance active">
+                            <p class="title">Active minings:</p>
+                            <p class="value">@user.SMSs.Where(s => s.Status == StatusType.Active && s.PlanType == SMSTypes.Mining).Count()</p>
+                        </div>
+                        <div class="card_balance closed">
+                            <p class="title">Closed minings:</p>
+                            <p class="value">@user.SMSs.Where(s => s.Status == StatusType.Completed && s.PlanType==SMSTypes.Mining).Count()</p>
+                        </div>
                     </div>
-                    <div class="card_balance active">
-                        <p class="title">Active minings:</p>
-                        <p class="value">0</p>
-                    </div>
-                    <div class="card_balance closed">
-                        <p class="title">Closed minings:</p>
-                        <p class="value">0</p>
-                    </div>
-                </div>
+                }
                 <span class="stake_balance_button" @onclick="ShowHistory">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-clock">
                         <path d="M16 22h2a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"></path>
@@ -62,108 +46,98 @@
             <div class="mid_section_top"><p>Pools</p></div>
             <div class="stake_cards_wrapper">
                 <div class="grids css-113fuih">
-                    <div class="stake_card css-1abtjwe">
-                        <div class="stake_card_top">
-                            <div class="stake_card_info">
-                                <img src="/asseticons/BTC.svg" alt="Bitcoin icon" />
-                                <span>
-                                    <p>BitcoinPool12</p>
-                                    <p>BTC</p>
-                                </span>
+                    @if (plans is not null && plans.Count > 0)
+                    {
+                        foreach (var plan in plans)
+                        {
+                            <div class="stake_card css-1abtjwe">
+                                <div class="stake_card_top">
+                                    <div class="stake_card_info">
+                                        <img src="/asseticons/@(plan.PlanSymbol).png" alt="@plan.PlanName icon" />
+                                        <span>
+                                            <p>@plan.PlanName</p>
+                                            <p>@plan.PlanSymbol</p>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="stake_card_details">
+                                    <span class="stake_card_detail">
+                                        <p>Minumum</p>
+                                        <p>@plan.MinimumAmount @plan.PlanSymbol</p>
+                                    </span>
+                                    <span class="stake_card_detail">
+                                        <p>Maximum</p>
+                                        <p>@plan.MaximumAmount @plan.PlanSymbol</p>
+                                    </span>
+                                    <span class="stake_card_detail">
+                                        <p>Cycle</p>
+                                        <p>@(plan.Cycle == 1 ? "Daily" : $"Every {plan.Cycle} Days")</p>
+                                    </span>
+                                </div>
+                                <div class="stake_card_footer">
+                                    <button class="css-nncgg" @onclick="()=>ShowMining(plan)"><p>Choose this plan</p></button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="stake_card_details">
-                            <span class="stake_card_detail">
-                                <p>Minumum</p>
-                                <p>0.02273 BTC</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Maximum</p>
-                                <p>10 BTC</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Cycle</p>
-                                <p>Daily</p>
-                            </span>
-                        </div>
-                        <div class="stake_card_footer">
-                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
-                        </div>
-                    </div>
-                    <div class="stake_card css-1abtjwe">
-                        <div class="stake_card_top">
-                            <div class="stake_card_info">
-                                <img src="/asseticons/DOGE.svg" alt="Dogecoin icon" />
-                                <span>
-                                    <p>Dogecoin</p>
-                                    <p>DOGE</p>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="stake_card_details">
-                            <span class="stake_card_detail">
-                                <p>Minumum</p>
-                                <p>2600 DOGE</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Maximum</p>
-                                <p>100000 DOGE</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Cycle</p>
-                                <p>Daily</p>
-                            </span>
-                        </div>
-                        <div class="stake_card_footer">
-                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
-                        </div>
-                    </div>
-                    <div class="stake_card css-1abtjwe">
-                        <div class="stake_card_top">
-                            <div class="stake_card_info">
-                                <img src="/asseticons/XRP.svg" alt="Ripple icon" />
-                                <span>
-                                    <p>Dragonmint#77</p>
-                                    <p>XRP</p>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="stake_card_details">
-                            <span class="stake_card_detail">
-                                <p>Minumum</p>
-                                <p>500 XRP</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Maximum</p>
-                                <p>10000 XRP</p>
-                            </span>
-                            <span class="stake_card_detail">
-                                <p>Cycle</p>
-                                <p>Daily</p>
-                            </span>
-                        </div>
-                        <div class="stake_card_footer">
-                            <button class="css-nncgg" @onclick="ShowMining"><p>Choose this plan</p></button>
-                        </div>
-                    </div>
+                        }
+                    }
+                    else
+                    {
+                        <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+                            <Placeholder Width="PlaceholderWidth.Col12" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+                            <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+                        </PlaceholderContainer>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
-<MineAndStakeModelComponent @bind-IsActive="showMining" @rendermode="InteractiveServer" />
+<MineAndStakeModelComponent @ref="smsModel" @bind-IsActive="showMining" @rendermode="InteractiveServer" />
 @code{
     private string historyTransform = "100%";
 
     private bool showMining = false;
+
+    private User? user;
+
+    private List<SMSPlan> plans = new List<SMSPlan>();
+
+    private MineAndStakeModelComponent smsModel;
+
+    private IDisposable _subscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        plans = await ViewSMSPlansByTypeUseCase.Execute(SMSTypes.Mining);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            user = await UserManager.FindByNameAsync(username);
+            State.SetCurrentUser(user);
+
+            _subscription = State.CurrentUserObservable
+       .Subscribe(Cuser =>
+           {
+               user = Cuser;
+               StateHasChanged();
+           });
+        }
+    }
 
     private async Task ShowHistory()
     {
         historyTransform = "0%";
     }
 
-    private async Task ShowMining()
+    private async Task ShowMining(SMSPlan plan)
     {
+        smsModel.plan = plan;
+        smsModel.user = user;
         showMining = true;
     }
 
@@ -180,5 +154,10 @@
     {
         historyTransform = "100%";
         StateHasChanged(); // Ensure UI updates
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _subscription?.Dispose();
     }
 }

@@ -15,6 +15,7 @@ namespace TSM.CoreBusiness
         public int SignalID { get; set; }
         public Guid UserID { get; set; }
         public int PlanID { get; set; }
+        public string PlanName { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public StatusType Status { get; set; } = StatusType.Pending;
         public int strength { get; set; }

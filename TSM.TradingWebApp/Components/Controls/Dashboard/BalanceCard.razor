@@ -94,45 +94,88 @@
         </p>
     </span>
     <div class="css-bqmfuh">
-        <div class="account_summary_new_item">
-            <span>
-                <img src="img/deposit.svg" alt="icon">
-                <p class="title">Total Deposits</p>
-            </span>
-            <p class="value">$0.00</p>
-            <button class="account_summary_button">
-                <p>Deposit</p>
-            </button>
-        </div>
-        <div class="account_summary_new_item">
-            <span>
-                <img src="img/withdraw.svg" alt="icon">
-                <p class="title">Total Withdrawals</p>
-            </span>
-            <p class="value">$0.00</p>
-            <button class="account_summary_button">
-                <p>Withdraw</p>
-            </button>
-        </div>
-        <div class="account_summary_new_item">
-            <span>
-                <img src="img/trade.svg" alt="icon">
-                <p class="title">Total Profits</p>
-            </span>
-            <p class="value">$0.00</p>
-            <button class="account_summary_button" style="opacity: 0; user-select: none; pointer-events: none;">
-                <p>Profits</p>
-            </button>
-        </div>
-        @if (user is not null && user.Status != StatusType.Active)
+        @if (user is not null)
         {
             <div class="account_summary_new_item">
                 <span>
-                    <img src="img/verify.svg" alt="icon">
-                    <p class="title">Verification</p>
+                    <img src="img/deposit.svg" alt="icon">
+                    <p class="title">Total Deposits</p>
                 </span>
-                <p class="value" style="color: rgb(255, 51, 68);">Your account is not verified</p>
+                @{
+                    decimal TotalDeposit = 0.0m;
+                    decimal TotalWithdraw = 0.0m;
+                }
+                @foreach (var tran in user.Transactions)
+                {
+                    if (price is not null && price.ContainsKey(tran.Asset))
+                    {
+                        if (tran.TransactionType=="Deposit"&&tran.Status==StatusType.Approved)
+                        {
+                            TotalDeposit += (price[tran.Asset] * tran.Amount);
+                        }
+                        else if (tran.TransactionType == "Withdraw" && tran.Status == StatusType.Approved)
+                        {
+                            TotalWithdraw += (price[tran.Asset] * tran.Amount);
+                        }
+                    }
+                    else if (otherprices is not null && otherprices.ContainsKey(tran.Asset))
+                    {
+                        if (tran.TransactionType == "Deposit" && tran.Status == StatusType.Approved)
+                        {
+                            TotalDeposit += (otherprices[tran.Asset] * tran.Amount);
+                        }
+                        else if (tran.TransactionType == "Withdraw" && tran.Status == StatusType.Approved)
+                        {
+                            TotalWithdraw += (otherprices[tran.Asset] * tran.Amount);
+                        }
+                    }
+                    else if (stockprices is not null && stockprices.ContainsKey(tran.Asset))
+                    {
+                        if (tran.TransactionType == "Deposit" && tran.Status == StatusType.Approved)
+                        {
+                            TotalDeposit += (stockprices[tran.Asset] * tran.Amount);
+                        }
+                        else if (tran.TransactionType == "Withdraw" && tran.Status == StatusType.Approved)
+                        {
+                            TotalWithdraw += (stockprices[tran.Asset] * tran.Amount);
+                        }
+                    }
+                }
+                <p class="value">$@FormatValues.FormatCurrencyWithMinusForBal(TotalDeposit)</p>
+                <button class="account_summary_button" @onclick='()=> NavigationManager.NavigateTo("/user/deposit")'>
+                    <p>Deposit</p>
+                </button>
             </div>
+            <div class="account_summary_new_item">
+                <span>
+                    <img src="img/withdraw.svg" alt="icon">
+                    <p class="title">Total Withdrawals</p>
+                </span>
+                <p class="value">$@FormatValues.FormatCurrencyWithMinusForBal(TotalWithdraw)</p>
+                <button class="account_summary_button" @onclick='()=> NavigationManager.NavigateTo("/user/withdraw")'>
+                    <p>Withdraw</p>
+                </button>
+            </div>
+            <div class="account_summary_new_item">
+                <span>
+                    <img src="img/trade.svg" alt="icon">
+                    <p class="title">Total Profits</p>
+                </span>
+                <p class="value">$@FormatValues.FormatCurrencyWithMinusForBal(user.Trades.Sum(t=>t.Profit))</p>
+                <button class="account_summary_button" style="opacity: 0; user-select: none; pointer-events: none;">
+                    <p>Profits</p>
+                </button>
+            </div>
+            @if (user.Status != StatusType.Active)
+            {
+                <div class="account_summary_new_item">
+                    <span>
+                        <img src="img/verify.svg" alt="icon">
+                        <p class="title">Verification</p>
+                    </span>
+                    <p class="value" style="color: rgb(255, 51, 68);">Your account is not verified</p>
+                </div>
+            }
         }
     </div>
 </div>

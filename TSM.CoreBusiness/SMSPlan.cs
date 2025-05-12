@@ -15,7 +15,7 @@ namespace TSM.CoreBusiness
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PlanID { get; set; }
         public string PlanName { get; set; } = string.Empty;
-        public string PlanSymbol { get; set; } = string.Empty;
+        public string PlanSymbol { get; set; } = "USD";
         public SMSTypes PlanType { get; set; }
         public decimal MinimumAmount { get; set; }
         public decimal MaximumAmount { get; set; }

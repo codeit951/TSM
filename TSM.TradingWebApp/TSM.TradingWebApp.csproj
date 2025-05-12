@@ -33,7 +33,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TSM.CoreBusiness\TSM.CoreBusiness.csproj" />
     <ProjectReference Include="..\TSM.Plugins\TSM.EFCoreSqlServer\TSM.EFCoreSqlServer.csproj" />
-    <ProjectReference Include="..\TSM.Plugins\TSM.InMemoryStore\TSM.InMemoryStore.csproj" />
     <ProjectReference Include="..\TSM.UseCase\TSM.UseCase.csproj" />
   </ItemGroup>
 

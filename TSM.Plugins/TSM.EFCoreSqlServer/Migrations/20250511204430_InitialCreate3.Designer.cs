@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TSM.EFCoreSqlServer;
 
@@ -11,9 +12,11 @@ using TSM.EFCoreSqlServer;
 namespace TSM.EFCoreSqlServer.Migrations
 {
     [DbContext(typeof(TSMContext))]
-    partial class TSMContextModelSnapshot : ModelSnapshot
+    [Migration("20250511204430_InitialCreate3")]
+    partial class InitialCreate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,10 +297,6 @@ namespace TSM.EFCoreSqlServer.Migrations
 
                     b.Property<int>("PlanID")
                         .HasColumnType("int");
-
-                    b.Property<string>("PlanName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
