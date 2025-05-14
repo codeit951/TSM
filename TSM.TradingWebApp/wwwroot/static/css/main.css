@@ -3149,3 +3149,7 @@ select {
 .green-bar {
     background-color: rgb(31 188 36 / 50%);
 }
+.css-1vr3rr2 .switch_wrapper .switch.active {
+    transform: translate(18px, -50%);
+    background-color: rgb(49, 172, 238);
+}

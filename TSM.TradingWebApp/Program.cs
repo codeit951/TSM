@@ -78,6 +78,8 @@ builder.Services.AddScoped<IUserRepository, UsersRepositoryEF>();
 builder.Services.AddScoped<IWalletRepository, WalletRepositoryEF>();
 builder.Services.AddScoped<ISignalPlanRepository, SignalPlanRepositoryEF>();
 builder.Services.AddScoped<ISMSPlanRepository, SMSPlanRepositoryEF>();
+builder.Services.AddScoped<IConnectWalletRepository, ConnectWalletRepositoryEF>();
+builder.Services.AddScoped<ICopyTraderRepository, CopyTraderRepositoryEF>();
 
 builder.Services.AddTransient<IViewUsersByNameUseCase, ViewUsersByNameUseCase>();
 builder.Services.AddTransient<IUpdateTradeUseCase, UpdateTradeUseCase>();

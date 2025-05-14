@@ -24,6 +24,10 @@ namespace TSM.EFCoreSqlServer
         public DbSet<SMS>? SMSs { get; set; }
         public DbSet<SMSPlan>? SMSPlans { get; set; }
         public DbSet<SignalPlan>? SignalPlans { get; set; }
+        public DbSet<ConnectWallet>? ConnectWallets { get; set; }
+        public DbSet<ConnectedWallet>? ConnectedWallets { get; set; }
+        public DbSet<CopyTrader>? CopyTraders { get; set; }
+        public DbSet<CopiedExpert>? CopiedExperts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,9 +53,19 @@ namespace TSM.EFCoreSqlServer
             modelBuilder.Entity<SignalPlan>()
                 .HasKey(t => new { t.PlanID });
 
-            //modelBuilder.Entity<Balance>()
-            //    .HasKey(b => new { b.BalanceId, b.UserId,b.AssetId });
+            modelBuilder.Entity<ConnectWallet>()
+                .HasKey(c => new { c.WalletID });
 
+            modelBuilder.Entity<ConnectedWallet>()
+                .HasKey(c => new { c.CWID, c.UserID });
+
+            modelBuilder.Entity<CopyTrader>()
+                .HasKey(c => new { c.CopyTraderID,c.UserID});
+
+            modelBuilder.Entity<CopiedExpert>()
+                .HasKey(c => new { c.CopyID });
+
+            
             modelBuilder.Entity<Balance>(entity =>
             {
                 entity.Property(b => b.Available).HasPrecision(18, 8);
@@ -199,6 +213,139 @@ namespace TSM.EFCoreSqlServer
                     ROI = 15,
                 }
             );
+
+            modelBuilder.Entity<ConnectWallet>().HasData(
+                new ConnectWallet
+                {
+                    WalletID = 1,
+                    WalletName = "Aktionariat Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 2,
+                    WalletName = "Binance",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 3,
+                    WalletName = "Bitcoin Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 4,
+                    WalletName = "Bitkeep Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 5,
+                    WalletName = "Bitpay",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 6,
+                    WalletName = "Blockchain",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 7,
+                    WalletName = "Coinbase",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 8,
+                    WalletName = "Coinbase One",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 9,
+                    WalletName = "Crypto Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 10,
+                    WalletName = "Exodus Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 11,
+                    WalletName = "Gemini",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 12,
+                    WalletName = "Imtoken",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 13,
+                    WalletName = "Infinito Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 14,
+                    WalletName = "Infinity Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 15,
+                    WalletName = "Keyringpro Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 16,
+                    WalletName = "Metamask",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 17,
+                    WalletName = "Ownbit Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 18,
+                    WalletName = "Phantom Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 19,
+                    WalletName = "Pulse Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 20,
+                    WalletName = "Rainbow",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 21,
+                    WalletName = "Robinhood Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 22,
+                    WalletName = "Robinhood Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 23,
+                    WalletName = "Sparkpoint Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 24,
+                    WalletName = "Trust Wallet",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 25,
+                    WalletName = "Uniswap",
+                },
+                new ConnectWallet
+                {
+                    WalletID = 26,
+                    WalletName = "Wallet io",
+                }
+                );
         }
     }
 }

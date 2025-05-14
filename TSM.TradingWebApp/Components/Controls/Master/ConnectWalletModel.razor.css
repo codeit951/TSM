@@ -1,0 +1,208 @@
+﻿
+/*! CSS Used from: Embedded */
+.css-jdqo73 {
+    display: grid;
+    gap: 6px;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+    .css-jdqo73 .input_wrapper {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 4px;
+        border: 1px solid transparent;
+        transition: border 150ms ease-in-out;
+        min-width: 135px;
+        margin-top: 6px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.024);
+        padding: 10px 8px !important;
+    }
+
+        .css-jdqo73 .input_wrapper:hover {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+    .css-jdqo73 label {
+        font-size: 13px;
+        line-height: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .css-jdqo73 input,
+    .css-jdqo73 textarea {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        line-height: 18px;
+        font-weight: 600;
+        width: 100%;
+        appearance: none;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+        .css-jdqo73 input::placeholder,
+        .css-jdqo73 textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+.css-nncgg {
+    background: rgb(49, 172, 238);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+    .css-nncgg.disabled {
+        background-color: grey;
+        pointer-events: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+.css-8ndowl {
+    position: fixed;
+    z-index: 1300;
+    inset: 0px;
+}
+
+.css-919eu4 {
+    position: fixed;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: transparent;
+    z-index: -1;
+}
+
+.css-1ocdasm {
+    position: absolute;
+    width: 92%;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    max-width: 430px;
+    animation: 0.3s ease-out 0s 1 normal forwards running fadeSlideIn;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.075) !important;
+    backdrop-filter: blur(200px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.024) !important;
+}
+
+    .css-1ocdasm .modal_top {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+        .css-1ocdasm .modal_top .modal_top_title {
+            font-size: 14px;
+            line-height: 18px;
+            font-weight: 600;
+            color: rgb(255, 255, 255);
+        }
+
+        .css-1ocdasm .modal_top button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+            .css-1ocdasm .modal_top button:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+                filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(334deg) brightness(200%) contrast(100%);
+            }
+
+    .css-1ocdasm .modal_content {
+        margin-top: 6px;
+        display: grid;
+        gap: 16px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .css-1ocdasm .modal_content .modal_description {
+            font-size: 14px;
+            line-height: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 95%;
+        }
+
+    .css-1ocdasm .modal_footer {
+        margin-top: 32px;
+        display: flex;
+        gap: 12px;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box !important;
+    }
+
+.css-3delch {
+    background: rgb(255, 51, 68);
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 42px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 6px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    transition: 150ms ease-in;
+    margin: 0px !important;
+}
+
+    .css-3delch.disabled {
+        background-color: grey;
+        pointer-events: none;
+        user-select: none;
+        cursor: not-allowed;
+    }

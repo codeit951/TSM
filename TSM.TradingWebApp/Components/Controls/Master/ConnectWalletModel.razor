@@ -1,0 +1,45 @@
+﻿<div role="presentation" aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" class="MuiModal-root css-8ndowl" style="display:@(IsActive? "block":"none")">
+    <div aria-hidden="true" class="MuiBackdrop-root MuiModal-backdrop css-919eu4" style="opacity: 1; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);"></div>
+    <div tabindex="0" data-testid="sentinelStart"></div>
+    <div tabindex="-1" class="css-1ocdasm">
+        <div class="modal_top" style="color: white;">
+            <p class="modal_top_title">Connect wallet</p>
+            <button @onclick="CloseModal">
+                <Icon Name="IconName.X"/>
+            </button>
+        </div>
+        <div class="modal_content">
+            <p class="modal_description">Connect your wallet to start enjoying your account's additional benefits.</p>
+            <div class="css-jdqo73">
+                <label>Wallet:</label>
+                <div class="input_wrapper"><input type="text" placeholder="Aktionariat Wallet" class="no-zoom-14px" value="Aktionariat Wallet" /></div>
+            </div>
+            <div class="css-jdqo73">
+                <label>Seed/Recovery Phrase:</label>
+                <div class="input_wrapper">
+                    <div class="textarea-wrapper">
+                        <textarea type="text" placeholder="Your Aktionariat Wallet Seed/Recovery Phrase" rows="5" cols="50" class="no-zoom-textarea"></textarea>
+                        <sider-quick-compose-btn dir="ltr" data-gpts-theme="light" data-ext-text-inserter="no" style="display: contents;"></sider-quick-compose-btn>
+                    </div>
+                </div>
+            </div>
+            <div class="modal_footer">
+                <button class="disabled css-3delch" disabled=""><p>Disconnect</p></button><button class="disabled css-nncgg" disabled=""><p>Save</p></button>
+            </div>
+        </div>
+    </div>
+    <div tabindex="0" data-testid="sentinelEnd"></div>
+</div>
+
+@code{
+    [Parameter]
+    public bool IsActive { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsActiveChanged { get; set; }
+
+    private void CloseModal()
+    {
+        IsActive = false;
+        IsActiveChanged.InvokeAsync(IsActive);
+    }
+}

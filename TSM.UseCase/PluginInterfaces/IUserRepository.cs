@@ -9,6 +9,8 @@ namespace TSM.UseCase.PluginInterfaces
 {
     public interface IUserRepository
     {
+        Task AddConnectedWalletAsync(ConnectedWallet connectedWallet);
+        Task AddCopyExpertAsync(CopiedExpert copyExpert);
         Task<string> AddSignalAsync(Signal signal);
         Task<string> AddSMSAsync(SMS sms);
         Task<string> AddSwapTransaction(Guid userID, Transaction transaction, string coinFrom, string coinTo, decimal amountFrom, decimal amountTo);
@@ -17,6 +19,8 @@ namespace TSM.UseCase.PluginInterfaces
         Task<bool> CloseSMSAsync(SMS sms);
         Task CloseTrade(Trade trade, decimal closePrice, decimal profit, decimal loss);
         Task<List<User>> GetUsersByName(string name);
+        Task RemoveConnectedWalletAsync(int connectedWalletID);
+        Task RemoveCopyExpertAsync(int copyID);
         Task UpdateTrade(Guid userID, Trade trade);
         Task UpdateUserBalance(Guid userID, List<Balance> balances);
         Task UseNowPayAsync(Transaction transaction);

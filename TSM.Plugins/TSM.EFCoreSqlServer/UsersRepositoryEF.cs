@@ -20,6 +20,36 @@ namespace TSM.EFCoreSqlServer
             this.contextFactory = contextFactory;
         }
 
+        public async Task AddConnectedWalletAsync(ConnectedWallet connectedWallet)
+        {
+            if (connectedWallet == null)
+                throw new ArgumentNullException(nameof(connectedWallet));
+            await using var db = contextFactory.CreateDbContext();
+            var user = await db.Users
+                .Include(u => u.ConnectedWallets)
+                .FirstOrDefaultAsync(u => u.UserID == connectedWallet.UserID);
+            if (user == null)
+                throw new InvalidOperationException("User not found");
+            user.ConnectedWallets ??= new List<ConnectedWallet>();
+            user.ConnectedWallets.Add(connectedWallet);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task AddCopyExpertAsync(CopiedExpert copyExpert)
+        {
+            if (copyExpert == null)
+                throw new ArgumentNullException(nameof(copyExpert));
+            await using var db = contextFactory.CreateDbContext();
+            var user = await db.Users
+                .Include(u => u.CopiedExperts)
+                .FirstOrDefaultAsync(u => u.UserID == copyExpert.UserID);
+            if (user == null)
+                throw new InvalidOperationException("User not found");
+            user.CopiedExperts ??= new List<CopiedExpert>();
+            user.CopiedExperts.Add(copyExpert);
+            await db.SaveChangesAsync();
+        }
+
         public async Task<string> AddSignalAsync(Signal signal)
         {
             if (signal == null)
@@ -405,6 +435,28 @@ namespace TSM.EFCoreSqlServer
         }
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken) => Task.FromResult(!string.IsNullOrEmpty(user.Password));
+
+        public async Task RemoveConnectedWalletAsync(int connectedWalletID)
+        {
+            await using var db = contextFactory.CreateDbContext();
+            var connectedWallet = await db.ConnectedWallets.FindAsync(connectedWalletID);
+            if (connectedWallet != null)
+            {
+                db.ConnectedWallets.Remove(connectedWallet);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveCopyExpertAsync(int copyID)
+        {
+            await using var db = contextFactory.CreateDbContext();
+            var copyExpert = await db.CopiedExperts.FindAsync(copyID);
+            if (copyExpert != null)
+            {
+                db.CopiedExperts.Remove(copyExpert);
+                await db.SaveChangesAsync();
+            }
+        }
 
         public async Task SetNormalizedUserNameAsync(User user, string? normalizedName, CancellationToken cancellationToken)
         {

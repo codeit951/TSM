@@ -1,4 +1,6 @@
-﻿<div class="scrollbar-hide css-10q5ekg" style="transform: translateX(@Transform);opacity:1;">
+﻿
+<ConnectWalletModel @bind-IsActive="showConnect" @rendermode="InteractiveServer" />
+<div class="scrollbar-hide css-10q5ekg" style="transform: translateX(@Transform);opacity:1;">
     <div class="top">
         <div role="button" @onclick="UpdateTransform" style="white-space: nowrap; min-width: 100px; display: grid; grid-template-columns: 16px auto; align-items: center; gap: 6px; appearance: button; cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +46,7 @@
                                 <input placeholder="Search for your wallet" class="no-zoom-14px" />
                             </div>
                             <div>
-                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; justify-content: space-between;" @onclick="OpenConnect">
                                     <div class="hoverable css-1vr3rr2">
                                         <label style="display: flex; gap: 6px; align-items: center;">
                                             <img src="./The Iron Markets_files/aktionriat.svg" alt="" style="width: 20px; height: auto;" />
@@ -311,6 +313,13 @@
 
     [Parameter]
     public User? user { get; set; }
+
+    private bool showConnect = false;
+
+    private void OpenConnect()
+    {
+        showConnect = true;
+    }
 
     private void UpdateTransform()
     {
